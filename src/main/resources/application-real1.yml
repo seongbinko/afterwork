@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    include: oauth,real-db
+server:
+  port: 8081
