@@ -37,3 +37,8 @@ out/
 
 ### ChromeDriver
 chromedriver
+
+### application-oauth.yml
+application-oauth.yml
+application-real-db.yml
+application-local-db.yml
