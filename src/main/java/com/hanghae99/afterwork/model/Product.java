@@ -34,7 +34,7 @@ public class Product extends BaseTimeEntity{
 
     private String location;
 
-    private int starRate;
+    private int popularity;
 
     private String status;
 
