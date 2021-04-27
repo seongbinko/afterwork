@@ -22,7 +22,9 @@ public class Product extends BaseTimeEntity{
     private String title;
 
     @Column(nullable = false)
-    private String price;
+    private int price;
+
+    private String priceInfo;
 
     private String author;
 
@@ -37,7 +39,9 @@ public class Product extends BaseTimeEntity{
     private String status;
 
     @Column(nullable = false)
-    private String site;
+    private String siteName;
+
+    private String siteUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
