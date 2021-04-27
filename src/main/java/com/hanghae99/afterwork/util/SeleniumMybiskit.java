@@ -30,7 +30,6 @@ public class SeleniumMybiskit implements ApplicationRunner {
             System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
         } catch (Exception e) {
             e.printStackTrace();
-
         }
 
         // 크롬 설정을 담은 객체 생성
@@ -96,31 +95,40 @@ public class SeleniumMybiskit implements ApplicationRunner {
             // 가격이 없는 경우 예외처리
             // 한달 가격으로 표시되는 상품은 코드 추가 필요
             String str_price;
+            String priceInfo;
             try {
                 str_price = elList.get(i).findElement(By.className("compo_price")).findElement(By.className("num")).getText();
                 // 공백 제거
                 str_price = str_price.replace(" ","");
                 // 쉼표 제거
                 str_price = str_price.replace(",","");
+
+                priceInfo = elList.get(i).findElement(By.className("price_discount")).getText();
             } catch (Exception e) {
                 e.printStackTrace();
                 str_price = "0";
+                priceInfo = "";
             }
             int price = Integer.parseInt(str_price);
 
+
+
             String img_url = elList.get(i).findElement(By.className("fixed")).findElement(By.tagName("img")).getAttribute("data-src");
-            boolean is_online = true;
+            boolean isOnline = true;
 
             // 연결 사이트 mybiskit에 맞춰넣음
-            String site = "https://www.mybiskit.com/lecture/" + title.replace(" ", "-") + "-" + img_url.split("/")[4];
+            String siteUrl = "https://www.mybiskit.com/lecture/" + title.replace(" ", "-") + "-" + img_url.split("/")[4];
+            String siteName = "mybiskit";
 
             String category = elList.get(i).findElement(By.className("ctag")).getText();
 
             System.out.println("title = " + title);
             System.out.println("price = " + price);
+            System.out.println("priceInfo = " + priceInfo);
             System.out.println("img_url = " + img_url);
-            System.out.println("is_online = " + is_online);
-            System.out.println("site = " + site);
+            System.out.println("isOnline = " + isOnline);
+            System.out.println("siteUrl = " + siteUrl);
+            System.out.println("siteName = " + siteName);
 
             //카테고리 변환
             if (category.contains("운동")) {
