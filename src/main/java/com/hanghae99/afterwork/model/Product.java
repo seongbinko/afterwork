@@ -32,12 +32,12 @@ public class Product extends BaseTimeEntity{
 
     private String location;
 
-    private int starRate;
+    private int popularity;
 
     private String status;
 
     @Column(nullable = false)
-    private String site;
+    private String siteUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
