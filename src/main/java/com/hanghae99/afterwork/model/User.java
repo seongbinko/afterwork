@@ -13,7 +13,7 @@ import java.util.List;
 @Getter @Setter
 @AllArgsConstructor @Builder
 @NoArgsConstructor//(access = AccessLevel.PROTECTED)// protected로 기본생성자 생성
-@ToString(of = {"id", "name", "email", "offTime", "imgUrl", "location"})
+@ToString(of = {"id", "name", "email", "offTime", "imageUrl", "location"})
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
