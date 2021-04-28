@@ -1,6 +1,8 @@
 package com.hanghae99.afterwork.util;
 
+import com.hanghae99.afterwork.model.Category;
 import com.hanghae99.afterwork.model.Product;
+import com.hanghae99.afterwork.repository.CategoryRepository;
 import com.hanghae99.afterwork.repository.ProductRepository;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,6 +14,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Component
@@ -20,9 +23,11 @@ public class SeleniumTest implements ApplicationRunner {
     public static final String WEB_DRIVER_ID = "webdriver.chrome.driver"; // 드라이버 ID
     public static final String WEB_DRIVER_PATH = "C:\\Users\\Jason\\Downloads\\chromedriver.exe"; // 드라이버 경로
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    public SeleniumTest(ProductRepository productRepository){
+    public SeleniumTest(ProductRepository productRepository, CategoryRepository categoryRepository){
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
 //    @Scheduled(fixedDelay = 1000)
@@ -142,12 +147,15 @@ public class SeleniumTest implements ApplicationRunner {
         }
     }
 
+
+    @Transactional
     public void taling_crawl(){
         WebDriver driver = new ChromeDriver();
+        String category_temp = "운동/건강";
         int pageCount = 1;
 
         while(true) {
-            String url = "https://taling.me/Home/Search/?page="+pageCount+"&cateMain=22&cateSub=&region=1,4,2,9,19,14,11,6,5,21,10,15,77,17,12,7,18,97,24,8,22,112,25,100,3,13,107,119,16,110,23,134,101,98,129,109,103,108,102,99,123,135,116,75,122,124,131,76,128&orderIdx=&query=&code=&org=&day=&time=&tType=&region=1,4,2,9,19,14,11,6,5,21,10,15,77,17,12,7,18,97,24,8,22,112,25,100,3,13,107,119,16,110,23,134,101,98,129,109,103,108,102,99,123,135,116,75,122,124,131,76,128&regionMain=0";
+            String url = "https://taling.me/Home/Search/?page="+pageCount+"&cateMain=&cateSub=27&region=1,7,4,5,9,2,6,14,10,3,22,17,15,21,11,122,123,24,109,19,16,13,135,77,136,25,112,129,8&orderIdx=&query=&code=&org=&day=&time=&tType=&region=1,7,4,5,9,2,6,14,10,3,22,17,15,21,11,122,123,24,109,19,16,13,135,77,136,25,112,129,8&regionMain=0";
             driver.get(url);
             try {
                 Thread.sleep(5000);
@@ -215,12 +223,22 @@ public class SeleniumTest implements ApplicationRunner {
                 }
 //                Price
                 String price_temp = product_base.get(i).findElement(By.className("price2")).getText();
-                String price = null;
+                String price_info = price_temp;
+                StringBuilder sb2 = new StringBuilder();
+                String[] arr2 = null;
+                int price = 0;
                 if (price_temp.contains("시간")) {
-                    price = price_temp.substring(1, price_temp.length() - 3);
+                    price_temp = price_temp.substring(1, price_temp.length() - 3);
                 } else {
-                    price = price_temp.substring(1);
+                    price_temp = price_temp.substring(1);
                 }
+                arr2 = price_temp.split(",");
+                for(int j = 0; j < arr2.length; j++){
+                    sb2.append(arr2[j]);
+                }
+                price = Integer.parseInt(String.valueOf(sb2));
+                System.out.println(price);
+
 //                Popularity
                 String popularity_temp = product_base.get(i).findElement(By.className("d_day")).getText();
                 int popularity = 0;
@@ -242,19 +260,25 @@ public class SeleniumTest implements ApplicationRunner {
                     status = "Y";
                 }
 
-                productRepository.save(
-                        Product.builder()
-                                .title(title)
-                                .price(price)
-                                .author(author)
-                                .imgUrl(imgUrl)
-                                .isOnline(isOnline)
-                                .location(location)
-                                .popularity(popularity)
-                                .status(status)
-                                .siteUrl(siteUrl)
-                                .build()
-                );
+                Category category = categoryRepository.findByName(category_temp).get();
+
+
+                Product product = Product.builder()
+                        .title(title)
+                        .price(price)
+                        .priceInfo(price_info)
+                        .author(author)
+                        .imgUrl(imgUrl)
+                        .isOnline(isOnline)
+                        .location(location)
+                        .popularity(popularity)
+                        .status(status)
+                        .siteName(siteName)
+                        .siteUrl(siteUrl)
+                        .category(category)
+                        .build();
+                productRepository.save(product);
+
             }
             if(size < 15){
                 break;
