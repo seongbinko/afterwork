@@ -21,6 +21,8 @@ public class Category extends BaseTimeEntity{
     @Column(nullable = false)
     private String name;
 
+    private String imgUrl;
+
     @OneToMany(mappedBy = "category")
     @Builder.Default
     private List<Interest> interests = new ArrayList<>();
