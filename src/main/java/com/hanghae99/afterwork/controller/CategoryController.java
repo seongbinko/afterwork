@@ -20,7 +20,7 @@ public class CategoryController {
     private final CategoryRepository categoryRepository;
 
     @GetMapping("/api/categorys")
-    public ResponseEntity getCurrentUser() {
+    public ResponseEntity getCategorys() {
 
         List<Category> categoryList = categoryRepository.findAll();
         List<CategoryResponseDto> categoryResponseDtoList =
