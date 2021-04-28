@@ -44,7 +44,7 @@ public class SeleniumMybiskit implements ApplicationRunner {
             e.printStackTrace();
         }
 
-        mybiskit();
+//        mybiskit();
     }
 
     // mybiskit 크롤링
