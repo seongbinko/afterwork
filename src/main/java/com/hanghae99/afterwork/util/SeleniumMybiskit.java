@@ -138,7 +138,7 @@ public class SeleniumMybiskit implements ApplicationRunner {
                 System.out.println("No Category");
             }
 
-            Category category = categoryRepository.findByName(strCategory).get();
+            Category category = categoryRepository.findByName(strCategory).orElse(null);
 
             Product product = Product.builder()
                     .title(strTitle)
