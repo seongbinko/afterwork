@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @Getter @Setter
 @AllArgsConstructor @Builder
 @NoArgsConstructor//(access = AccessLevel.PROTECTED)// protected로 기본생성자 생성
-@ToString(of = {"id", "name", "email", "offTime", "imgUrl", "location"})
+@ToString(of = {"id", "name", "email", "offTime", "imageUrl", "location"})
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
@@ -33,7 +34,7 @@ public class User extends BaseTimeEntity {
 
     private String imageUrl;
 
-    private String offTime;
+    private LocalDateTime offTime;
 
     private String location;
 
