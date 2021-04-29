@@ -1,51 +1,27 @@
 package com.hanghae99.afterwork.controller;
 
-import com.hanghae99.afterwork.dto.CategoryResponseDto;
 import com.hanghae99.afterwork.dto.ProductResponseDto;
 import com.hanghae99.afterwork.model.Category;
 import com.hanghae99.afterwork.model.Product;
-import com.hanghae99.afterwork.repository.CategoryRepository;
 import com.hanghae99.afterwork.repository.ProductRepository;
-import com.hanghae99.afterwork.service.CollectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @RestController
-public class CategoryController {
+@RequiredArgsConstructor
+public class SearchController {
 
-//    private final CategoryService categoryService;
-    private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
 
-    @GetMapping("/api/categorys")
-    public ResponseEntity getCategorys() {
-
-        List<Category> categoryList = categoryRepository.findAll();
-        List<CategoryResponseDto> categoryResponseDtoList =
-                categoryList.stream().map(
-                        category -> new CategoryResponseDto(
-                                category.getCategoryId(),
-                                category.getName(),
-                                category.getImgUrl()
-                        )).collect(Collectors.toList());
-
-        return ResponseEntity.ok().body(categoryResponseDtoList);
-    }
-
-    @GetMapping("/api/categorys/{id}")
-    public Page<ProductResponseDto> getProductByCategory(@PathVariable("id") Long categoryId, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String strSort, @RequestParam(value = "direction", required = false, defaultValue = "desc") String strDirection) {
+    @GetMapping("/api/search")
+    public Page<ProductResponseDto> getProductByCategory(@RequestParam("keyword") String keyword, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String strSort, @RequestParam(value = "direction", required = false, defaultValue = "desc") String strDirection) {
 
         Sort.Direction direction = Sort.Direction.DESC;
 
@@ -56,8 +32,9 @@ public class CategoryController {
 
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, strSort));
 
-        Category category = categoryRepository.findById(categoryId).orElse(null);
-        Page<Product> productList = productRepository.findAllByCategory(category, pageRequest);
+        keyword = "%" + keyword + "%";
+
+        Page<Product> productList = productRepository.findAllByTitleLike(keyword, pageRequest);
         Page<ProductResponseDto> productResponseDtoList =
                 productList.map(
                         product -> new ProductResponseDto(
@@ -76,6 +53,7 @@ public class CategoryController {
                         ));
 
         return productResponseDtoList;
+
     }
 
 }
