@@ -49,7 +49,7 @@ public class CategoryController {
 
         Sort.Direction direction = Sort.Direction.DESC;
 
-        if (strDirection.toLowerCase(Locale.ROOT) == "asc")
+        if (strDirection.toLowerCase(Locale.ROOT).equals("asc"))
         {
             direction = Sort.Direction.ASC;
         }
