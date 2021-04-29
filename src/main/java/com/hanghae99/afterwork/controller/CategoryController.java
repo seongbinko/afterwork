@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -44,9 +45,16 @@ public class CategoryController {
     }
 
     @GetMapping("/api/categorys/{id}")
-    public Page<ProductResponseDto> getProductByCategory(@PathVariable("id") Long categoryId, @RequestParam("page") int page, @RequestParam("size") int size) {
+    public Page<ProductResponseDto> getProductByCategory(@PathVariable("id") Long categoryId, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String strSort, @RequestParam(value = "direction", required = false, defaultValue = "desc") String strDirection) {
 
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Sort.Direction direction = Sort.Direction.DESC;
+
+        if (strDirection.toLowerCase(Locale.ROOT) == "asc")
+        {
+            direction = Sort.Direction.ASC;
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, strSort));
 
         Category category = categoryRepository.findById(categoryId).orElse(null);
         Page<Product> productList = productRepository.findAllByCategory(category, pageRequest);
