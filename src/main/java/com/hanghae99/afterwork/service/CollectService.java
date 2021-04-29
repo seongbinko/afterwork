@@ -28,13 +28,11 @@ public class CollectService {
 
     public Collect postCollect(CollectRequestDto collectRequestDtorequestDto, UserPrincipal userPrincipal){
         Product product = productRepository.findByProductId(collectRequestDtorequestDto.getProductId());
-//        User user = userRepository.findByUserId(userPrincipal.getId());
+        User user = userRepository.findByUserId(userPrincipal.getId());
 
-        System.out.println(product.getProductId());
-//        System.out.println(user.getUserId());
         Collect collect = Collect.builder()
                 .product(product)
-//                .user(user)
+                .user(user)
                 .build();
 
         return collectRepository.save(collect);
