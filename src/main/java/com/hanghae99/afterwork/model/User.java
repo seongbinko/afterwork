@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
 
     @Column(nullable = false)
     private String name;
@@ -34,9 +33,11 @@ public class User extends BaseTimeEntity {
 
     private String imageUrl;
 
-    private LocalDateTime offTime;
+    private String offTime;
 
-    private String location;
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
+    List<Location> locations = new ArrayList<>();
 
     @NotNull
     @Enumerated(EnumType.STRING)
