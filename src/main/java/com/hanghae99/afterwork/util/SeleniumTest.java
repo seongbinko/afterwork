@@ -49,38 +49,68 @@ public class SeleniumTest implements ApplicationRunner {
         // 설정하지 않을 시 실제 크롬 창이 생성되고, 어떤 순서로 진행되는지 확인할 수 있다.
         options.addArguments("headless");
 
-//        hobbyful_crawl();
-//        mochaclass_crawl();
-        taling_crawl();
+//        hobbyful_crawl(options);
+        mochaclass_crawl(options);
+//        taling_crawl(options);
     }
 
-    public void hobbyful_crawl(){
+    public void hobbyful_crawl(ChromeOptions options){
         //위에서 설정한 옵션들 담은 드라이버 객체 생성
-        //옵션을 설정하지 않았을 때에는 생략 가능하다.
+        //옵션을 설정하지 않았을 때에는 생략 가능하다.seongbinko-springboot-webservice.cdpzofsjdpj2.ap-northeast-2.rds.amazonaws.com
         //WebDriver 객체가 곧 하나의 브라우저 창이라 생각한다.
-        WebDriver driver = new ChromeDriver();
+        WebDriver driver = new ChromeDriver(options);
+        String category_temp = "공예";
         //이동을 원하는 url
-        String url = "https://hobbyful.co.kr/list/class";
+        String url = "https://hobbyful.co.kr/list/class/macrame";
         //webDriver를 해당 url로 이동한다.
         driver.get(url);
         //브라우저 이동시 생기는 로드시간을 기다린다.
         //HTTP 응답속도보다 자바의 컴파일 속도가 더 빠르기 때문에 임의적으로 1초를 대기한다.
 //        class = "nav"인 모든 태그를 가진 WebElement리스트를 받아온다.
 //        WebElement는 html의 태그를 가지는 클래스이다.
-        final List<WebElement> products = driver.findElements(By.className("class-list"));
-        int size = products.size();
+        final List<WebElement> base = driver.findElements(By.className("class-list"));
+        int size = base.size();
 
         for(int i = 0; i < size; i++){
             final List<WebElement> img = driver.findElements(By.className("class-list-thumb"));
             final List<WebElement> cont = driver.findElements(By.className("class-list-cont"));
-            final List<WebElement> product = driver.findElements(By.className("class-list"));
+            final List<WebElement> base2 = driver.findElements(By.className("class-list"));
             String imgUrl = img.get(i).findElement(By.tagName("img")).getAttribute("src");
             String title = cont.get(i).findElement(By.className("class-list-name")).getText();
             String author = cont.get(i).findElement(By.className("class-list-lecturer-name")).getText();
-            String price = cont.get(i).findElement(By.className("class-list-price")).getText();
-            String site = product.get(i).findElement(By.tagName("a")).getAttribute("href");
-            System.out.println(imgUrl + " " + title + " " + author + " " + price + " " + site);
-            i++;
+            String price_temp = cont.get(i).findElement(By.className("class-list-price")).getText();
+            String price_info = price_temp;
+            if(price_temp.contains("월")){
+                price_temp = price_temp.replace("월", "");
+                int index = price_temp.indexOf("원");
+                price_temp = price_temp.substring(0, index);
+                price_temp = price_temp.replace(",", "");
+            }else{
+                price_temp = price_temp.replace(" ", "");
+                price_temp = price_temp.replace(",", "");
+                price_temp = price_temp.replace("원", "");
+            }
+            int price = Integer.parseInt(price_temp);
+            boolean isOnline = false;
+            String status = "Y";
+            String siteName = "Hobbyful";
+            String siteUrl = base2.get(i).findElement(By.tagName("a")).getAttribute("href");
+
+            Category category = categoryRepository.findByName(category_temp).get();
+
+            Product product = Product.builder()
+                    .title(title)
+                    .price(price)
+                    .priceInfo(price_info)
+                    .author(author)
+                    .imgUrl(imgUrl)
+                    .isOnline(isOnline)
+                    .status(status)
+                    .siteName(siteName)
+                    .siteUrl(siteUrl)
+                    .category(category)
+                    .build();
+            productRepository.save(product);
         }
         try {
             Thread.sleep(2000);
@@ -100,40 +130,77 @@ public class SeleniumTest implements ApplicationRunner {
         }
     }
 
-    public void mochaclass_crawl(){
+    public void mochaclass_crawl(ChromeOptions options){
         WebDriver driver = new ChromeDriver();
-        String url = "https://mochaclass.com/search?keyword=&location=%EC%A0%84%EC%B2%B4&category=%EC%A0%84%EC%B2%B4";
-        driver.get(url);
-        while(true) {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        String[] moveLocationName = {"서울", "경기도", "부산", "인천", "대구", "울산", "광주", "대전", "전라남도", "경상북도",
+                "경상남도", "전라북도", "충청남도", "충청북도", "강원도", "제주도", "세종"};
+        String[] moveCategoryName = {"핸드메이드·수공예", "쿠킹+클래스", "플라워+레슨", "드로잉", "음악", "요가·필라테스", "레져·스포츠", "자기계발", "Live+클래스"};
+        int moveCategory = 0;
+        while(moveCategory < 9) {
+            String category_temp = null;
+            if(moveCategory == 0){
+                category_temp = "공예";
+            }else if(moveCategory == 1){
+                category_temp = "요리";
+            }else if(moveCategory == 2){
+                category_temp = "아트";
+            }else if(moveCategory == 3){
+                category_temp = "아트";
+            }else if(moveCategory == 4){
+                category_temp = "음악";
+            }else if(moveCategory == 5){
+                category_temp = "운동/건강";
+            }else if(moveCategory == 6){
+                category_temp = "운동/건강";
+            }else if(moveCategory == 7){
+                category_temp = "";
+            }else if(moveCategory == 8){
+                category_temp = "";
             }
-            final WebElement base = driver.findElement(By.className("MuiGrid-root"));
-            final List<WebElement> product = base.findElements(By.tagName("a"));
-            final WebElement multiPage_base = driver.findElement(By.className("MuiPagination-ul"));
-            final List<WebElement> multiPage = multiPage_base.findElements(By.tagName("li"));
-            final String nextPage = multiPage.get(multiPage.size()-1).findElement(By.tagName("button")).getAttribute("class");
-            int size = product.size();
-            for (int i = 0; i < size; i++) {
-                final List<WebElement> desc = product.get(i).findElements(By.tagName("p"));
-                String imgUrl = product.get(i).findElement(By.tagName("img")).getAttribute("src");
-                String category = desc.get(0).getText();
-                String title = desc.get(1).getText();
-                String location = desc.get(2).getText();
-                String price = desc.get(3).getText();
-                String site = product.get(i).getAttribute("href");
-                System.out.println(imgUrl + " " + title + " " + category + " " + location + " " + price + " " + site);
+            int moveLocation = 0;
+            while (moveLocation < 17) {
+                String url = "https://mochaclass.com/search?keyword=&location=" + moveLocationName[moveLocation] + "&category="+moveCategoryName[moveCategory];
+                driver.get(url);
+                while (true) {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    try{
+                        final WebElement base = driver.findElement(By.className("MuiGrid-root"));
+                        final List<WebElement> product = base.findElements(By.tagName("a"));
+                        final WebElement multiPage_base = driver.findElement(By.className("MuiPagination-ul"));
+                        final List<WebElement> multiPage = multiPage_base.findElements(By.tagName("li"));
+                        final String nextPage = multiPage.get(multiPage.size() - 1).findElement(By.tagName("button")).getAttribute("class");
+                        int size = product.size();
+                        for (int i = 0; i < size; i++) {
+                            final List<WebElement> desc = product.get(i).findElements(By.tagName("p"));
+                            String imgUrl = product.get(i).findElement(By.tagName("img")).getAttribute("src");
+                            String category = desc.get(0).getText();
+                            String title = desc.get(1).getText();
+                            String location = desc.get(2).getText();
+                            String price = desc.get(3).getText();
+                            String site = product.get(i).getAttribute("href");
+                            System.out.println(imgUrl + " " + title + " " + category + " " + location + " " + price + " " + site);
+                        }
+                        if (nextPage.contains("disabled")) {
+                            System.out.println("bot exit");
+                            break;
+                        } else {
+                            multiPage.get(multiPage.size() - 1).click();
+                            System.out.println("clicked!");
+                        }
+                    }catch(Exception e){
+                        break;
+                    }
+                }
+                moveLocation++;
             }
-            if(nextPage.contains("disabled")){
-                System.out.println("bot exit");
-                break;
-            }else{
-                multiPage.get(multiPage.size()-1).click();
-                System.out.println("clicked!");
-            }
+            moveLocation = 0;
+            moveCategory++;
         }
+
         try {
             //드라이버가 null이 아니라면
             if (driver != null) {
@@ -149,8 +216,8 @@ public class SeleniumTest implements ApplicationRunner {
 
 
     @Transactional
-    public void taling_crawl(){
-        WebDriver driver = new ChromeDriver();
+    public void taling_crawl(ChromeOptions options){
+        WebDriver driver = new ChromeDriver(options);
         String category_temp = "운동/건강";
         int pageCount = 1;
 
@@ -278,7 +345,6 @@ public class SeleniumTest implements ApplicationRunner {
                         .category(category)
                         .build();
                 productRepository.save(product);
-
             }
             if(size < 15){
                 break;
