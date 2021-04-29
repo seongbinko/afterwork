@@ -48,9 +48,22 @@ public class SeleniumTest implements ApplicationRunner {
         // 브라우저가 눈에 보이지 않고 내부적으로 돈다.
         // 설정하지 않을 시 실제 크롬 창이 생성되고, 어떤 순서로 진행되는지 확인할 수 있다.
         options.addArguments("headless");
-
+        String name = null;
+//        for(int i = 0; i < 6; i++){
+//            if(i == 0) name = "운동/건강";
+//            if(i == 1) name = "요리";
+//            if(i == 2) name = "아트";
+//            if(i == 3) name = "교육";
+//            if(i == 4) name = "공예";
+//            if(i == 5) name = "음악";
+//            categoryRepository.save(
+//                    Category.builder()
+//                            .name(name)
+//                            .build()
+//            );
+//        }
 //        hobbyful_crawl(options);
-        mochaclass_crawl(options);
+//        mochaclass_crawl(options);
 //        taling_crawl(options);
     }
 
@@ -61,7 +74,7 @@ public class SeleniumTest implements ApplicationRunner {
         WebDriver driver = new ChromeDriver(options);
         String category_temp = "공예";
         //이동을 원하는 url
-        String url = "https://hobbyful.co.kr/list/class/macrame";
+        String url = "https://hobbyful.co.kr/list/class";
         //webDriver를 해당 url로 이동한다.
         driver.get(url);
         //브라우저 이동시 생기는 로드시간을 기다린다.
@@ -131,12 +144,12 @@ public class SeleniumTest implements ApplicationRunner {
     }
 
     public void mochaclass_crawl(ChromeOptions options){
-        WebDriver driver = new ChromeDriver();
+        WebDriver driver = new ChromeDriver(options);
         String[] moveLocationName = {"서울", "경기도", "부산", "인천", "대구", "울산", "광주", "대전", "전라남도", "경상북도",
                 "경상남도", "전라북도", "충청남도", "충청북도", "강원도", "제주도", "세종"};
         String[] moveCategoryName = {"핸드메이드·수공예", "쿠킹+클래스", "플라워+레슨", "드로잉", "음악", "요가·필라테스", "레져·스포츠", "자기계발", "Live+클래스"};
         int moveCategory = 0;
-        while(moveCategory < 9) {
+        while(moveCategory < 1) {
             String category_temp = null;
             if(moveCategory == 0){
                 category_temp = "공예";
@@ -153,12 +166,12 @@ public class SeleniumTest implements ApplicationRunner {
             }else if(moveCategory == 6){
                 category_temp = "운동/건강";
             }else if(moveCategory == 7){
-                category_temp = "";
+                category_temp = "교육";
             }else if(moveCategory == 8){
-                category_temp = "";
+                category_temp = "교육";
             }
             int moveLocation = 0;
-            while (moveLocation < 17) {
+            while (moveLocation < 1) {
                 String url = "https://mochaclass.com/search?keyword=&location=" + moveLocationName[moveLocation] + "&category="+moveCategoryName[moveCategory];
                 driver.get(url);
                 while (true) {
@@ -169,20 +182,51 @@ public class SeleniumTest implements ApplicationRunner {
                     }
                     try{
                         final WebElement base = driver.findElement(By.className("MuiGrid-root"));
-                        final List<WebElement> product = base.findElements(By.tagName("a"));
+                        final List<WebElement> base2 = base.findElements(By.tagName("a"));
                         final WebElement multiPage_base = driver.findElement(By.className("MuiPagination-ul"));
                         final List<WebElement> multiPage = multiPage_base.findElements(By.tagName("li"));
                         final String nextPage = multiPage.get(multiPage.size() - 1).findElement(By.tagName("button")).getAttribute("class");
-                        int size = product.size();
+                        int size = base2.size();
                         for (int i = 0; i < size; i++) {
-                            final List<WebElement> desc = product.get(i).findElements(By.tagName("p"));
-                            String imgUrl = product.get(i).findElement(By.tagName("img")).getAttribute("src");
-                            String category = desc.get(0).getText();
+                            final List<WebElement> desc = base2.get(i).findElements(By.tagName("p"));
+                            String imgUrl = base2.get(i).findElement(By.tagName("img")).getAttribute("src");
                             String title = desc.get(1).getText();
                             String location = desc.get(2).getText();
-                            String price = desc.get(3).getText();
-                            String site = product.get(i).getAttribute("href");
-                            System.out.println(imgUrl + " " + title + " " + category + " " + location + " " + price + " " + site);
+                            String price_info = desc.get(3).getText();
+                            int price = 0;
+                            if(price_info.contains("원")){
+                                price_info = price_info.replace(" ", "");
+                                price_info = price_info.replace("원", "");
+                                price_info = price_info.replace(",", "");
+                                price = Integer.parseInt(price_info);
+                            }else if(price_info.contains("%")){
+                                price_info = desc.get(3).getText() + desc.get(4).getText();
+                                String price_temp = desc.get(5).getText();
+                                price_temp = price_temp.replace(" ", "");
+                                price_temp = price_temp.replace("원", "");
+                                price_temp = price_temp.replace(",", "");
+                                price = Integer.parseInt(price_temp);
+                            }
+                            String siteName = "Mochaclass";
+                            boolean isOnline = false;
+                            String status = "Y";
+                            String siteUrl = base2.get(i).getAttribute("href");
+
+                            Category category = categoryRepository.findByName(category_temp).get();
+
+                            Product product = Product.builder()
+                                    .title(title)
+                                    .price(price)
+                                    .priceInfo(price_info)
+                                    .imgUrl(imgUrl)
+                                    .location(location)
+                                    .isOnline(isOnline)
+                                    .status(status)
+                                    .siteName(siteName)
+                                    .siteUrl(siteUrl)
+                                    .category(category)
+                                    .build();
+                            productRepository.save(product);
                         }
                         if (nextPage.contains("disabled")) {
                             System.out.println("bot exit");
@@ -222,7 +266,7 @@ public class SeleniumTest implements ApplicationRunner {
         int pageCount = 1;
 
         while(true) {
-            String url = "https://taling.me/Home/Search/?page="+pageCount+"&cateMain=&cateSub=27&region=1,7,4,5,9,2,6,14,10,3,22,17,15,21,11,122,123,24,109,19,16,13,135,77,136,25,112,129,8&orderIdx=&query=&code=&org=&day=&time=&tType=&region=1,7,4,5,9,2,6,14,10,3,22,17,15,21,11,122,123,24,109,19,16,13,135,77,136,25,112,129,8&regionMain=0";
+            String url = "https://taling.me/Home/Search/?page="+pageCount+"&cateMain=3&cateSub=&region=&orderIdx=&query=&code=&org=&day=&time=&tType=&region=&regionMain=";
             driver.get(url);
             try {
                 Thread.sleep(5000);
