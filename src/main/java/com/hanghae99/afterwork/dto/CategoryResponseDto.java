@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class CategoryResponseDto {
 
-    private Long id;
+    private Long categoryId;
 
     private String name;
 
@@ -24,9 +24,9 @@ public class CategoryResponseDto {
 
     }
 
-    public CategoryResponseDto(Long id, String name, String imgUrl)
+    public CategoryResponseDto(Long categoryId, String name, String imgUrl)
     {
-        this.id = id;
+        this.categoryId = categoryId;
         this.name = name;
         this.imgUrl = imgUrl;
     }

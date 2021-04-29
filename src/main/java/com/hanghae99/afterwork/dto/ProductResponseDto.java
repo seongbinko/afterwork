@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class ProductResponseDto {
 
-    private Long id;
+    private Long productId;
     private String title;
     private int price;
     private String priceInfo;
@@ -25,11 +25,11 @@ public class ProductResponseDto {
 
     List<Collect> collects = new ArrayList<>();
 
-    public ProductResponseDto(Long id, String title, int price, String priceInfo, String author, String imgUrl,
+    public ProductResponseDto(Long productId, String title, int price, String priceInfo, String author, String imgUrl,
                               boolean isOnline, String location, int popularity, String status, String siteName,
                               String siteUrl)
     {
-        this.id = id;
+        this.productId = productId;
         this.title = title;
         this.price = price;
         this.priceInfo = priceInfo;

@@ -56,10 +56,9 @@ public class SeleniumClasstok implements ApplicationRunner {
 
         options.addArguments("headless");
 
-        WebDriver driver = new ChromeDriver();
+        WebDriver driver = new ChromeDriver(options);
 
         List<ClasstokCategory> enumValues = Arrays.asList(ClasstokCategory.values());
-
         for (int i = 0; i < enumValues.size(); i++) {
 
             String krCategory = enumValues.get(i).getKrCategory();

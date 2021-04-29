@@ -56,7 +56,7 @@ public class SeleniumHobbyinthebox implements ApplicationRunner {
 
         options.addArguments("headless");
 
-        WebDriver driver = new ChromeDriver();//
+        WebDriver driver = new ChromeDriver(options);//
 
         List<HobyintheboxCategory> enumValues = Arrays.asList(HobyintheboxCategory.values());
 
@@ -185,7 +185,6 @@ public class SeleniumHobbyinthebox implements ApplicationRunner {
 
                     productRepository.save(product);
                 }
-
                 pageNum++;
             }
         }
