@@ -35,7 +35,7 @@ public class CategoryController {
         List<CategoryResponseDto> categoryResponseDtoList =
                 categoryList.stream().map(
                         category -> new CategoryResponseDto(
-                                category.getId(),
+                                category.getCategoryId(),
                                 category.getName(),
                                 category.getImgUrl()
                         )).collect(Collectors.toList());
@@ -53,7 +53,7 @@ public class CategoryController {
         Page<ProductResponseDto> productResponseDtoList =
                 productList.map(
                         product -> new ProductResponseDto(
-                                product.getId(),
+                                product.getProductId(),
                                 product.getTitle(),
                                 product.getPrice(),
                                 product.getPriceInfo(),
