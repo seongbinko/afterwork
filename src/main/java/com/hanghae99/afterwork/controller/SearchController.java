@@ -1,7 +1,6 @@
 package com.hanghae99.afterwork.controller;
 
 import com.hanghae99.afterwork.dto.ProductResponseDto;
-import com.hanghae99.afterwork.model.Category;
 import com.hanghae99.afterwork.model.Product;
 import com.hanghae99.afterwork.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,7 @@ public class SearchController {
     private final ProductRepository productRepository;
 
     @GetMapping("/api/search")
-    public Page<ProductResponseDto> getProductByCategory(@RequestParam("keyword") String keyword, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String strSort, @RequestParam(value = "direction", required = false, defaultValue = "desc") String strDirection) {
+    public Page<ProductResponseDto> getProductByCategory(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String strSort, @RequestParam(value = "direction", required = false, defaultValue = "desc") String strDirection) {
 
         Sort.Direction direction = Sort.Direction.DESC;
 
