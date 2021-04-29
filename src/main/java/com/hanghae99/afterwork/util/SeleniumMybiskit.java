@@ -56,7 +56,7 @@ public class SeleniumMybiskit implements ApplicationRunner {
 
         options.addArguments("headless");
 
-        WebDriver driver = new ChromeDriver();//
+        WebDriver driver = new ChromeDriver(options);//
 
         String strUrl = "https://www.mybiskit.com/lecture";
 
@@ -75,6 +75,8 @@ public class SeleniumMybiskit implements ApplicationRunner {
         InfiniteScroll(driver);
 
         List<WebElement> elList = driver.findElements(By.className("class_summary"));
+
+        int count = 0;
 
         for (int i = 0; i < elList.size(); i++) {
             String strTitle = null;
@@ -154,6 +156,13 @@ public class SeleniumMybiskit implements ApplicationRunner {
                     .build();
 
             productRepository.save(product);
+
+            count++;
+
+            if (count == 100)
+            {
+                break;
+            }
         }
 
         // 크롤링이 끝났을 경우 driver 종료
