@@ -5,22 +5,22 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "collects")
-@Getter @Setter
+@Table(name = "locations")
+@Getter
+@Setter
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)// protected로 기본생성자 생성
-public class Collect extends BaseEntity{
+public class Location extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long collectId;
+    private Long locationId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
 }

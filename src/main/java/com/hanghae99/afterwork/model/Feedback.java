@@ -13,7 +13,7 @@ public class Feedback extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long feedbackId;
 
     @Column(nullable = false)
     private String content;
