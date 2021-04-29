@@ -6,6 +6,7 @@ import com.hanghae99.afterwork.model.Category;
 import com.hanghae99.afterwork.model.Product;
 import com.hanghae99.afterwork.repository.CategoryRepository;
 import com.hanghae99.afterwork.repository.ProductRepository;
+import com.hanghae99.afterwork.service.CategoryService;
 import com.hanghae99.afterwork.service.CollectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 @RestController
 public class CategoryController {
 
-//    private final CategoryService categoryService;
+    private final CategoryService categoryService;
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
 
