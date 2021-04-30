@@ -50,5 +50,4 @@ public class Product extends BaseTimeEntity{
     @OneToMany(mappedBy = "product")
     @Builder.Default
     List<Collect> collects = new ArrayList<>();
-
 }
