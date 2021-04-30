@@ -23,13 +23,13 @@ public class UserResponseDto {
 
     private String offTime;
 
-    List<Location> locations;
+    List<LocationResponseDto> locations;
 
-    List<Interest> interests;
+    List<InterestResponseDto> interests;
 
-    List<Collect> collects;
+    List<CollectResponseDto> collects;
 
-    public UserResponseDto(Long userId, String email, String name, String imageUrl, String offTime, List<Location> locations, List<Interest> interests, List<Collect> collects) {
+    public UserResponseDto(Long userId, String email, String name, String imageUrl, String offTime, List<LocationResponseDto> locations, List<InterestResponseDto> interests, List<CollectResponseDto> collects) {
         this.userId = userId;
         this.email = email;
         this.name = name;
