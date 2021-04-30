@@ -2,7 +2,11 @@ package com.hanghae99.afterwork.controller;
 
 import com.hanghae99.afterwork.dto.CollectRequestDto;
 import com.hanghae99.afterwork.dto.CollectResponseDto;
+import com.hanghae99.afterwork.dto.ProductResponseDto;
 import com.hanghae99.afterwork.model.Collect;
+import com.hanghae99.afterwork.model.User;
+import com.hanghae99.afterwork.repository.CollectRepository;
+import com.hanghae99.afterwork.repository.UserRepository;
 import com.hanghae99.afterwork.security.CurrentUser;
 import com.hanghae99.afterwork.security.UserPrincipal;
 import com.hanghae99.afterwork.service.CollectService;
@@ -17,14 +21,17 @@ import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
 public class CollectController {
 
     private final CollectRequestDtoValidator collectRequestDtoValidator;
-
     private final CollectService collectService;
+    private final CollectRepository collectRepository;
+    private final UserRepository userRepository;
 
     @InitBinder("collectRequestDto")
     public void postCollectBinder(WebDataBinder webDataBinder){
@@ -56,4 +63,19 @@ public class CollectController {
         CollectResponseDto collectResponseDto = new CollectResponseDto(collect);
         return ResponseEntity.ok().body(collectResponseDto);
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/api/collects")
+    public ResponseEntity getAllCollect(@CurrentUser UserPrincipal userPrincipal){
+        List<Collect> collects = collectService.getAllCollect(userPrincipal);
+        List<CollectResponseDto> collectsList = collects.stream().map(
+                collect -> new CollectResponseDto(
+                        collect.getCollectId(),
+                        collect.getProduct().getProductId(),
+                        collect.getUser().getUserId()
+                )).collect(Collectors.toList());
+        return ResponseEntity.ok().body(collectsList);
+    }
 }
+
+
