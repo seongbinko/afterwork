@@ -109,7 +109,9 @@ public class SeleniumClasstok implements ApplicationRunner {
                 intPrice = PriceStringToInt(strPrice);
 
                 //할인가 적용 가격
-                strPriceInfo = elList.get(j).findElement(By.className("search-result__item-price")).getText();
+//                strPriceInfo = elList.get(j).findElement(By.className("search-result__item-price")).getText();
+                strPriceInfo = strPrice + "원/월";
+
 
                 //이미지 경로
                 strImgUrl = elList.get(j).findElement(By.className("search-result__item-cover")).getAttribute("style").split("\"")[1];
@@ -149,7 +151,7 @@ public class SeleniumClasstok implements ApplicationRunner {
                 }
                 System.out.println("category = " + strCategory);
 
-                Category category = categoryRepository.findByName(strCategory).get();
+                Category category = categoryRepository.findByName(strCategory).orElse(null);
 
                 Product product = Product.builder()
                         .title(strTitle)
