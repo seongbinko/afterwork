@@ -117,7 +117,7 @@ public class SeleniumClasstok implements ApplicationRunner {
                 strImgUrl = elList.get(j).findElement(By.className("search-result__item-cover")).getAttribute("style").split("\"")[1];
 
                 //클릭 시 이동 경로
-                strSiteUrl = elList.get(i).findElement(By.className("search-result__item-link")).getAttribute("href");
+                strSiteUrl = elList.get(j).findElement(By.className("search-result__item-link")).getAttribute("href");
 
                 System.out.println("strTitle = " + strTitle);
                 System.out.println("strAuthor = " + strAuthor);
