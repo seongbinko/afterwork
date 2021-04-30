@@ -13,6 +13,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import java.net.URLDecoder;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -49,6 +50,8 @@ public class SeleniumTest implements ApplicationRunner {
         ChromeOptions options = new ChromeOptions();
         // 브라우저가 눈에 보이지 않고 내부적으로 돈다.
         // 설정하지 않을 시 실제 크롬 창이 생성되고, 어떤 순서로 진행되는지 확인할 수 있다.
+
+//        for h2 checking purpose
         options.addArguments("headless");
         String name = null;
         for(int i = 0; i < 6; i++){
@@ -64,9 +67,10 @@ public class SeleniumTest implements ApplicationRunner {
                             .build()
             );
         }
+
 //        hobbyful_crawl(options);
-        mochaclass_crawl(options);
-//        taling_crawl(options);
+//        mochaclass_crawl(options);
+        taling_crawl(options);
     }
 
     @Transactional
@@ -74,9 +78,8 @@ public class SeleniumTest implements ApplicationRunner {
         //위에서 설정한 옵션들 담은 드라이버 객체 생성
         //옵션을 설정하지 않았을 때에는 생략 가능하다.seongbinko-springboot-webservice.cdpzofsjdpj2.ap-northeast-2.rds.amazonaws.com
         //WebDriver 객체가 곧 하나의 브라우저 창이라 생각한다.
-        WebDriver driver = new ChromeDriver();
+        WebDriver driver = new ChromeDriver(options);
         //이동을 원하는 url
-
         String[] moveCategoryName = {"/embroidery", "/macrame", "/drawing", "/digital-drawing", "/knitting", "/ratan", "/leather"
         , "/soap-candle", "/jewelry-neonsign", "/calligraphy", "/kids"};
         int moveCategory = 0;
@@ -141,6 +144,11 @@ public class SeleniumTest implements ApplicationRunner {
                 String status = "Y";
                 String siteName = "Hobbyful";
                 String siteUrl = base2.get(i).findElement(By.tagName("a")).getAttribute("href");
+                try{
+                    siteUrl = URLDecoder.decode(siteUrl, "UTF-8");
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
 
                 Category category = categoryRepository.findByName(category_temp).get();
 
@@ -181,7 +189,7 @@ public class SeleniumTest implements ApplicationRunner {
 
     @Transactional
     public void mochaclass_crawl(ChromeOptions options){
-        WebDriver driver = new ChromeDriver();
+        WebDriver driver = new ChromeDriver(options);
         String[] moveCategoryName = {"핸드메이드·수공예", "쿠킹+클래스", "플라워+레슨", "드로잉", "음악", "요가·필라테스", "레져·스포츠", "자기계발", "Live+클래스"};
 
         int moveCategory = 0;
@@ -215,6 +223,11 @@ public class SeleniumTest implements ApplicationRunner {
                 for (int i = 0; i < size; i++) {
                     final List<WebElement> desc = base2.get(i).findElements(By.tagName("p"));
                     String imgUrl = base2.get(i).findElement(By.tagName("img")).getAttribute("src");
+                    try{
+                        imgUrl = URLDecoder.decode(imgUrl, "UTF-8");
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
                     String title = desc.get(1).getText();
                     String location = desc.get(2).getText();
                     String price_temp = desc.get(3).getText();
@@ -233,9 +246,6 @@ public class SeleniumTest implements ApplicationRunner {
                         price_temp = price_temp.replace("원", "");
                         price = Integer.parseInt(price_temp);
                     }
-
-                    System.out.println(price);
-                    System.out.println(price_info);
                     String siteName = "Mochaclass";
                     boolean isOnline = false;
                     if(moveCategory == moveCategoryName.length-1 || moveCategory == moveCategoryName.length-2){
@@ -360,20 +370,28 @@ public class SeleniumTest implements ApplicationRunner {
 //                Price
                 String price_temp = product_base.get(i).findElement(By.className("price2")).getText();
                 String price_info = price_temp;
-                StringBuilder sb2 = new StringBuilder();
-                String[] arr2 = null;
                 int price = 0;
-                if (price_temp.contains("시간")) {
-                    price_temp = price_temp.substring(1, price_temp.length() - 3);
-                } else {
-                    price_temp = price_temp.substring(1);
+
+                if(price_temp.contains("시간")){
+                    int dash_pos = 0;
+                    price_info = price_info.replace("￦", "");
+                    dash_pos = price_info.indexOf("/");
+                    price_info = price_info.substring(0, dash_pos);
+                    price_info += "원/시간";
+
+                    price_temp = price_temp.replace("￦", "");
+                    price_temp = price_temp.replace(",", "");
+                    price_temp = price_temp.replace("/시간", "");
+                    price = Integer.parseInt(price_temp);
+                }else{
+                    price_info = price_info.replace("￦", "");
+                    price_info += "원";
+
+                    price_temp = price_temp.replace("￦", "");
+                    price_temp = price_temp.replace(",", "");
+                    price = Integer.parseInt(price_temp);
                 }
-                arr2 = price_temp.split(",");
-                for(int j = 0; j < arr2.length; j++){
-                    sb2.append(arr2[j]);
-                }
-                price = Integer.parseInt(String.valueOf(sb2));
-                System.out.println(price);
+
 
 //                Popularity
                 String popularity_temp = product_base.get(i).findElement(By.className("d_day")).getText();
