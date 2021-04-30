@@ -1,6 +1,7 @@
 package com.hanghae99.afterwork.controller;
 
 import com.hanghae99.afterwork.dto.UserRequestDto;
+import com.hanghae99.afterwork.dto.UserResponseDto;
 import com.hanghae99.afterwork.exception.ResourceNotFoundException;
 import com.hanghae99.afterwork.model.User;
 import com.hanghae99.afterwork.repository.UserRepository;
@@ -21,9 +22,19 @@ public class UserController {
 
     @GetMapping("/api/user/me")
     @PreAuthorize("hasRole('USER')")
-    public User getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
-        return userRepository.findById(userPrincipal.getId())
+    public UserResponseDto getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+        User user = userRepository.findById(userPrincipal.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
+        return new UserResponseDto(
+                user.getUserId(),
+                user.getEmail(),
+                user.getName(),
+                user.getImageUrl(),
+                user.getOffTime(),
+                user.getLocations(),
+                user.getInterests(),
+                user.getCollects()
+        );
     }
 
     @PostMapping("/api/user")
