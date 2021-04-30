@@ -49,16 +49,21 @@ public class CollectService {
         );
         User user = userRepository.findByUserId(userPrincipal.getId());
 
-        int index = 0;
-        for(int i = 0; i < user.getCollects().size(); i++){
-            if(user.getCollects().get(i).getCollectId() == collectId){
-                index = i;
-                break;
-            }
-        }
-        if(collectId != user.getCollects().get(index).getCollectId()){
-            collectRepository.deleteByCollectId(collectId);
-        }
+//        if(collect.getUser().getUserId() == )
+
+//        int index = 0;
+//        for(int i = 0; i < user.getCollects().size(); i++){
+//            if(user.getCollects().get(i).getCollectId() == collectId){
+//                index = i;
+//                break;
+//            }
+//        }
+//
+//        if(collectId != user.getCollects().get(index).getCollectId()){
+//            collectRepository.deleteByCollectId(collectId);
+//        }
+
+        collectRepository.deleteByCollectId(collectId);
         return collect;
     }
 }
