@@ -1,6 +1,6 @@
 package com.hanghae99.afterwork.controller;
 
-import com.hanghae99.afterwork.dto.UserRequestDto;
+import com.hanghae99.afterwork.dto.*;
 import com.hanghae99.afterwork.exception.ResourceNotFoundException;
 import com.hanghae99.afterwork.model.User;
 import com.hanghae99.afterwork.repository.UserRepository;
@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -21,9 +24,35 @@ public class UserController {
 
     @GetMapping("/api/user/me")
     @PreAuthorize("hasRole('USER')")
-    public User getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
-        return userRepository.findById(userPrincipal.getId())
+    public UserResponseDto getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+        User user = userRepository.findById(userPrincipal.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
+
+        return new UserResponseDto(
+                user.getUserId(),
+                user.getEmail(),
+                user.getName(),
+                user.getImageUrl(),
+                user.getOffTime(),
+                user.getLocations().stream().map(
+                        location -> new LocationResponseDto(
+                                location.getLocationId(),
+                                location.getName()
+                        )
+                ).collect(Collectors.toList()),
+                user.getInterests().stream().map(
+                        interest -> new InterestResponseDto(
+                                interest.getInterestId(),
+                                interest.getCategory().getCategoryId()
+                        )
+                ).collect(Collectors.toList()),
+                user.getCollects().stream().map(
+                        collect -> new CollectResponseDto(
+                                collect.getCollectId(),
+                                collect.getProduct().getProductId()
+                        )
+                ).collect(Collectors.toList())
+        );
     }
 
     @PostMapping("/api/user")

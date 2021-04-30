@@ -5,7 +5,9 @@ import com.hanghae99.afterwork.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findAllByCategory(Category category, Pageable pageable);
     Page<Product> findAllByTitleLike(String keyword, Pageable pageable);

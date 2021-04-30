@@ -6,12 +6,18 @@ import lombok.Data;
 @Data
 public class CollectResponseDto {
 
+    private Long collectId;
+    private Long productId;
+//    private Long userId;
+
     public CollectResponseDto(Collect collect){
         this.collectId = collect.getCollectId();
         this.productId = collect.getProduct().getProductId();
 //        this.userId = collect.getUser().getUserId();
     }
-    private Long collectId;
-    private Long productId;
-//    private Long userId;
+
+    public CollectResponseDto(Long collectId, Long productId) {
+        this.collectId = collectId;
+        this.productId = productId;
+    }
 }
