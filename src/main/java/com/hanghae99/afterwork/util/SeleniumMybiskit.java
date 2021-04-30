@@ -83,7 +83,7 @@ public class SeleniumMybiskit implements ApplicationRunner {
             String strAuthor = null;
             int intPrice = 0;
             String strPrice = null;
-            String strPriceInfo = null;
+            String strPriceInfo = "사전예약";
             String strImgUrl = null;
             String strSiteUrl = null;
             String strSiteName = "mybiskit";
@@ -97,12 +97,20 @@ public class SeleniumMybiskit implements ApplicationRunner {
 
             // 가격이 없는 경우 예외처리
             try {
-                strPrice = elList.get(i).findElement(By.className("compo_price")).findElement(By.className("num")).getText();
-                strPriceInfo = elList.get(i).findElement(By.className("price_discount")).getText();
+//                strPrice = elList.get(i).findElement(By.className("compo_price")).findElement(By.className("num")).getText();
+                strPrice = elList.get(i).findElement(By.className("real_price")).findElement(By.className("num")).getText();
+                strPriceInfo = strPrice + "원";
                 intPrice = PriceStringToInt(strPrice);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            try {
+                strPriceInfo += "/월 x " + elList.get(i).findElement(By.className("installment")).findElement(By.className("num")).getText();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             strImgUrl = elList.get(i).findElement(By.className("fixed")).findElement(By.tagName("img")).getAttribute("data-src");
 
             // 연결 사이트 mybiskit에 맞춰넣음
