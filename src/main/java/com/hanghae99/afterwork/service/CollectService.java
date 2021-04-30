@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
@@ -49,21 +51,19 @@ public class CollectService {
         );
         User user = userRepository.findByUserId(userPrincipal.getId());
 
-//        if(collect.getUser().getUserId() == )
-
-//        int index = 0;
-//        for(int i = 0; i < user.getCollects().size(); i++){
-//            if(user.getCollects().get(i).getCollectId() == collectId){
-//                index = i;
-//                break;
-//            }
-//        }
-//
-//        if(collectId != user.getCollects().get(index).getCollectId()){
-//            collectRepository.deleteByCollectId(collectId);
-//        }
-
-        collectRepository.deleteByCollectId(collectId);
+        if(collect.getUser().getUserId() == user.getUserId()){
+            collectRepository.deleteByCollectId(collectId);
+        }else{
+            //error 부분 추가 예정
+            System.out.println("해상 유저 id 와 상품 id가 동일 하지 않습니다");
+        }
         return collect;
     }
+
+    public List<Collect> getAllCollect(UserPrincipal userPrincipal){
+        User user = userRepository.findByUserId(userPrincipal.getId());
+        return collectRepository.findAllByUser(user);
+    }
+
+
 }

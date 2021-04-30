@@ -52,25 +52,25 @@ public class SeleniumTest implements ApplicationRunner {
         // 설정하지 않을 시 실제 크롬 창이 생성되고, 어떤 순서로 진행되는지 확인할 수 있다.
 
 //        for h2 checking purpose
-        options.addArguments("headless");
-        String name = null;
-        for(int i = 0; i < 6; i++){
-            if(i == 0) name = "운동/건강";
-            if(i == 1) name = "요리";
-            if(i == 2) name = "아트";
-            if(i == 3) name = "교육";
-            if(i == 4) name = "공예";
-            if(i == 5) name = "음악";
-            categoryRepository.save(
-                    Category.builder()
-                            .name(name)
-                            .build()
-            );
-        }
+//        options.addArguments("headless");
+//        String name = null;
+//        for(int i = 0; i < 6; i++){
+//            if(i == 0) name = "운동/건강";
+//            if(i == 1) name = "요리";
+//            if(i == 2) name = "아트";
+//            if(i == 3) name = "교육";
+//            if(i == 4) name = "공예";
+//            if(i == 5) name = "음악";
+//            categoryRepository.save(
+//                    Category.builder()
+//                            .name(name)
+//                            .build()
+//            );
+//        }
 
 //        hobbyful_crawl(options);
 //        mochaclass_crawl(options);
-        taling_crawl(options);
+//        taling_crawl(options);
     }
 
     @Transactional
