@@ -1,6 +1,7 @@
 package com.hanghae99.afterwork.service;
 
 import com.hanghae99.afterwork.dto.CollectRequestDto;
+import com.hanghae99.afterwork.dto.ProductResponseDto;
 import com.hanghae99.afterwork.model.Collect;
 import com.hanghae99.afterwork.model.Product;
 import com.hanghae99.afterwork.model.User;
@@ -32,7 +33,6 @@ public class CollectService {
     public Collect postCollect(CollectRequestDto collectRequestDtorequestDto, UserPrincipal userPrincipal){
         Product product = productRepository.findByProductId(collectRequestDtorequestDto.getProductId());
         User user = userRepository.findByUserId(userPrincipal.getId());
-
         Collect collect = Collect.builder()
                 .product(product)
                 .user(user)
@@ -61,15 +61,15 @@ public class CollectService {
         return collect;
     }
 
-    public List<Product> getAllCollect(UserPrincipal userPrincipal){
+    public List<ProductResponseDto> getAllCollect(UserPrincipal userPrincipal){
         User user = userRepository.findByUserId(userPrincipal.getId());
         List<Collect> collects = collectRepository.findAllByUser(user);
-        List<Product> products = new ArrayList<>();
+        List<ProductResponseDto> products = new ArrayList<>();
         for(int i = 0; i < collects.size(); i++){
             Product product = productRepository.findByProductId(collects.get(i).getProduct().getProductId());
-            products.add(product);
+            ProductResponseDto p = new ProductResponseDto(product, collects.get(i).getCollectId());
+            products.add(p);
         }
-
         return products;
     }
 

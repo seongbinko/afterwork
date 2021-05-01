@@ -26,10 +26,12 @@ public class SeleniumTest implements ApplicationRunner {
     public static final String WEB_DRIVER_PATH = "C:\\Users\\Jason\\Downloads\\chromedriver.exe"; // 드라이버 경로
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final TalingMacro talingMacro;
 
-    public SeleniumTest(ProductRepository productRepository, CategoryRepository categoryRepository){
+    public SeleniumTest(ProductRepository productRepository, CategoryRepository categoryRepository, TalingMacro talingMacro){
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.talingMacro = talingMacro;
     }
 
 //    @Scheduled(fixedDelay = 1000)
@@ -68,7 +70,10 @@ public class SeleniumTest implements ApplicationRunner {
 
 //        hobbyful_crawl(options);
 //        mochaclass_crawl(options);
-//        taling_crawl(options);
+//        List<SeleniumListResponse> infoList = talingMacro.sorted();
+//        System.out.println(infoList.get(0));
+//        System.out.println(infoList.get(1));
+//        taling_crawl(options, infoList);
     }
 
     @Transactional
@@ -292,14 +297,13 @@ public class SeleniumTest implements ApplicationRunner {
     }
 
     @Transactional
-    public void taling_crawl(ChromeOptions options){
-
+    public void taling_crawl(ChromeOptions options, List<SeleniumListResponse> infoList){
         WebDriver driver = new ChromeDriver(options);
-        String category_temp = "운동/건강";
         int pageCount = 1;
-
+        int infoListCount = 0;
         while(true) {
-            String url = "https://taling.me/Home/Search/?page="+pageCount+"&cateMain=3&cateSub=&region=&orderIdx=&query=&code=&org=&day=&time=&tType=&region=&regionMain=";
+
+            String url = "https://taling.me/Home/Search/?page="+pageCount+"&cateMain=3&cateSub="+""+"&region=&orderIdx=&query=&code=&org=&day=&time=&tType=&region=&regionMain=";
             driver.get(url);
             try {
                 Thread.sleep(5000);
@@ -412,24 +416,24 @@ public class SeleniumTest implements ApplicationRunner {
                     status = "Y";
                 }
 
-                Category category = categoryRepository.findByName(category_temp).get();
-
-
-                Product product = Product.builder()
-                        .title(title)
-                        .price(price)
-                        .priceInfo(price_info)
-                        .author(author)
-                        .imgUrl(imgUrl)
-                        .isOnline(isOnline)
-                        .location(location)
-                        .popularity(popularity)
-                        .status(status)
-                        .siteName(siteName)
-                        .siteUrl(siteUrl)
-                        .category(category)
-                        .build();
-                productRepository.save(product);
+//                Category category = categoryRepository.findByName(category_temp).get();
+//
+//
+//                Product product = Product.builder()
+//                        .title(title)
+//                        .price(price)
+//                        .priceInfo(price_info)
+//                        .author(author)
+//                        .imgUrl(imgUrl)
+//                        .isOnline(isOnline)
+//                        .location(location)
+//                        .popularity(popularity)
+//                        .status(status)
+//                        .siteName(siteName)
+//                        .siteUrl(siteUrl)
+//                        .category(category)
+//                        .build();
+//                productRepository.save(product);
             }
             if(size < 15){
                 break;

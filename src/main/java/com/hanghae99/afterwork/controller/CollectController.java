@@ -69,24 +69,8 @@ public class CollectController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/api/collects")
     public ResponseEntity getAllCollect(@CurrentUser UserPrincipal userPrincipal){
-        List<Product> collectsList = collectService.getAllCollect(userPrincipal);
-        List<ProductResponseDto> collectsResponseList =
-                collectsList.stream().map(
-                        product -> new ProductResponseDto(
-                                product.getProductId(),
-                                product.getTitle(),
-                                product.getPrice(),
-                                product.getPriceInfo(),
-                                product.getAuthor(),
-                                product.getImgUrl(),
-                                product.isOnline(),
-                                product.getLocation(),
-                                product.getPopularity(),
-                                product.getStatus(),
-                                product.getSiteName(),
-                                product.getSiteUrl()
-                        )).collect(Collectors.toList());
-        return ResponseEntity.ok().body(collectsResponseList);
+        List<ProductResponseDto> collectsList = collectService.getAllCollect(userPrincipal);
+        return ResponseEntity.ok().body(collectsList);
     }
 }
 
