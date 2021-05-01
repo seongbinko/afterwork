@@ -1,6 +1,7 @@
 package com.hanghae99.afterwork.service;
 
 import com.hanghae99.afterwork.dto.CollectRequestDto;
+import com.hanghae99.afterwork.dto.ProductResponseDto;
 import com.hanghae99.afterwork.model.Collect;
 import com.hanghae99.afterwork.model.Product;
 import com.hanghae99.afterwork.model.User;
@@ -16,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
@@ -29,7 +33,6 @@ public class CollectService {
     public Collect postCollect(CollectRequestDto collectRequestDtorequestDto, UserPrincipal userPrincipal){
         Product product = productRepository.findByProductId(collectRequestDtorequestDto.getProductId());
         User user = userRepository.findByUserId(userPrincipal.getId());
-
         Collect collect = Collect.builder()
                 .product(product)
                 .user(user)
@@ -49,16 +52,26 @@ public class CollectService {
         );
         User user = userRepository.findByUserId(userPrincipal.getId());
 
-        int index = 0;
-        for(int i = 0; i < user.getCollects().size(); i++){
-            if(user.getCollects().get(i).getCollectId() == collectId){
-                index = i;
-                break;
-            }
-        }
-        if(collectId != user.getCollects().get(index).getCollectId()){
+        if(collect.getUser().getUserId() == user.getUserId()){
             collectRepository.deleteByCollectId(collectId);
+        }else{
+            //error 부분 추가 예정
+            System.out.println("해상 유저 id 와 상품 id가 동일 하지 않습니다");
         }
         return collect;
     }
+
+    public List<ProductResponseDto> getAllCollect(UserPrincipal userPrincipal){
+        User user = userRepository.findByUserId(userPrincipal.getId());
+        List<Collect> collects = collectRepository.findAllByUser(user);
+        List<ProductResponseDto> products = new ArrayList<>();
+        for(int i = 0; i < collects.size(); i++){
+            Product product = productRepository.findByProductId(collects.get(i).getProduct().getProductId());
+            ProductResponseDto p = new ProductResponseDto(product, collects.get(i).getCollectId());
+            products.add(p);
+        }
+        return products;
+    }
+
+
 }
