@@ -4,6 +4,8 @@ import com.hanghae99.afterwork.model.Category;
 import com.hanghae99.afterwork.model.Product;
 import com.hanghae99.afterwork.repository.CategoryRepository;
 import com.hanghae99.afterwork.repository.ProductRepository;
+import lombok.Getter;
+import lombok.Setter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,7 +13,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import java.net.URLDecoder;
 
@@ -25,8 +26,6 @@ public class SeleniumTest implements ApplicationRunner {
     public static final String WEB_DRIVER_PATH = "C:\\Users\\Jason\\Downloads\\chromedriver.exe"; // 드라이버 경로
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-
-    private final String[] CategoryArray = {"운동/건강", "요리", "아트", "교육", "공예", "음악"};
 
     public SeleniumTest(ProductRepository productRepository, CategoryRepository categoryRepository){
         this.productRepository = productRepository;
@@ -50,9 +49,8 @@ public class SeleniumTest implements ApplicationRunner {
         ChromeOptions options = new ChromeOptions();
         // 브라우저가 눈에 보이지 않고 내부적으로 돈다.
         // 설정하지 않을 시 실제 크롬 창이 생성되고, 어떤 순서로 진행되는지 확인할 수 있다.
-
-//        for h2 checking purpose
-//        options.addArguments("headless");
+        options.addArguments("headless");
+        //        for h2 checking purpose
 //        String name = null;
 //        for(int i = 0; i < 6; i++){
 //            if(i == 0) name = "운동/건강";
@@ -293,9 +291,9 @@ public class SeleniumTest implements ApplicationRunner {
         }
     }
 
-
     @Transactional
     public void taling_crawl(ChromeOptions options){
+
         WebDriver driver = new ChromeDriver(options);
         String category_temp = "운동/건강";
         int pageCount = 1;

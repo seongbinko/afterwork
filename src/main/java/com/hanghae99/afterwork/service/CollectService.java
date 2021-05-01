@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -60,9 +61,16 @@ public class CollectService {
         return collect;
     }
 
-    public List<Collect> getAllCollect(UserPrincipal userPrincipal){
+    public List<Product> getAllCollect(UserPrincipal userPrincipal){
         User user = userRepository.findByUserId(userPrincipal.getId());
-        return collectRepository.findAllByUser(user);
+        List<Collect> collects = collectRepository.findAllByUser(user);
+        List<Product> products = new ArrayList<>();
+        for(int i = 0; i < collects.size(); i++){
+            Product product = productRepository.findByProductId(collects.get(i).getProduct().getProductId());
+            products.add(product);
+        }
+
+        return products;
     }
 
 
