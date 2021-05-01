@@ -72,7 +72,6 @@ public class SeleniumTest implements ApplicationRunner {
 //        mochaclass_crawl(options);
 //        List<SeleniumListResponse> infoList = talingMacro.sorted();
 //        System.out.println(infoList.get(0));
-//        System.out.println(infoList.get(1));
 //        taling_crawl(options, infoList);
     }
 
