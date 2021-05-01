@@ -2,6 +2,7 @@ package com.hanghae99.afterwork.dto;
 
 import com.hanghae99.afterwork.model.Category;
 import com.hanghae99.afterwork.model.Collect;
+import com.hanghae99.afterwork.model.Product;
 import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 public class ProductResponseDto {
 
     private Long productId;
+    private Long collectId;
     private String title;
     private int price;
     private String priceInfo;
@@ -41,6 +43,23 @@ public class ProductResponseDto {
         this.status = status;
         this.siteName = siteName;
         this.siteUrl = siteUrl;
+    }
+
+    public ProductResponseDto(Product product, Long collectId)
+    {
+        this.productId = product.getProductId();
+        this.collectId = collectId;
+        this.title = product.getTitle();
+        this.price = product.getPrice();
+        this.priceInfo = product.getPriceInfo();
+        this.author = product.getAuthor();
+        this.imgUrl = product.getImgUrl();
+        this.isOnline = product.isOnline();
+        this.location = product.getLocation();
+        this.popularity = product.getPopularity();
+        this.status = product.getStatus();
+        this.siteName = product.getSiteName();
+        this.siteUrl = product.getSiteUrl();
 
     }
 
