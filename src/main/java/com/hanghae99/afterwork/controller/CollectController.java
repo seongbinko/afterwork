@@ -4,6 +4,7 @@ import com.hanghae99.afterwork.dto.CollectRequestDto;
 import com.hanghae99.afterwork.dto.CollectResponseDto;
 import com.hanghae99.afterwork.dto.ProductResponseDto;
 import com.hanghae99.afterwork.model.Collect;
+import com.hanghae99.afterwork.model.Product;
 import com.hanghae99.afterwork.model.User;
 import com.hanghae99.afterwork.repository.CollectRepository;
 import com.hanghae99.afterwork.repository.UserRepository;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,13 +69,7 @@ public class CollectController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/api/collects")
     public ResponseEntity getAllCollect(@CurrentUser UserPrincipal userPrincipal){
-        List<Collect> collects = collectService.getAllCollect(userPrincipal);
-        List<CollectResponseDto> collectsList = collects.stream().map(
-                collect -> new CollectResponseDto(
-                        collect.getCollectId(),
-                        collect.getProduct().getProductId(),
-                        collect.getUser().getUserId()
-                )).collect(Collectors.toList());
+        List<ProductResponseDto> collectsList = collectService.getAllCollect(userPrincipal);
         return ResponseEntity.ok().body(collectsList);
     }
 }

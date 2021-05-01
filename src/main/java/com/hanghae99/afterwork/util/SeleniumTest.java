@@ -4,6 +4,8 @@ import com.hanghae99.afterwork.model.Category;
 import com.hanghae99.afterwork.model.Product;
 import com.hanghae99.afterwork.repository.CategoryRepository;
 import com.hanghae99.afterwork.repository.ProductRepository;
+import lombok.Getter;
+import lombok.Setter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,7 +13,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import java.net.URLDecoder;
 
@@ -25,12 +26,12 @@ public class SeleniumTest implements ApplicationRunner {
     public static final String WEB_DRIVER_PATH = "C:\\Users\\Jason\\Downloads\\chromedriver.exe"; // 드라이버 경로
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final TalingMacro talingMacro;
 
-    private final String[] CategoryArray = {"운동/건강", "요리", "아트", "교육", "공예", "음악"};
-
-    public SeleniumTest(ProductRepository productRepository, CategoryRepository categoryRepository){
+    public SeleniumTest(ProductRepository productRepository, CategoryRepository categoryRepository, TalingMacro talingMacro){
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.talingMacro = talingMacro;
     }
 
 //    @Scheduled(fixedDelay = 1000)
@@ -50,9 +51,8 @@ public class SeleniumTest implements ApplicationRunner {
         ChromeOptions options = new ChromeOptions();
         // 브라우저가 눈에 보이지 않고 내부적으로 돈다.
         // 설정하지 않을 시 실제 크롬 창이 생성되고, 어떤 순서로 진행되는지 확인할 수 있다.
-
-//        for h2 checking purpose
-//        options.addArguments("headless");
+        options.addArguments("headless");
+        //        for h2 checking purpose
 //        String name = null;
 //        for(int i = 0; i < 6; i++){
 //            if(i == 0) name = "운동/건강";
@@ -70,7 +70,9 @@ public class SeleniumTest implements ApplicationRunner {
 
 //        hobbyful_crawl(options);
 //        mochaclass_crawl(options);
-//        taling_crawl(options);
+//        List<SeleniumListResponse> infoList = talingMacro.sorted();
+//        System.out.println(infoList.get(0));
+//        taling_crawl(options, infoList);
     }
 
     @Transactional
@@ -293,15 +295,14 @@ public class SeleniumTest implements ApplicationRunner {
         }
     }
 
-
     @Transactional
-    public void taling_crawl(ChromeOptions options){
+    public void taling_crawl(ChromeOptions options, List<SeleniumListResponse> infoList){
         WebDriver driver = new ChromeDriver(options);
-        String category_temp = "운동/건강";
         int pageCount = 1;
-
+        int infoListCount = 0;
         while(true) {
-            String url = "https://taling.me/Home/Search/?page="+pageCount+"&cateMain=3&cateSub=&region=&orderIdx=&query=&code=&org=&day=&time=&tType=&region=&regionMain=";
+
+            String url = "https://taling.me/Home/Search/?page="+pageCount+"&cateMain=3&cateSub="+""+"&region=&orderIdx=&query=&code=&org=&day=&time=&tType=&region=&regionMain=";
             driver.get(url);
             try {
                 Thread.sleep(5000);
@@ -414,24 +415,24 @@ public class SeleniumTest implements ApplicationRunner {
                     status = "Y";
                 }
 
-                Category category = categoryRepository.findByName(category_temp).get();
-
-
-                Product product = Product.builder()
-                        .title(title)
-                        .price(price)
-                        .priceInfo(price_info)
-                        .author(author)
-                        .imgUrl(imgUrl)
-                        .isOnline(isOnline)
-                        .location(location)
-                        .popularity(popularity)
-                        .status(status)
-                        .siteName(siteName)
-                        .siteUrl(siteUrl)
-                        .category(category)
-                        .build();
-                productRepository.save(product);
+//                Category category = categoryRepository.findByName(category_temp).get();
+//
+//
+//                Product product = Product.builder()
+//                        .title(title)
+//                        .price(price)
+//                        .priceInfo(price_info)
+//                        .author(author)
+//                        .imgUrl(imgUrl)
+//                        .isOnline(isOnline)
+//                        .location(location)
+//                        .popularity(popularity)
+//                        .status(status)
+//                        .siteName(siteName)
+//                        .siteUrl(siteUrl)
+//                        .category(category)
+//                        .build();
+//                productRepository.save(product);
             }
             if(size < 15){
                 break;

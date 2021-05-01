@@ -24,7 +24,6 @@ public class CollectResponseDto {
     public CollectResponseDto(Long collectId, Long productId, Long userId) {
         this.collectId = collectId;
         this.productId = productId;
-        this.userId = userId;
     }
 
 }
