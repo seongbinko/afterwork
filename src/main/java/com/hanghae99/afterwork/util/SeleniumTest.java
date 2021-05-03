@@ -70,8 +70,7 @@ public class SeleniumTest implements ApplicationRunner {
 
 //        hobbyful_crawl(options);
 //        mochaclass_crawl(options);
-//        List<SeleniumListResponse> infoList = talingMacro.sorted();
-//        System.out.println(infoList.get(0));
+//        SeleniumListResponse infoList = talingMacro.sorted();
 //        taling_crawl(options, infoList);
     }
 
@@ -212,11 +211,16 @@ public class SeleniumTest implements ApplicationRunner {
 
             while (true) {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                final WebElement base = driver.findElement(By.className("MuiGrid-root"));
+                WebElement base = null;
+                try{
+                    base = driver.findElement(By.className("MuiGrid-root"));
+                }catch(Exception e){
+                    break;
+                }
                 final List<WebElement> base2 = base.findElements(By.tagName("a"));
                 final WebElement multiPage_base = driver.findElement(By.className("MuiPagination-ul"));
                 final List<WebElement> multiPage = multiPage_base.findElements(By.tagName("li"));
@@ -235,18 +239,20 @@ public class SeleniumTest implements ApplicationRunner {
                     String price_temp = desc.get(3).getText();
                     String price_info = price_temp;
                     int price = 0;
-                    if(price_temp.contains("%")){
-                        price_info = desc.get(5).getText();
-                        price_temp = desc.get(5).getText();
-                        price_temp = price_temp.replace(",", "");
-                        price_temp = price_temp.replace("원", "");
-                        price = Integer.parseInt(price_temp);
-                    }else if(price_temp.contains("문의")){
+                    if(price_temp.contains("문의")){
                         price = 0;
-                    } else if(!price_temp.contains("%")){
-                        price_temp = price_temp.replace(",", "");
-                        price_temp = price_temp.replace("원", "");
-                        price = Integer.parseInt(price_temp);
+                    }else{
+                        if(price_temp.contains("%")){
+                            price_info = desc.get(5).getText();
+                            price_temp = desc.get(5).getText();
+                            price_temp = price_temp.replace(",", "");
+                            price_temp = price_temp.replace("원", "");
+                            price = Integer.parseInt(price_temp);
+                        } else if(!price_temp.contains("%")){
+                            price_temp = price_temp.replace(",", "");
+                            price_temp = price_temp.replace("원", "");
+                            price = Integer.parseInt(price_temp);
+                        }
                     }
                     String siteName = "Mochaclass";
                     boolean isOnline = false;
@@ -295,149 +301,239 @@ public class SeleniumTest implements ApplicationRunner {
         }
     }
 
+    int totMinutes = 0;
+    int seconds = 0;
+
+    Timer timer = new Timer();
+    TimerTask task = new TimerTask(){
+      public void run(){
+          System.out.println(totMinutes + ":" + seconds);
+          seconds++;
+          if(seconds == 60){
+              totMinutes++;
+              seconds = 0;
+          }
+      }
+    };
+
+    public void start(){
+        timer.scheduleAtFixedRate(task, 1000, 1000);
+    }
+
     @Transactional
-    public void taling_crawl(ChromeOptions options, List<SeleniumListResponse> infoList){
+    public void taling_crawl(ChromeOptions options, SeleniumListResponse infoList){
+        int productCount = 0;
         WebDriver driver = new ChromeDriver(options);
-        int pageCount = 1;
-        int infoListCount = 0;
+        List<CategorySort> cateList = infoList.getCateList();
+        List<MainRegionSort> mainRegionList = infoList.getMainRegionList();
+        int regionSize = 0;
+        int pageCount = 9;
+        int cateListCount = 0;
+        int regionLayerCnt = 1;
+        int mainRegionListNum = 0;
+        int regionArrayCnt = 0;
+        String url = "https://taling.me/Home/Search/?page="+pageCount+"&cateMain=&cateSub="+cateList.get(0).getCategoryNum()+"&region=&orderIdx=&query=&code=&org=&day=&time=&tType=&region=&regionMain=";
+        driver.get(url);
+//        start();
         while(true) {
-
-            String url = "https://taling.me/Home/Search/?page="+pageCount+"&cateMain=3&cateSub="+""+"&region=&orderIdx=&query=&code=&org=&day=&time=&tType=&region=&regionMain=";
-            driver.get(url);
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            final WebElement base = driver.findElement(By.className("cont2"));
-            final List<WebElement> product_base = base.findElements(By.className("cont2_class"));
-            int size = product_base.size();
-
-            for (int i = 0; i < size; i++) {
-//                Image Url
-                String imgUrl_temp = product_base.get(i).findElement(By.className("img")).getAttribute("style");
-                String http = "https://";
-                int imgUrl_size = imgUrl_temp.length();
-                String imgUrl = http + imgUrl_temp.substring(25, (imgUrl_size - 1) - 2);
-//                Author
-                String author = product_base.get(i).findElement(By.className("name")).getText();
-//                Title
-                String title = product_base.get(i).findElement(By.className("title")).getText();
-//                Location
-                String location_temp = product_base.get(i).findElement(By.className("location")).getText();
-                String location = null;
-                boolean isOnline = false;
-                String[] arr = null;
-                StringBuilder sb = new StringBuilder();
-                sb.append("서울,");
-                if (location_temp.contains("온라인") || location_temp.contains("온/오프라인") || location_temp.contains("Live")
-                        || location_temp.contains("live")) {
-                    isOnline = true;
-                    arr = location_temp.split("온라인 Live|온/오프라인|지역없음|지역 없음|,");
-                    int cnt = 0;
-                    for(int j = 0; j < arr.length; j++){
-                        if(arr[j].equals("") || arr[j].equals(" ") || arr[j].equals("  ")) continue;
-                        else {
-                            if(cnt > 0){
-                                sb.append(",");
-                            }
-                            sb.append(arr[j]);
-                            cnt++;
-                        }
-                    }
-                    location = sb.toString();
-                }else if(location_temp.contains("지역 없음") || location_temp.contains("지억없음")){
-                    arr = location_temp.split("지역없음|지역 없음|,");
-                    int cnt = 0;
-                    for(int j = 0; j < arr.length; j++){
-                        if(arr[j].equals("") || arr[j].equals(" ") || arr[j].equals("  ")) continue;
-                        else {
-                            if(cnt > 0){
-                                sb.append(",");
-                            }
-                            sb.append(arr[j]);
-                            cnt++;
-                        }
-                    }
-                    if(sb.length() == 3){
-                        location = sb.substring(0, sb.length()-1);
+            while (true) {
+                while (true) {
+                    String[] regionArray = null;
+                    WebElement right = driver.findElement(By.className("right"));
+                    List<WebElement> regionSubLayers = right.findElements(By.tagName("select"));
+                    List<WebElement> regionLayer = regionSubLayers.get(regionLayerCnt).findElements(By.tagName("option"));
+                    String regionUrl = regionLayer.get(0).getAttribute("value");
+                    String regionName = null;
+                    regionSize = regionSubLayers.size();
+                    if(regionLayerCnt == 0){
+                        url = "https://taling.me/Home/Search/?page=" + pageCount + "&cateMain=&cateSub=" + cateList.get(cateListCount).getCategoryNum() +
+                                "&region=&orderIdx=&query=&code=&org=&day=&time=&region=" + regionUrl
+                                + "&regionMain=";
+                        regionLayerCnt = 1;
                     }else{
-                        location = sb.toString();
+                        url = "https://taling.me/Home/Search/?page=" + pageCount + "&cateMain=&cateSub=" + cateList.get(cateListCount).getCategoryNum() +
+                                "&region=&orderIdx=&query=&code=&org=&day=&time=&region=" + regionUrl
+                                + "&regionMain=" + mainRegionListNum;
                     }
-                }else{
-                    sb.append(location_temp);
-                    location = sb.toString();
+                    driver.get(url);
+                    right = driver.findElement(By.className("right"));
+                    regionSubLayers = right.findElements(By.tagName("select"));
+                    regionLayer = regionSubLayers.get(regionLayerCnt).findElements(By.tagName("option"));
+                    regionName = regionLayer.get(0).getText();
+
+                    List<WebElement> regionSubLayer2 = regionSubLayers;
+                    List<WebElement> regionLayer2 = regionSubLayer2.get(0).findElements(By.tagName("option"));
+                    regionArray = new String[regionSubLayers.size() - 1];
+                    for (int i = 1; i < regionSubLayer2.size(); i++) {
+                        regionArray[i - 1] = regionLayer2.get(i).getText();
+                    }
+
+                    for (int i = 0; i < mainRegionList.size(); i++) {
+                        if (regionArray[regionArrayCnt].contains(mainRegionList.get(i).getMainRegionLabel())) {
+                            mainRegionListNum = mainRegionList.get(i).getMainRegionNum();
+                        }
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    final WebElement base = driver.findElement(By.className("cont2"));
+                    final List<WebElement> product_base = base.findElements(By.className("cont2_class"));
+                    int size = product_base.size();
+                    for (int i = 0; i < size; i++) {
+                        //                Category
+                        String category_temp = cateList.get(cateListCount).getCategoryLabel();
+                        //                Image Url
+                        String imgUrl_temp = product_base.get(i).findElement(By.className("img")).getAttribute("style");
+                        String http = "https://";
+                        int imgUrl_size = imgUrl_temp.length();
+                        String imgUrl = http + imgUrl_temp.substring(25, (imgUrl_size - 1) - 2);
+                        //                Author
+                        String author = product_base.get(i).findElement(By.className("name")).getText();
+                        //                Title
+                        String title = product_base.get(i).findElement(By.className("title")).getText();
+                        //                Location
+                        String location_temp = product_base.get(i).findElement(By.className("location")).getText();
+                        String location = null;
+                        boolean isOnline = false;
+                        String[] arr = null;
+                        StringBuilder sb = new StringBuilder();
+
+                        for (int j = 0; j < mainRegionList.size(); j++) {
+                            if (mainRegionListNum == mainRegionList.get(j).getMainRegionNum()) {
+                                sb.append(mainRegionList.get(j).getMainRegionLabel());
+                                sb.append(",");
+                                break;
+                            }
+                        }
+
+                        if (location_temp.contains("온라인") || location_temp.contains("온/오프라인") || location_temp.contains("Live")
+                                || location_temp.contains("live")) {
+                            isOnline = true;
+                            arr = location_temp.split("온라인 Live|온/오프라인|지역없음|지역 없음|,");
+                            int cnt = 0;
+                            for (int j = 0; j < arr.length; j++) {
+                                if (arr[j].equals("") || arr[j].equals(" ") || arr[j].equals("  ")) continue;
+                                else {
+                                    if (cnt > 0) {
+                                        sb.append(",");
+                                    }
+                                    sb.append(arr[j]);
+                                    cnt++;
+                                }
+                            }
+                            location = sb.toString();
+                        } else if (location_temp.contains("지역 없음") || location_temp.contains("지억없음")) {
+                            arr = location_temp.split("지역없음|지역 없음|,");
+                            int cnt = 0;
+                            for (int j = 0; j < arr.length; j++) {
+                                if (arr[j].equals("") || arr[j].equals(" ") || arr[j].equals("  ")) continue;
+                                else {
+                                    if (cnt > 0) {
+                                        sb.append(",");
+                                    }
+                                    sb.append(arr[j]);
+                                    cnt++;
+                                }
+                            }
+                            if (sb.length() == 3) {
+                                location = sb.substring(0, sb.length() - 1);
+                            } else {
+                                location = sb.toString();
+                            }
+                        } else {
+                            sb.append(location_temp);
+                            location = sb.toString();
+                        }
+                        //                Price
+                        String price_temp = product_base.get(i).findElement(By.className("price2")).getText();
+                        String price_info = price_temp;
+                        int price = 0;
+
+                        if (price_temp.contains("시간")) {
+                            int dash_pos = 0;
+                            price_info = price_info.replace("￦", "");
+                            dash_pos = price_info.indexOf("/");
+                            price_info = price_info.substring(0, dash_pos);
+                            price_info += "원/시간";
+
+                            price_temp = price_temp.replace("￦", "");
+                            price_temp = price_temp.replace(",", "");
+                            price_temp = price_temp.replace("/시간", "");
+                            price = Integer.parseInt(price_temp);
+                        } else {
+                            price_info = price_info.replace("￦", "");
+                            price_info += "원";
+
+                            price_temp = price_temp.replace("￦", "");
+                            price_temp = price_temp.replace(",", "");
+                            price = Integer.parseInt(price_temp);
+                        }
+
+                        //                Popularity
+                        String popularity_temp = product_base.get(i).findElement(By.className("d_day")).getText();
+                        int popularity = 0;
+                        if (popularity_temp.contains("명")) {
+                            popularity = Integer.parseInt(popularity_temp.substring(0, popularity_temp.indexOf("명")));
+                        } else if (popularity_temp.contains("D")) {
+                            try{
+                                popularity_temp = product_base.get(i).findElement(By.className("review")).getText();
+                                popularity = Integer.parseInt(popularity_temp.substring(1, popularity_temp.length() - 1));
+                            }catch(Exception e){
+                                popularity = 0;
+                            }
+                        }
+                        //                Site Url/Name
+                        String siteUrl = product_base.get(i).findElement(By.tagName("a")).getAttribute("href");
+                        String siteName = "Taling";
+                        //                Status
+                        String status = null;
+                        try {
+                            WebElement find = product_base.get(i).findElement(By.className("soldoutbox"));
+                            status = "N";
+                        } catch (Exception e) {
+                            status = "Y";
+                        }
+
+                        Category category = categoryRepository.findByName(category_temp).get();
+
+
+                        Product product = Product.builder()
+                                .title(title)
+                                .price(price)
+                                .priceInfo(price_info)
+                                .author(author)
+                                .imgUrl(imgUrl)
+                                .isOnline(isOnline)
+                                .location(location)
+                                .popularity(popularity)
+                                .status(status)
+                                .siteName(siteName)
+                                .siteUrl(siteUrl)
+                                .category(category)
+                                .build();
+                        productRepository.save(product);
+                        productCount+=1;
+                    }
+                    if (size == 0) {
+                        regionLayerCnt++;
+                        regionArrayCnt++;
+                        pageCount = 1;
+                        break;
+                    } else {
+                        pageCount++;
+                    }
                 }
-//                Price
-                String price_temp = product_base.get(i).findElement(By.className("price2")).getText();
-                String price_info = price_temp;
-                int price = 0;
-
-                if(price_temp.contains("시간")){
-                    int dash_pos = 0;
-                    price_info = price_info.replace("￦", "");
-                    dash_pos = price_info.indexOf("/");
-                    price_info = price_info.substring(0, dash_pos);
-                    price_info += "원/시간";
-
-                    price_temp = price_temp.replace("￦", "");
-                    price_temp = price_temp.replace(",", "");
-                    price_temp = price_temp.replace("/시간", "");
-                    price = Integer.parseInt(price_temp);
-                }else{
-                    price_info = price_info.replace("￦", "");
-                    price_info += "원";
-
-                    price_temp = price_temp.replace("￦", "");
-                    price_temp = price_temp.replace(",", "");
-                    price = Integer.parseInt(price_temp);
+                if (regionLayerCnt == regionSize) {
+                    regionLayerCnt = 0;
+                    break;
                 }
-
-
-//                Popularity
-                String popularity_temp = product_base.get(i).findElement(By.className("d_day")).getText();
-                int popularity = 0;
-                if(popularity_temp.contains("명")){
-                    popularity = Integer.parseInt(popularity_temp.substring(0, popularity_temp.indexOf("명")));
-                }else if(popularity_temp.contains("D")){
-                    popularity_temp = product_base.get(i).findElement(By.className("review")).getText();
-                    popularity = Integer.parseInt(popularity_temp.substring(1, popularity_temp.length()-1));
-                }
-//                Site Url/Name
-                String siteUrl = product_base.get(i).findElement(By.tagName("a")).getAttribute("href");
-                String siteName = "Taling";
-//                Status
-                String status = null;
-                try{
-                    WebElement find = product_base.get(i).findElement(By.className("soldoutbox"));
-                    status = "N";
-                }catch(Exception e){
-                    status = "Y";
-                }
-
-//                Category category = categoryRepository.findByName(category_temp).get();
-//
-//
-//                Product product = Product.builder()
-//                        .title(title)
-//                        .price(price)
-//                        .priceInfo(price_info)
-//                        .author(author)
-//                        .imgUrl(imgUrl)
-//                        .isOnline(isOnline)
-//                        .location(location)
-//                        .popularity(popularity)
-//                        .status(status)
-//                        .siteName(siteName)
-//                        .siteUrl(siteUrl)
-//                        .category(category)
-//                        .build();
-//                productRepository.save(product);
             }
-            if(size < 15){
+            cateListCount++;
+            regionArrayCnt = 0;
+            if(cateListCount == cateList.size()){
                 break;
-            }else{
-                pageCount++;
             }
         }
         try {
@@ -451,5 +547,9 @@ public class SeleniumTest implements ApplicationRunner {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+
+
+
+
     }
 }

@@ -3,7 +3,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-import javax.swing.plaf.synth.Region;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +21,31 @@ import java.util.List;
 
 // (8)노래: 60=보컬 | 59=악기 | 61=작곡/디제잉
 
+//(0)서울: 1=강남 | 4=신촌홍대 | 14=건대 | 2=사당 | 9=잠실 | 5=종로 | 19=마포 | 11=신림 | 6=영등포 |
+// 7=성북 | 15=용산 | 10=왕십리 | 21=목동 | 8=혜화 | 77=강서 | 17=노원 | 22=구로 | 12=동작 | 24=은평 |
+// 3=신사 | 13=회기 | 112=성수 | 18=수유 | 97=천호동 | 100=올림픽공원 | 25=미아 | 129=중구 | 16=충무로 |
+// 134=상봉 | 135=삼성 | 102=한양대 | 75=마곡더랜드타워 | 103=명동 | 110=고덕 | 125=동대입구 | 122=대치
+// 99=명일동 | 116=약수역 | 128=신당 | 20=정릉 | 131=월곡 | 124=옥수 | 76=셀렉티드연남 | 136=동소문
+
+//(0)서울: 1=강남 | 4=신촌홍대 | 14=건대 | 2=사당 | 9=잠실 | 5=종로 | 19=마포 | 11=신림 | 6=영등포 |
+// 7=성북 | 15=용산 | 10=왕십리 | 21=목동 | 8=혜화 | 77=강서 | 17=노원 | 22=구로 | 12=동작 | 24=은평 |
+// 3=신사 | 13=회기 | 112=성수 | 18=수유 | 97=천호동 | 100=올림픽공원 | 25=미아 | 129=중구 | 16=충무로 |
+// 134=상봉 | 135=삼성 | 102=한양대 | 75=마곡더랜드타워 | 103=명동 | 110=고덕 | 125=동대입구 | 122=대치
+// 99=명일동 | 116=약수역 | 128=신당 | 20=정릉 | 131=월곡 | 124=옥수 | 76=셀렉티드연남 | 136=동소문
+
+@Getter
+@Setter
+class RegionSort{
+
+    public RegionSort(int regionNum, String regionLabel){
+        this.regionNum = regionNum;
+        this.regionLabel = regionLabel;
+    }
+
+    private int regionNum;
+    private String regionLabel;
+}
+
 @Getter
 @Setter
 class CategorySort{
@@ -37,34 +61,38 @@ class CategorySort{
 
 @Getter
 @Setter
-class RegionSort{
+class MainRegionSort{
 
-    public RegionSort(int regionNum, String regionLabel){
-        this.regionNum = regionNum;
-        this.regionLabel = regionLabel;
+    public MainRegionSort(int mainRegionNum, String mainRegionLabel){
+        this.mainRegionNum = mainRegionNum;
+        this.mainRegionLabel = mainRegionLabel;
     }
 
-    private int regionNum;
-    private String regionLabel;
+    private int mainRegionNum;
+    private String mainRegionLabel;
 }
 
+@Getter
+@Setter
 class SeleniumListResponse{
 
-    public SeleniumListResponse(List<CategorySort> cateList, List<RegionSort> regionList){
+    public SeleniumListResponse(List<CategorySort> cateList, List<MainRegionSort> mainRegionList){
         this.cateList = cateList;
-        this.regionList = regionList;
+        this.mainRegionList = mainRegionList;
     }
 
     private List<CategorySort> cateList;
-    private List<RegionSort> regionList;
+    private List<MainRegionSort> mainRegionList;
 }
 
+@Getter
 @Component
 public class TalingMacro {
 
     private final List<CategorySort> cateList = new ArrayList<>();
-    private final List<RegionSort> regionList = new ArrayList<>();
+    private final List<MainRegionSort> mainRegionList = new ArrayList<>();
     private final List<SeleniumListResponse> responseList = new ArrayList<>();
+
     private final String[] cateArray = {"운동/건강", "요리", "아트", "교육", "공예", "음악"};
     private final int[][] cateSub = {{27, 78, 235, 123, 217, 33},
                                     {84, 83},
@@ -73,10 +101,11 @@ public class TalingMacro {
                                      15, 250, 239, 12, 14, 11, 54, 182, 199, 3, 42, 43, 44, 51},
                                     {81, 249, 126},
                                     {60, 59, 61}};
-    private final String[] regionArray = {"서울", "경기", "인천", "부산", "경상,대구,울산", "대전,충청", "광주,전라,제주", "온라인"};
-    private final int[] regionSub = {0, 1, 2, 3, 4, 5, 6, 7};
+    private final String[] mainRegionArray = {"서울", "경기", "인천", "부산", "경상,대구,울산", "대전,충청", "강원", "광주,전라,제주", "온라인"};
+    private final int[] mainRegionSub = {0, 1, 2, 3, 4, 5, 6, 7, 8};
 
-    public List<SeleniumListResponse> sorted (){
+    public SeleniumListResponse sorted (){
+
 
         for(int i = 0; i < cateSub.length; i++){
             for(int j = 0; j < cateSub[i].length; j++){
@@ -85,14 +114,11 @@ public class TalingMacro {
             }
         }
 
-        for(int i = 0; i < regionArray.length; i++){
-            RegionSort r = new RegionSort(regionSub[i], regionArray[i]);
-            regionList.add(r);
+        for(int i = 0; i < mainRegionArray.length; i++){
+            MainRegionSort r = new MainRegionSort(mainRegionSub[i], mainRegionArray[i]);
+            mainRegionList.add(r);
         }
 
-        SeleniumListResponse s = new SeleniumListResponse(cateList, regionList);
-        responseList.add(s);
-
-        return responseList;
+        return new SeleniumListResponse(cateList, mainRegionList);
     }
 }

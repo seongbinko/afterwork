@@ -4,16 +4,11 @@ import com.hanghae99.afterwork.dto.CollectRequestDto;
 import com.hanghae99.afterwork.dto.CollectResponseDto;
 import com.hanghae99.afterwork.dto.ProductResponseDto;
 import com.hanghae99.afterwork.model.Collect;
-import com.hanghae99.afterwork.model.Product;
-import com.hanghae99.afterwork.model.User;
-import com.hanghae99.afterwork.repository.CollectRepository;
-import com.hanghae99.afterwork.repository.UserRepository;
 import com.hanghae99.afterwork.security.CurrentUser;
 import com.hanghae99.afterwork.security.UserPrincipal;
 import com.hanghae99.afterwork.service.CollectService;
 import com.hanghae99.afterwork.validator.CollectRequestDtoValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
@@ -22,9 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -32,8 +25,6 @@ public class CollectController {
 
     private final CollectRequestDtoValidator collectRequestDtoValidator;
     private final CollectService collectService;
-    private final CollectRepository collectRepository;
-    private final UserRepository userRepository;
 
     @InitBinder("collectRequestDto")
     public void postCollectBinder(WebDataBinder webDataBinder){
