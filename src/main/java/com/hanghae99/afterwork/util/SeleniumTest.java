@@ -53,25 +53,25 @@ public class SeleniumTest implements ApplicationRunner {
         // 설정하지 않을 시 실제 크롬 창이 생성되고, 어떤 순서로 진행되는지 확인할 수 있다.
         options.addArguments("headless");
         //        for h2 checking purpose
-        String name = null;
-        for(int i = 0; i < 6; i++){
-            if(i == 0) name = "운동/건강";
-            if(i == 1) name = "요리";
-            if(i == 2) name = "아트";
-            if(i == 3) name = "교육";
-            if(i == 4) name = "공예";
-            if(i == 5) name = "음악";
-            categoryRepository.save(
-                    Category.builder()
-                            .name(name)
-                            .build()
-            );
-        }
+//        String name = null;
+//        for(int i = 0; i < 6; i++){
+//            if(i == 0) name = "운동/건강";
+//            if(i == 1) name = "요리";
+//            if(i == 2) name = "아트";
+//            if(i == 3) name = "교육";
+//            if(i == 4) name = "공예";
+//            if(i == 5) name = "음악";
+//            categoryRepository.save(
+//                    Category.builder()
+//                            .name(name)
+//                            .build()
+//            );
+//        }
 
 //        hobbyful_crawl(options);
 //        mochaclass_crawl(options);
-        SeleniumListResponse infoList = talingMacro.sorted();
-        taling_crawl(options, infoList);
+//        SeleniumListResponse infoList = talingMacro.sorted();
+//        taling_crawl(options, infoList);
     }
 
     @Transactional
@@ -211,11 +211,16 @@ public class SeleniumTest implements ApplicationRunner {
 
             while (true) {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                final WebElement base = driver.findElement(By.className("MuiGrid-root"));
+                WebElement base = null;
+                try{
+                    base = driver.findElement(By.className("MuiGrid-root"));
+                }catch(Exception e){
+                    break;
+                }
                 final List<WebElement> base2 = base.findElements(By.tagName("a"));
                 final WebElement multiPage_base = driver.findElement(By.className("MuiPagination-ul"));
                 final List<WebElement> multiPage = multiPage_base.findElements(By.tagName("li"));
@@ -234,18 +239,20 @@ public class SeleniumTest implements ApplicationRunner {
                     String price_temp = desc.get(3).getText();
                     String price_info = price_temp;
                     int price = 0;
-                    if(price_temp.contains("%")){
-                        price_info = desc.get(5).getText();
-                        price_temp = desc.get(5).getText();
-                        price_temp = price_temp.replace(",", "");
-                        price_temp = price_temp.replace("원", "");
-                        price = Integer.parseInt(price_temp);
-                    }else if(price_temp.contains("문의")){
+                    if(price_temp.contains("문의")){
                         price = 0;
-                    } else if(!price_temp.contains("%")){
-                        price_temp = price_temp.replace(",", "");
-                        price_temp = price_temp.replace("원", "");
-                        price = Integer.parseInt(price_temp);
+                    }else{
+                        if(price_temp.contains("%")){
+                            price_info = desc.get(5).getText();
+                            price_temp = desc.get(5).getText();
+                            price_temp = price_temp.replace(",", "");
+                            price_temp = price_temp.replace("원", "");
+                            price = Integer.parseInt(price_temp);
+                        } else if(!price_temp.contains("%")){
+                            price_temp = price_temp.replace(",", "");
+                            price_temp = price_temp.replace("원", "");
+                            price = Integer.parseInt(price_temp);
+                        }
                     }
                     String siteName = "Mochaclass";
                     boolean isOnline = false;
@@ -327,7 +334,7 @@ public class SeleniumTest implements ApplicationRunner {
         int regionArrayCnt = 0;
         String url = "https://taling.me/Home/Search/?page="+pageCount+"&cateMain=&cateSub="+cateList.get(0).getCategoryNum()+"&region=&orderIdx=&query=&code=&org=&day=&time=&tType=&region=&regionMain=";
         driver.get(url);
-        start();
+//        start();
         while(true) {
             while (true) {
                 while (true) {

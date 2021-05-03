@@ -3,7 +3,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-import javax.swing.plaf.synth.Region;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,13 +85,14 @@ class SeleniumListResponse{
     private List<MainRegionSort> mainRegionList;
 }
 
+@Getter
 @Component
 public class TalingMacro {
 
     private final List<CategorySort> cateList = new ArrayList<>();
-    private final List<RegionSort> regionList = new ArrayList<>();
     private final List<MainRegionSort> mainRegionList = new ArrayList<>();
     private final List<SeleniumListResponse> responseList = new ArrayList<>();
+
     private final String[] cateArray = {"운동/건강", "요리", "아트", "교육", "공예", "음악"};
     private final int[][] cateSub = {{27, 78, 235, 123, 217, 33},
                                     {84, 83},
@@ -104,24 +104,8 @@ public class TalingMacro {
     private final String[] mainRegionArray = {"서울", "경기", "인천", "부산", "경상,대구,울산", "대전,충청", "강원", "광주,전라,제주", "온라인"};
     private final int[] mainRegionSub = {0, 1, 2, 3, 4, 5, 6, 7, 8};
 
-//    private final String[][] regionArray = {{"강남","신촌홍대","건대","사당","잠실","종로","마포","신림","영등포","성북",
-//            "용산","왕십리","목동","혜화","강서","노원","구로","동작","은평","신사",
-//            "회기","성수","수유","천호동","올림픽공원","미아","중구","충무로","상봉","삼성",
-//            "한양대","마곡더랜드타워","명동","고덕","동대입구","대치","명일동","약수역","신당","정릉",
-//            "월곡","옥수","셀렉티드연남","동소문"}
-//    };
-//    private final int[][] regionSub = {{1,4,14,2,9,5,19,11,6,7,
-//            15,10,21,8,77,17,22,12,24,3,
-//            13,112,18,97,100,25,120,16,134,135,
-//            102,75,103,110,125,122,99,116,128,20,
-//            131,124,76,136}};
-
     public SeleniumListResponse sorted (){
 
-//        for(int i = 0; i < regionArray[0].length; i++){
-//            RegionSort r = new RegionSort(regionSub[0][i], regionArray[0][i]);
-//            regionList.add(r);
-//        }
 
         for(int i = 0; i < cateSub.length; i++){
             for(int j = 0; j < cateSub[i].length; j++){
