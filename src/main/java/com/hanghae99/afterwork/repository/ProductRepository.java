@@ -16,5 +16,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findAllByTitleLike(String keyword, Pageable pageable);
     boolean existsByProductId(Long productId);
     Product findByProductId(Long productId);
-    List<Product> findTop12ByLocationContains(String location, Sort sort);
 }
