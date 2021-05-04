@@ -7,12 +7,14 @@ import com.hanghae99.afterwork.model.User;
 import com.hanghae99.afterwork.repository.ProductRepository;
 import com.hanghae99.afterwork.repository.UserRepository;
 import com.hanghae99.afterwork.security.UserPrincipal;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,27 +22,39 @@ import java.util.stream.Collectors;
 @Service
 public class RecommendService {
 
-    private final ProductRepository productRepository;
-
     private final UserRepository userRepository;
 
+    @PersistenceContext
+    EntityManager em;
 
-    public RecommendService(ProductRepository productRepository, UserRepository userRepository){
-        this.productRepository = productRepository;
+    public RecommendService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
 
     public List<ProductResponseDto> recommendProduct(UserPrincipal userPrincipal){
-        Sort sort = sortBypopularity();
-        
         User user = userRepository.findByUserId(userPrincipal.getId());
         List<Location> locations = user.getLocations();
-        List<Product> productList = new ArrayList<>();
         if(locations.size() > 0){
+            //JPQL query parameter builder
+            StringBuilder jpql = new StringBuilder();
             for(int i = 0; i < locations.size(); i++){
-                List<Product> temp = productRepository.findTop12ByLocationContains(locations.get(i).getName(), sort);
-                productList.addAll(temp);
+                if(locations.size() == 1 && i == 0){
+                    jpql.append("SELECT p FROM Product p WHERE p.location ");
+                    jpql.append("LIKE '%" + locations.get(i).getName()+"%'" + " ORDER BY p.popularity DESC");
+                }else if(locations.size() > 1){
+                    if(i == 0){
+                        jpql.append("SELECT p FROM Product p WHERE p.location ");
+                        jpql.append("LIKE '%" + locations.get(i).getName()+"%' ");
+                    }else if(i != locations.size()-1){
+                        jpql.append("OR p.location LIKE '%" + locations.get(i).getName()+"%' ");
+                    }else if(i == locations.size()-1){
+                        jpql.append("OR p.location LIKE '%" + locations.get(i).getName()+"%' ORDER BY p.popularity DESC");
+                    }
+                }
             }
+            Query query = em.createQuery(String.valueOf(jpql)).setMaxResults(12);
+            List<Product> productList = query.getResultList();
+
             List<ProductResponseDto> productResponseDtoList =
                     productList.stream().map(
                             product -> new ProductResponseDto(
@@ -60,9 +74,5 @@ public class RecommendService {
             return productResponseDtoList;
         }
         return null;
-    }
-
-    private Sort sortBypopularity() {
-        return Sort.by(Sort.Direction.DESC, "popularity");
-    }
+        }
 }
