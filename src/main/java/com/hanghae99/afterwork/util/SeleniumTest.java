@@ -4,8 +4,6 @@ import com.hanghae99.afterwork.model.Category;
 import com.hanghae99.afterwork.model.Product;
 import com.hanghae99.afterwork.repository.CategoryRepository;
 import com.hanghae99.afterwork.repository.ProductRepository;
-import lombok.Getter;
-import lombok.Setter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -327,7 +325,7 @@ public class SeleniumTest implements ApplicationRunner {
         List<CategorySort> cateList = infoList.getCateList();
         List<MainRegionSort> mainRegionList = infoList.getMainRegionList();
         int regionSize = 0;
-        int pageCount = 9;
+        int pageCount = 1;
         int cateListCount = 0;
         int regionLayerCnt = 1;
         int mainRegionListNum = 0;
@@ -423,7 +421,13 @@ public class SeleniumTest implements ApplicationRunner {
                                     cnt++;
                                 }
                             }
-                            location = sb.toString();
+                            String convertSb = sb.toString();
+                            char replace = ',';
+                            char sb_last = convertSb.charAt(sb.length()-1);
+                            if(sb_last == replace){
+                                convertSb = convertSb.substring(0, convertSb.length()-1);
+                            }
+                            location = convertSb;
                         } else if (location_temp.contains("지역 없음") || location_temp.contains("지억없음")) {
                             arr = location_temp.split("지역없음|지역 없음|,");
                             int cnt = 0;
@@ -547,9 +551,5 @@ public class SeleniumTest implements ApplicationRunner {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-
-
-
-
     }
 }
