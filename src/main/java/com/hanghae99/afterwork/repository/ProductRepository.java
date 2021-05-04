@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -21,4 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     boolean existsByProductId(Long productId);
     Product findByProductId(Long productId);
     List<Product> findTop12ByLocationContains(String location, Sort sort);
+
+    Optional<Product> findByTitleLikeAndCategory(String title, Category category);
+    List<Product>findAllBySiteName(String siteName);
 }
