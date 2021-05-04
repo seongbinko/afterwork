@@ -44,6 +44,9 @@ public class SeleniumMybiskit implements ApplicationRunner {
             e.printStackTrace();
         }
 
+        //status 상태 Y -> N 처리
+//        statusChange();
+
 //        mybiskit();
     }
 
@@ -56,7 +59,7 @@ public class SeleniumMybiskit implements ApplicationRunner {
 
         options.addArguments("headless");
 
-        WebDriver driver = new ChromeDriver(options);//
+        WebDriver driver = new ChromeDriver(options);
 
         String strUrl = "https://www.mybiskit.com/lecture";
 
@@ -75,8 +78,6 @@ public class SeleniumMybiskit implements ApplicationRunner {
         InfiniteScroll(driver);
 
         List<WebElement> elList = driver.findElements(By.className("class_summary"));
-
-        int count = 0;
 
         for (int i = 0; i < elList.size(); i++) {
             String strTitle = null;
@@ -97,7 +98,6 @@ public class SeleniumMybiskit implements ApplicationRunner {
 
             // 가격이 없는 경우 예외처리
             try {
-//                strPrice = elList.get(i).findElement(By.className("compo_price")).findElement(By.className("num")).getText();
                 strPrice = elList.get(i).findElement(By.className("real_price")).findElement(By.className("num")).getText();
                 strPriceInfo = strPrice + "원";
                 intPrice = PriceStringToInt(strPrice);
@@ -132,7 +132,8 @@ public class SeleniumMybiskit implements ApplicationRunner {
             } else if (strCategory.contains("부업")) {
                 strCategory = "교육";
             } else if (strCategory.contains("자수")
-                    || strCategory.contains("비누")) {
+                    || strCategory.contains("비누")
+                    || strCategory.contains("원데이")) {
                 strCategory = "공예";
             } else if (strCategory.contains("디지털디자인")
                     || strCategory.contains("캘리")
@@ -142,35 +143,39 @@ public class SeleniumMybiskit implements ApplicationRunner {
                 strCategory = "음악";
             } else if (strCategory.contains("요리")) {
                 strCategory = "요리";
-            } else if (strCategory.contains("원데이")) {
-
             } else {
                 System.out.println("No Category");
             }
 
             Category category = categoryRepository.findByName(strCategory).orElse(null);
 
-            Product product = Product.builder()
-                    .title(strTitle)
-                    .popularity(intPopularity)
-                    .price(intPrice)
-                    .priceInfo(strPriceInfo)
-                    .imgUrl(strImgUrl)
-                    .isOnline(isOnline)
-                    .siteUrl(strSiteUrl)
-                    .siteName(strSiteName)
-                    .status(strStatus)
-                    .category(category)
-                    .build();
+            Product product = productRepository.findByTitleLikeAndCategory(strTitle,category).orElse(null);
+
+            if (product == null)
+            {
+                product = Product.builder()
+                        .title(strTitle)
+                        .popularity(intPopularity)
+                        .price(intPrice)
+                        .priceInfo(strPriceInfo)
+                        .imgUrl(strImgUrl)
+                        .isOnline(isOnline)
+                        .siteUrl(strSiteUrl)
+                        .siteName(strSiteName)
+                        .status(strStatus)
+                        .category(category)
+                        .build();
+            }
+            else {
+                product.setPopularity(intPopularity);
+                product.setPrice(intPrice);
+                product.setPriceInfo(strPriceInfo);
+                product.setImgUrl(strImgUrl);
+                product.setStatus(strStatus);
+            }
 
             productRepository.save(product);
 
-            count++;
-
-            if (count == 100)
-            {
-                break;
-            }
         }
 
         // 크롤링이 끝났을 경우 driver 종료
@@ -231,5 +236,14 @@ public class SeleniumMybiskit implements ApplicationRunner {
         return Integer.parseInt(price);
     }
 
+    public void statusChange() {
+        List<Product> productList = productRepository.findAllBySiteName("mybiskit");
+
+        for (Product product : productList) {
+            product.setStatus("N");
+
+            productRepository.save(product);
+        }
+    }
 }
 
