@@ -56,6 +56,7 @@ public class UserController {
     }
 
     @PostMapping("/api/user")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity modifyUser(@CurrentUser UserPrincipal userPrincipal, @RequestBody UserRequestDto userRequestDto){
 
         User user = userRepository.findById(userPrincipal.getId())
@@ -65,6 +66,7 @@ public class UserController {
     }
 
     @DeleteMapping("/api/user")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity deleteUser(@CurrentUser UserPrincipal userPrincipal)
     {
         User user = userRepository.findById(userPrincipal.getId())
