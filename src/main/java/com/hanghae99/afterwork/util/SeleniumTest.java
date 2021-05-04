@@ -325,7 +325,7 @@ public class SeleniumTest implements ApplicationRunner {
         List<CategorySort> cateList = infoList.getCateList();
         List<MainRegionSort> mainRegionList = infoList.getMainRegionList();
         int regionSize = 0;
-        int pageCount = 9;
+        int pageCount = 1;
         int cateListCount = 0;
         int regionLayerCnt = 1;
         int mainRegionListNum = 0;
