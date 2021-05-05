@@ -8,9 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CollectRepository extends JpaRepository<Collect, Long> {
-
     void deleteAllByUser(User user);
-    boolean existsByProduct(Product productId);
     void deleteByCollectId(Long collectId);
     List<Collect> findAllByUser(User user);
+    boolean existsByUserAndProduct (User user, Product product);
 }
