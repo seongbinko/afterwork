@@ -14,12 +14,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -30,9 +32,12 @@ public class CollectService {
     private final CollectRepository collectRepository;
     private final UserRepository userRepository;
 
-    public Collect postCollect(CollectRequestDto collectRequestDtorequestDto, UserPrincipal userPrincipal){
-        Product product = productRepository.findByProductId(collectRequestDtorequestDto.getProductId());
+    public Collect postCollect(CollectRequestDto collectRequestDto, UserPrincipal userPrincipal){
+        Product product = productRepository.findByProductId(collectRequestDto.getProductId());
         User user = userRepository.findByUserId(userPrincipal.getId());
+        if(collectRepository.existsByUserAndProduct(user, product)){
+            throw new NullPointerException("이미 등록 하신 상품 입니다");
+        }
         Collect collect = Collect.builder()
                 .product(product)
                 .user(user)
