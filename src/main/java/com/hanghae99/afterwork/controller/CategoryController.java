@@ -59,6 +59,7 @@ public class CategoryController {
 
         Category category = categoryRepository.findById(categoryId).orElse(null);
         Page<Product> productList = productRepository.findAllByCategory(category, pageRequest);
+
         Page<ProductResponseDto> productResponseDtoList =
                 productList.map(
                         product -> new ProductResponseDto(
