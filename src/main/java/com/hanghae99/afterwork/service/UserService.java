@@ -1,14 +1,8 @@
 package com.hanghae99.afterwork.service;
 
 import com.hanghae99.afterwork.dto.UserRequestDto;
-import com.hanghae99.afterwork.model.Category;
-import com.hanghae99.afterwork.model.Interest;
-import com.hanghae99.afterwork.model.Location;
-import com.hanghae99.afterwork.model.User;
-import com.hanghae99.afterwork.repository.CategoryRepository;
-import com.hanghae99.afterwork.repository.InterestRepository;
-import com.hanghae99.afterwork.repository.LocationRepository;
-import com.hanghae99.afterwork.repository.UserRepository;
+import com.hanghae99.afterwork.model.*;
+import com.hanghae99.afterwork.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +17,7 @@ public class UserService {
     private final LocationRepository locationRepository;
     private final InterestRepository interestRepository;
     private final CategoryRepository categoryRepository;
+    private final CollectRepository collectRepository;
 
     public Long modifyUser(UserRequestDto userRequestDto, User user){
 
@@ -30,18 +25,8 @@ public class UserService {
         List<String> locationList = userRequestDto.getLocations();
         List<Long> categoryList = userRequestDto.getCategorys();
 
-        List<Location> currentLocationList = locationRepository.findAllByUser(user);
-        List<Interest> currentInterestList = interestRepository.findAllByUser(user);
-
-        //현재 관심 위치값 삭제
-        for (Location location : currentLocationList){
-            locationRepository.delete(location);
-        }
-
-        //현재 관심취미 삭제
-        for (Interest interest : currentInterestList){
-            interestRepository.delete(interest);
-        }
+        deleteLocation(user);
+        deleteInterest(user);
 
         //관심 위치 생성
         for (String strLocation : locationList) {
@@ -69,6 +54,42 @@ public class UserService {
 
         userRepository.save(user);
         return user.getUserId();
+    }
+
+    public void deleteUser(User user){
+
+        deleteLocation(user);
+        deleteInterest(user);
+        deleteCollect(user);
+
+        userRepository.delete(user);
+    }
+
+    public void deleteLocation(User user) {
+        List<Location> currentLocationList = locationRepository.findAllByUser(user);
+
+        //현재 관심 위치값 삭제
+        for (Location location : currentLocationList){
+            locationRepository.delete(location);
+        }
+    }
+
+    public void deleteInterest(User user) {
+        List<Interest> currentInterestList = interestRepository.findAllByUser(user);
+
+        //현재 관심취미 삭제
+        for (Interest interest : currentInterestList){
+            interestRepository.delete(interest);
+        }
+    }
+
+    public void deleteCollect(User user) {
+        List<Collect> currentCollectList = collectRepository.findAllByUser(user);
+
+        //현재 관심취미 삭제
+        for (Collect collect : currentCollectList){
+            collectRepository.delete(collect);
+        }
     }
 
 }
