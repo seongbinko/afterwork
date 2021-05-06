@@ -20,7 +20,7 @@ public class SearchController {
     private final ProductRepository productRepository;
 
     @GetMapping("/api/search")
-    public Page<ProductResponseDto> getProductByCategory(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String strSort, @RequestParam(value = "direction", required = false, defaultValue = "desc") String strDirection) {
+    public Page<ProductResponseDto> getProductByCategory(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String strSort, @RequestParam(value = "direction", required = false, defaultValue = "desc") String strDirection, @RequestParam(value = "filter", required = false, defaultValue = "total") String strFilter) {
 
         Sort.Direction direction = Sort.Direction.DESC;
 
@@ -29,11 +29,21 @@ public class SearchController {
             direction = Sort.Direction.ASC;
         }
 
+        boolean isOnline = true;
+        String location = " ";
+
+        if (strFilter.equals("offline")){
+            isOnline = false;
+        }
+        else if(strFilter.equals("online")){
+            location = null;
+        }
+
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, strSort));
 
         keyword = "%" + keyword + "%";
 
-        Page<Product> productList = productRepository.findAllByTitleLike(keyword, pageRequest);
+        Page<Product> productList = productRepository.findAllByTitleLikeAndOnlineAndLocation(keyword, isOnline, location, pageRequest);
         Page<ProductResponseDto> productResponseDtoList =
                 productList.map(
                         product -> new ProductResponseDto(
