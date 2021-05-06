@@ -33,6 +33,5 @@ public class CollectRequestDtoValidator implements Validator {
         if(!productRepository.existsByProductId(collectRequestDto.getProductId())){
             errors.rejectValue("productId", "invalid.productId", new Object[]{collectRequestDto.getProductId()},"존재하지 않는 상품 입니다");
         }
-
     }
 }
