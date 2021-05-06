@@ -41,6 +41,9 @@ public class SeleniumClass101 implements ApplicationRunner {
             e.printStackTrace();
         }
 
+        //status 상태 Y -> N 처리
+//        statusChange("class101");
+
 //        class101();
     }
 
@@ -182,19 +185,29 @@ public class SeleniumClass101 implements ApplicationRunner {
 
                 Category category = categoryRepository.findByName(strCategory).orElse(null);
 
-                Product product = Product.builder()
-                        .title(strTitle)
-                        .author(strAuthor)
-                        .popularity(intPopularity)
-                        .price(intPrice)
-                        .priceInfo(strPriceInfo)
-                        .imgUrl(strImgUrl)
-                        .isOnline(isOnline)
-                        .siteUrl(strSiteUrl)
-                        .siteName(strSiteName)
-                        .status(strStatus)
-                        .category(category)
-                        .build();
+                Product product = productRepository.findByTitleLikeAndCategory(strTitle,category).orElse(null);
+
+                if (product == null) {
+                    product = Product.builder()
+                            .title(strTitle)
+                            .author(strAuthor)
+                            .popularity(intPopularity)
+                            .price(intPrice)
+                            .priceInfo(strPriceInfo)
+                            .imgUrl(strImgUrl)
+                            .isOnline(isOnline)
+                            .siteUrl(strSiteUrl)
+                            .siteName(strSiteName)
+                            .status(strStatus)
+                            .category(category)
+                            .build();
+                } else {
+                    product.setPopularity(intPopularity);
+                    product.setPrice(intPrice);
+                    product.setPriceInfo(strPriceInfo);
+                    product.setImgUrl(strImgUrl);
+                    product.setStatus(strStatus);
+                }
 
                 productRepository.save(product);
             }
@@ -263,5 +276,15 @@ public class SeleniumClass101 implements ApplicationRunner {
         price = price.replace("개", "");
 
         return Integer.parseInt(price);
+    }
+
+    public void statusChange(String siteName) {
+        List<Product> productList = productRepository.findAllBySiteName(siteName);
+
+        for (Product product : productList) {
+            product.setStatus("N");
+
+            productRepository.save(product);
+        }
     }
 }
