@@ -45,6 +45,9 @@ public class SeleniumHobbyinthebox implements ApplicationRunner {
             e.printStackTrace();
         }
 
+        //status 상태 Y -> N 처리
+//        statusChange("hobbyinthebox");
+
 //        hobbyinthebox();
     }
 
@@ -93,7 +96,7 @@ public class SeleniumHobbyinthebox implements ApplicationRunner {
                     String strPriceInfo = null;
                     String strImgUrl = null;
                     String strSiteUrl = null;
-                    String strSiteName = "hobyinthebox";
+                    String strSiteName = "hobbyinthebox";
                     String strCategory = null;
                     String strStatus = "Y";
                     int intPopularity = 0;
@@ -127,11 +130,11 @@ public class SeleniumHobbyinthebox implements ApplicationRunner {
 
                     // 연결 사이트 mybiskit에 맞춰넣음
                     strSiteUrl = elList.get(j).findElement(By.className("sp-product-item-thumb")).findElement(By.tagName("a")).getAttribute("href");
-                    try {
-                        strSiteUrl = URLDecoder.decode(strSiteUrl, "UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        strSiteUrl = URLDecoder.decode(strSiteUrl, "UTF-8");
+//                    } catch (UnsupportedEncodingException e) {
+//                        e.printStackTrace();
+//                    }
 
                     System.out.println("strTitle = " + strTitle);
                     System.out.println("strAuthor = " + strAuthor);
@@ -169,19 +172,29 @@ public class SeleniumHobbyinthebox implements ApplicationRunner {
 
                     Category category = categoryRepository.findByName(strCategory).orElse(null);
 
-                    Product product = Product.builder()
-                            .title(strTitle)
-                            .author(strAuthor)
-                            .popularity(intPopularity)
-                            .price(intPrice)
-                            .priceInfo(strPriceInfo)
-                            .imgUrl(strImgUrl)
-                            .isOnline(isOnline)
-                            .siteUrl(strSiteUrl)
-                            .siteName(strSiteName)
-                            .status(strStatus)
-                            .category(category)
-                            .build();
+                    Product product = productRepository.findByTitleLikeAndCategory(strTitle,category).orElse(null);
+
+                    if(product == null) {
+                        product = Product.builder()
+                                .title(strTitle)
+                                .author(strAuthor)
+                                .popularity(intPopularity)
+                                .price(intPrice)
+                                .priceInfo(strPriceInfo)
+                                .imgUrl(strImgUrl)
+                                .isOnline(isOnline)
+                                .siteUrl(strSiteUrl)
+                                .siteName(strSiteName)
+                                .status(strStatus)
+                                .category(category)
+                                .build();
+                    } else{
+                        product.setPopularity(intPopularity);
+                        product.setPrice(intPrice);
+                        product.setPriceInfo(strPriceInfo);
+                        product.setImgUrl(strImgUrl);
+                        product.setStatus(strStatus);
+                    }
 
                     productRepository.save(product);
                 }
@@ -196,5 +209,15 @@ public class SeleniumHobbyinthebox implements ApplicationRunner {
         price = price.replace("원", "");
 
         return Integer.parseInt(price);
+    }
+
+    public void statusChange(String siteName) {
+        List<Product> productList = productRepository.findAllBySiteName(siteName);
+
+        for (Product product : productList) {
+            product.setStatus("N");
+
+            productRepository.save(product);
+        }
     }
 }
