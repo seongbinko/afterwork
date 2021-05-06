@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.hanghae99.afterwork.dto.UserRequestDto;
 import com.hanghae99.afterwork.dto.UserResponseDto;
+import com.hanghae99.afterwork.exception.ResourceNotFoundException;
 import com.hanghae99.afterwork.model.AuthProvider;
 import com.hanghae99.afterwork.model.Location;
 import com.hanghae99.afterwork.model.User;
@@ -48,7 +49,6 @@ class UserControllerTest {
     void setup() {
         String email = "wnrhd1082@gmail.com";
         String name = "seongbin";
-
         User user = User.builder()
                 .email(email)
                 .name(name)
@@ -56,14 +56,12 @@ class UserControllerTest {
                 .build();
         User saveUser = userRepository.save(user);
         userId = saveUser.getUserId();
-
     }
 
     @AfterEach
     void tearDown() {
         userRepository.deleteAll();
     }
-
 
     @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("회원 정보 불러오기 - 입력값 정상")
@@ -86,10 +84,9 @@ class UserControllerTest {
     @Test
     void modifyUser() throws Exception {
         String offTime = "18:00:28";
-
         UserRequestDto userRequestDto = new UserRequestDto();
         userRequestDto.setOffTime(offTime);
-
+        
         ObjectMapper objectMapper = new ObjectMapper();
         String userInfo = objectMapper.writeValueAsString(userRequestDto);
 
@@ -100,8 +97,11 @@ class UserControllerTest {
                 .andExpect(content().string(String.valueOf(userId)))
                 .andExpect(authenticated());
 
-        User user = userRepository.findById(userId).orElse(null);
-        assertEquals(offTime, user.getOffTime());
+        Optional<User> user = userRepository.findById(userId);
+        if(!user.isPresent()) {
+            throw new ResourceNotFoundException("User", "id", userId);
+        }
+        assertEquals(offTime, user.get().getOffTime());
     }
 
     @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION) //BeforEach 실행 이후에 실행시킨다
@@ -112,6 +112,6 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(authenticated());
         Optional<User> notUser = userRepository.findById(userId);
-        assertEquals(notUser.isPresent(), false);
+        assertFalse(notUser.isPresent());
     }
 }
