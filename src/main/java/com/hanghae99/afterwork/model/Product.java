@@ -28,6 +28,7 @@ public class Product extends BaseTimeEntity{
 
     private String author;
 
+    @Column(length = 2000)
     private String imgUrl;
 
     private boolean isOnline;

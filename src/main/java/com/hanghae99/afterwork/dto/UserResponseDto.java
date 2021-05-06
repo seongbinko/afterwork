@@ -29,6 +29,8 @@ public class UserResponseDto {
 
     List<CollectResponseDto> collects;
 
+    public UserResponseDto() {}
+
     public UserResponseDto(Long userId, String email, String name, String imageUrl, String offTime, List<LocationResponseDto> locations, List<InterestResponseDto> interests, List<CollectResponseDto> collects) {
         this.userId = userId;
         this.email = email;
