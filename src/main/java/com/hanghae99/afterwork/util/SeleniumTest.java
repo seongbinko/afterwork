@@ -187,7 +187,7 @@ public class SeleniumTest implements ApplicationRunner {
 
     @Transactional
     public void mochaclass_crawl(ChromeOptions options){
-        WebDriver driver = new ChromeDriver();
+        WebDriver driver = new ChromeDriver(options);
         String[] moveCategoryName = {"핸드메이드·수공예", "쿠킹+클래스", "플라워+레슨", "드로잉", "음악", "요가·필라테스", "레져·스포츠", "자기계발", "Live+클래스"};
 
         int moveCategory = 0;
@@ -226,21 +226,6 @@ public class SeleniumTest implements ApplicationRunner {
                 for (int i = 0; i < size; i++) {
                     final List<WebElement> desc = base2.get(i).findElements(By.tagName("p"));
                     String imgUrl = base2.get(i).findElement(By.tagName("img")).getAttribute("src");
-                    if(imgUrl.length() > 255){
-                        try{
-                            imgUrl = URLDecoder.decode(imgUrl, "UTF-8");
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-                        int front_index = imgUrl.indexOf("/images") + 7;
-                        String front_url = imgUrl.substring(0, front_index);
-                        String decode_url = imgUrl.substring(front_index, imgUrl.length());
-                        String[] splitUrl = decode_url.split("\\?");
-                        splitUrl[0] = splitUrl[0].replace(" ", "%20");
-                        splitUrl[0] = splitUrl[0].replace("/", "%2F");
-                        splitUrl[0] = splitUrl[0].replace("+", "%2B");
-                        imgUrl = front_url + splitUrl[0] + "?" + splitUrl[1];
-                    }
                     String title = desc.get(1).getText();
                     String location = desc.get(2).getText();
                     String price_temp = desc.get(3).getText();
@@ -507,7 +492,6 @@ public class SeleniumTest implements ApplicationRunner {
                         }
 
                         Category category = categoryRepository.findByName(category_temp).get();
-
 
                         Product product = Product.builder()
                                 .title(title)
