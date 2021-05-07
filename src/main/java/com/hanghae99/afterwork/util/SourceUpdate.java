@@ -39,17 +39,6 @@ public class SourceUpdate implements ApplicationRunner {
         this.talingMacro = talingMacro;
     }
 
-    int seconds = 180;
-
-    @Scheduled(fixedDelay = 1000)
-    public void keepTrack(){
-        System.out.println("DB update till t - " + seconds);
-        seconds--;
-        if(seconds == 0){
-            seconds = 180;
-        }
-    }
-
 //    @Scheduled(cron = "* */3 * * * *")
     public void fetchUpdate(){
         try {
@@ -72,6 +61,8 @@ public class SourceUpdate implements ApplicationRunner {
     //Main method
     @Override
     public void run(ApplicationArguments args) throws Exception{
+//        H2 checking purpose
+
 //        String name = null;
 //        for(int i = 0; i < 6; i++){
 //            if(i == 0) name = "운동/건강";
@@ -90,7 +81,7 @@ public class SourceUpdate implements ApplicationRunner {
     //Hobbyful update
     @Transactional
     public void crawlHobby(ChromeOptions options){
-        String siteName = "Hobbyful";
+        String siteName = "하비풀";
         statusChange(siteName);
         WebDriver driver = new ChromeDriver(options);
         String[] moveCategoryName = {"/embroidery", "/macrame", "/drawing", "/digital-drawing", "/knitting", "/ratan", "/leather"
@@ -173,8 +164,6 @@ public class SourceUpdate implements ApplicationRunner {
                             .category(category)
                             .build();
                     productRepository.save(product);
-                    System.out.println("found new product");
-
                 }else{
                     product.setTitle(title);
                     product.setPrice(price);
@@ -184,7 +173,6 @@ public class SourceUpdate implements ApplicationRunner {
                     product.setSiteUrl(siteUrl);
                     product.setStatus(status);
                     productRepository.save(product);
-                    System.out.println("Updated");
                 }
             }
 
@@ -211,7 +199,7 @@ public class SourceUpdate implements ApplicationRunner {
     //MochaClass Update
     @Transactional
     public void crawlMocha(ChromeOptions options){
-        String siteName = "Mochaclass";
+        String siteName = "모카클래스";
         statusChange(siteName);
         WebDriver driver = new ChromeDriver(options);
         String[] moveCategoryName = {"핸드메이드·수공예", "쿠킹+클래스", "플라워+레슨", "드로잉", "음악", "요가·필라테스", "레져·스포츠", "자기계발", "Live+클래스"};
@@ -295,7 +283,6 @@ public class SourceUpdate implements ApplicationRunner {
                                 .category(category)
                                 .build();
                         productRepository.save(product);
-                        System.out.println("found new product");
                     }else{
                         product.setTitle(title);
                         product.setPrice(price);
@@ -306,7 +293,6 @@ public class SourceUpdate implements ApplicationRunner {
                         product.setSiteUrl(siteUrl);
                         product.setStatus(status);
                         productRepository.save(product);
-                        System.out.println("Updated");
                     }
                 }
                 if (nextPage.contains("disabled")) {
@@ -321,7 +307,7 @@ public class SourceUpdate implements ApplicationRunner {
 
     @Transactional
     public void crawlTaling(ChromeOptions options, SeleniumListResponse infoList){
-        String siteName = "Taling";
+        String siteName = "탈잉";
         statusChange(siteName);
         WebDriver driver = new ChromeDriver(options);
         int productCount = 0;
@@ -520,8 +506,6 @@ public class SourceUpdate implements ApplicationRunner {
                                     .category(category)
                                     .build();
                             productRepository.save(product);
-                            System.out.println("found new product");
-
                         }else{
                             product.setTitle(title);
                             product.setPrice(price);
@@ -532,7 +516,6 @@ public class SourceUpdate implements ApplicationRunner {
                             product.setSiteUrl(siteUrl);
                             product.setStatus(status);
                             productRepository.save(product);
-                            System.out.println("Updated");
                         }
                         productCount+=1;
                     }
@@ -570,18 +553,12 @@ public class SourceUpdate implements ApplicationRunner {
     }
 
     public void statusChange(String siteName) {
-        System.out.println(siteName + " Changing to all N");
         List<Product> productList = productRepository.findAllBySiteName(siteName);
         if(productList.size() > 0){
             for (Product product : productList) {
                 product.setStatus("N");
 
                 productRepository.save(product);
-            }
-            try {
-                Thread.sleep(30000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     }
