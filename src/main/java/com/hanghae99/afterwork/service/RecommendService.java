@@ -56,9 +56,10 @@ public class RecommendService {
             List<Product> temp = query.getResultList();
             List<Product> productList = new ArrayList<>();
             Random ran = new Random();
-            for(int i = 0; i < 12; i++){
+            for(int i = 0; i < 12;){
                 if(temp.get(ran.nextInt(temp.size())).getStatus().equals("Y")){
                     productList.add(temp.get(ran.nextInt(temp.size())));
+                    i++;
                 }
             }
 
