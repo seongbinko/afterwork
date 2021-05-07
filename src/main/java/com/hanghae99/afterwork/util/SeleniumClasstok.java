@@ -46,7 +46,7 @@ public class SeleniumClasstok implements ApplicationRunner {
         }
 
         //status 상태 Y -> N 처리
-//        statusChange("classtok");
+//        statusChange("클래스톡");
 
 //        classtok();
     }
@@ -92,7 +92,7 @@ public class SeleniumClasstok implements ApplicationRunner {
                 String strPriceInfo = null;
                 String strImgUrl = null;
                 String strSiteUrl = null;
-                String strSiteName = "classtok";
+                String strSiteName = "클래스톡";
                 String strCategory = null;
                 String strStatus = "Y";
                 int intPopularity = 0;
@@ -179,6 +179,7 @@ public class SeleniumClasstok implements ApplicationRunner {
                     product.setPriceInfo(strPriceInfo);
                     product.setImgUrl(strImgUrl);
                     product.setStatus(strStatus);
+                    product.setSiteName(strSiteName);
                 }
 
 
