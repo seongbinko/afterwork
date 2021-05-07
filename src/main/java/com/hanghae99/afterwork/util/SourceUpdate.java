@@ -156,7 +156,7 @@ public class SourceUpdate implements ApplicationRunner {
 
                 Category category = categoryRepository.findByName(category_temp).orElse(null);
 
-                Product product = productRepository.findByTitleAndCategoryAndLocation(title, category, location).orElse(null);
+                Product product = productRepository.findByTitleLikeAndCategoryAndLocation(title, category, location).orElse(null);
 
                 if(product == null){
                     product = Product.builder()
@@ -281,7 +281,7 @@ public class SourceUpdate implements ApplicationRunner {
                     String siteUrl = base2.get(i).getAttribute("href");
                     Category category = categoryRepository.findByName(category_temp).orElse(null);
 
-                    Product product = productRepository.findByTitleAndCategoryAndLocation(title, category, location).orElse(null);
+                    Product product = productRepository.findByTitleLikeAndCategoryAndLocation(title, category, location).orElse(null);
 
                     if(product == null){
                         product = Product.builder()
@@ -511,7 +511,7 @@ public class SourceUpdate implements ApplicationRunner {
 
                         Category category = categoryRepository.findByName(category_temp).orElse(null);
 
-                        Product product = productRepository.findByTitleAndCategoryAndLocation(title, category, location).orElse(null);
+                        Product product = productRepository.findByTitleLikeAndCategoryAndLocation(title, category, location).orElse(null);
 
                         if(product == null){
                             product = Product.builder()
