@@ -45,7 +45,7 @@ public class SeleniumMybiskit implements ApplicationRunner {
         }
 
         //status 상태 Y -> N 처리
-//        statusChange("mybiskit");
+//        statusChange("마이비스킷");
 
 //        mybiskit();
     }
@@ -87,7 +87,7 @@ public class SeleniumMybiskit implements ApplicationRunner {
             String strPriceInfo = "사전예약";
             String strImgUrl = null;
             String strSiteUrl = null;
-            String strSiteName = "mybiskit";
+            String strSiteName = "마이비스킷";
             String strCategory = null;
             String strStatus = "Y";
             int intPopularity = 0;
@@ -170,6 +170,7 @@ public class SeleniumMybiskit implements ApplicationRunner {
                 product.setPriceInfo(strPriceInfo);
                 product.setImgUrl(strImgUrl);
                 product.setStatus(strStatus);
+                product.setSiteName(strSiteName);
             }
 
             productRepository.save(product);
