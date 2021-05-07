@@ -7,7 +7,6 @@ import com.hanghae99.afterwork.model.Product;
 import com.hanghae99.afterwork.repository.CategoryRepository;
 import com.hanghae99.afterwork.repository.ProductRepository;
 import com.hanghae99.afterwork.service.CategoryService;
-import com.hanghae99.afterwork.service.CollectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,19 +45,28 @@ public class CategoryController {
     }
 
     @GetMapping("/api/categorys/{id}")
-    public Page<ProductResponseDto> getProductByCategory(@PathVariable("id") Long categoryId, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String strSort, @RequestParam(value = "direction", required = false, defaultValue = "desc") String strDirection) {
+    public Page<ProductResponseDto> getProductByCategory(@PathVariable("id") Long categoryId, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String strSort, @RequestParam(value = "direction", required = false, defaultValue = "desc") String strDirection, @RequestParam(value = "filter", required = false, defaultValue = "total") String strFilter) {
 
         Sort.Direction direction = Sort.Direction.DESC;
 
-        if (strDirection.toLowerCase(Locale.ROOT).equals("asc"))
-        {
+        if (strDirection.toLowerCase(Locale.ROOT).equals("asc")) {
             direction = Sort.Direction.ASC;
+        }
+
+        boolean isOnline = true;
+        String location = " ";
+
+        if (strFilter.equals("offline")){
+            isOnline = false;
+        }
+        else if(strFilter.equals("online")){
+            location = null;
         }
 
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, strSort));
 
         Category category = categoryRepository.findById(categoryId).orElse(null);
-        Page<Product> productList = productRepository.findAllByCategory(category, pageRequest);
+        Page<Product> productList = productRepository.findAllByCategoryAndOnlineAndLocation(category, isOnline, location, pageRequest);
 
         Page<ProductResponseDto> productResponseDtoList =
                 productList.map(
