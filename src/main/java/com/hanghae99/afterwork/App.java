@@ -10,7 +10,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableConfigurationProperties(AppProperties.class)
 @EnableJpaAuditing
-//@EnableScheduling
 public class App {
 
     public static void main(String[] args) {
