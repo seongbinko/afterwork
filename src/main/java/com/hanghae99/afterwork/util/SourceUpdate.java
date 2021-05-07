@@ -73,7 +73,7 @@ public class SourceUpdate implements ApplicationRunner {
         }
         ChromeOptions options = new ChromeOptions();
         options.addArguments("headless");
-        start();
+//        start();
 //        crawlHobby(options);
 //        minutesAmount[0] = minutesPassed;
 //        minutesPassed = 0;
@@ -92,17 +92,17 @@ public class SourceUpdate implements ApplicationRunner {
     //Main method
     @Override
     public void run(ApplicationArguments args) throws Exception{
-        fetchUpdate();
-        System.out.println("Hobbyful created amount= " + createAmount[0]);
-        System.out.println("Hobbyful updated amount= " + updateAmount[0]);
-        System.out.println("tot time = " + minutesAmount[0] + " minutes");
-        System.out.println("Mochaclass created amount= " + createAmount[1]);
-        System.out.println("Mochaclass updated amount= " + updateAmount[1]);
-        System.out.println("tot time = " + minutesAmount[1] + " minutes");
-        System.out.println("Taling created amount= " + createAmount[2]);
-        System.out.println("Taling updated amount= " + updateAmount[2]);
-        System.out.println("tot time = " + minutesAmount[2] + " minutes");
-//        H2 checking purpose
+//        fetchUpdate();
+//        System.out.println("Hobbyful created amount= " + createAmount[0]);
+//        System.out.println("Hobbyful updated amount= " + updateAmount[0]);
+//        System.out.println("tot time = " + minutesAmount[0] + " minutes");
+//        System.out.println("Mochaclass created amount= " + createAmount[1]);
+//        System.out.println("Mochaclass updated amount= " + updateAmount[1]);
+//        System.out.println("tot time = " + minutesAmount[1] + " minutes");
+//        System.out.println("Taling created amount= " + createAmount[2]);
+//        System.out.println("Taling updated amount= " + updateAmount[2]);
+//        System.out.println("tot time = " + minutesAmount[2] + " minutes");
+//        H2 checking purpose8
 
 //        String name = null;
 //        for(int i = 0; i < 6; i++){
