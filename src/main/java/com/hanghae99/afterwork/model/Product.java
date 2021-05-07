@@ -28,6 +28,7 @@ public class Product extends BaseTimeEntity{
 
     private String author;
 
+    @Column(length = 1000)
     private String imgUrl;
 
     private boolean isOnline;
@@ -41,6 +42,7 @@ public class Product extends BaseTimeEntity{
     @Column(nullable = false)
     private String siteName;
 
+    @Column(length = 1000)
     private String siteUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)

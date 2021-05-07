@@ -45,7 +45,7 @@ public class SeleniumMybiskit implements ApplicationRunner {
         }
 
         //status 상태 Y -> N 처리
-//        statusChange();
+//        statusChange("mybiskit");
 
 //        mybiskit();
     }
@@ -151,8 +151,7 @@ public class SeleniumMybiskit implements ApplicationRunner {
 
             Product product = productRepository.findByTitleLikeAndCategory(strTitle,category).orElse(null);
 
-            if (product == null)
-            {
+            if (product == null) {
                 product = Product.builder()
                         .title(strTitle)
                         .popularity(intPopularity)
@@ -165,8 +164,7 @@ public class SeleniumMybiskit implements ApplicationRunner {
                         .status(strStatus)
                         .category(category)
                         .build();
-            }
-            else {
+            } else {
                 product.setPopularity(intPopularity);
                 product.setPrice(intPrice);
                 product.setPriceInfo(strPriceInfo);
@@ -236,8 +234,8 @@ public class SeleniumMybiskit implements ApplicationRunner {
         return Integer.parseInt(price);
     }
 
-    public void statusChange() {
-        List<Product> productList = productRepository.findAllBySiteName("mybiskit");
+    public void statusChange(String siteName) {
+        List<Product> productList = productRepository.findAllBySiteName(siteName);
 
         for (Product product : productList) {
             product.setStatus("N");
