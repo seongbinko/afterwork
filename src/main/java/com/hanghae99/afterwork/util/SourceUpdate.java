@@ -9,25 +9,18 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.net.URLDecoder;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 @Component
 public class SourceUpdate implements ApplicationRunner {
-
-    private static final Logger logger = LoggerFactory.getLogger(SourceUpdate.class);
 
     public static final String WEB_DRIVER_ID = "webdriver.chrome.driver"; // 드라이버 ID
     public static final String WEB_DRIVER_PATH = "C:\\Users\\Jason\\Downloads\\chromedriver.exe"; // 드라이버 경로
@@ -35,37 +28,15 @@ public class SourceUpdate implements ApplicationRunner {
     private final CategoryRepository categoryRepository;
     private final TalingMacro talingMacro;
 
-    int[] createAmount = new int [3];
-    int[] updateAmount = new int [3];
-    int[] minutesAmount = new int [3];
-    int minutesPassed = 0;
-    int secondsPassed = 0;
-
     public SourceUpdate(ProductRepository productRepository, CategoryRepository categoryRepository, TalingMacro talingMacro){
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.talingMacro = talingMacro;
     }
 
-    private Timer myTimer = new Timer();
-    TimerTask task = new TimerTask() {
-        @Override
-        public void run() {
-            System.out.println("minutes : " + minutesPassed + " seconds : " + secondsPassed);
-            secondsPassed++;
-            if(secondsPassed == 60){
-                minutesPassed++;
-                secondsPassed = 0;
-            }
-        }
-    };
-
-    public void start(){
-        myTimer.scheduleAtFixedRate(task, 1000, 1000);
-    }
-
-//    @Scheduled(cron = "* */3 * * * *")
-    public void fetchUpdate(){
+    //Main method
+    @Override
+    public void run(ApplicationArguments args) throws Exception{
         try {
             System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
         } catch (Exception e){
@@ -73,50 +44,10 @@ public class SourceUpdate implements ApplicationRunner {
         }
         ChromeOptions options = new ChromeOptions();
         options.addArguments("headless");
-//        start();
 //        crawlHobby(options);
-//        minutesAmount[0] = minutesPassed;
-//        minutesPassed = 0;
-//        secondsPassed = 0;
 //        crawlMocha(options);
-//        minutesAmount[1] = minutesPassed;
-//        minutesPassed = 0;
-//        secondsPassed = 0;
 //        SeleniumListResponse infoList = talingMacro.sorted();
 //        crawlTaling(options, infoList);
-//        minutesAmount[2] = minutesPassed;
-//        minutesPassed = 0;
-//        secondsPassed = 0;
-    }
-
-    //Main method
-    @Override
-    public void run(ApplicationArguments args) throws Exception{
-//        fetchUpdate();
-//        System.out.println("Hobbyful created amount= " + createAmount[0]);
-//        System.out.println("Hobbyful updated amount= " + updateAmount[0]);
-//        System.out.println("tot time = " + minutesAmount[0] + " minutes");
-//        System.out.println("Mochaclass created amount= " + createAmount[1]);
-//        System.out.println("Mochaclass updated amount= " + updateAmount[1]);
-//        System.out.println("tot time = " + minutesAmount[1] + " minutes");
-//        System.out.println("Taling created amount= " + createAmount[2]);
-//        System.out.println("Taling updated amount= " + updateAmount[2]);
-//        System.out.println("tot time = " + minutesAmount[2] + " minutes");
-//        H2 checking purpose8
-
-//        String name = null;
-//        for(int i = 0; i < 6; i++){
-//            if(i == 0) name = "운동/건강";
-//            if(i == 1) name = "요리";
-//            if(i == 2) name = "아트";
-//            if(i == 3) name = "교육";
-//            if(i == 4) name = "공예";
-//            if(i == 5) name = "음악";
-//            categoryRepository.save(
-//                    Category.builder()
-//                            .name(name)
-//                            .build());
-//        }
     }
 
     //Hobbyful update
@@ -207,7 +138,6 @@ public class SourceUpdate implements ApplicationRunner {
                             .category(category)
                             .build();
                     productRepository.save(product);
-                    createAmount[0] += 1;
                 }else{
                     product.setTitle(title);
                     product.setAuthor(author);
@@ -220,7 +150,6 @@ public class SourceUpdate implements ApplicationRunner {
                     product.setStatus(status);
                     product.setCategory(category);
                     productRepository.save(product);
-                    updateAmount[0] += 1;
                 }
             }
 
@@ -333,7 +262,6 @@ public class SourceUpdate implements ApplicationRunner {
                                 .category(category)
                                 .build();
                         productRepository.save(product);
-                        createAmount[1] += 1;
                     }else{
                         product.setTitle(title);
                         product.setAuthor(author);
@@ -347,7 +275,6 @@ public class SourceUpdate implements ApplicationRunner {
                         product.setStatus(status);
                         product.setCategory(category);
                         productRepository.save(product);
-                        updateAmount[1] += 1;
                     }
 
                 }
@@ -570,7 +497,6 @@ public class SourceUpdate implements ApplicationRunner {
                                     .category(category)
                                     .build();
                             productRepository.save(product);
-                            createAmount[2] += 1;
                         }else{
                             product.setTitle(title);
                             product.setAuthor(author);
@@ -584,7 +510,6 @@ public class SourceUpdate implements ApplicationRunner {
                             product.setStatus(status);
                             product.setCategory(category);
                             productRepository.save(product);
-                            updateAmount[2] += 1;
                         }
                         productCount+=1;
                         System.out.println(imgUrl);
