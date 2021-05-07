@@ -20,6 +20,8 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.net.URLDecoder;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 @Component
@@ -33,13 +35,33 @@ public class SourceUpdate implements ApplicationRunner {
     private final CategoryRepository categoryRepository;
     private final TalingMacro talingMacro;
 
-    private int createAmount = 0;
-    private int updateAmount = 0;
+    int[] createAmount = new int [3];
+    int[] updateAmount = new int [3];
+    int[] minutesAmount = new int [3];
+    int minutesPassed = 0;
+    int secondsPassed = 0;
 
     public SourceUpdate(ProductRepository productRepository, CategoryRepository categoryRepository, TalingMacro talingMacro){
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.talingMacro = talingMacro;
+    }
+
+    private Timer myTimer = new Timer();
+    TimerTask task = new TimerTask() {
+        @Override
+        public void run() {
+            System.out.println("minutes : " + minutesPassed + " seconds : " + secondsPassed);
+            secondsPassed++;
+            if(secondsPassed == 60){
+                minutesPassed++;
+                secondsPassed = 0;
+            }
+        }
+    };
+
+    public void start(){
+        myTimer.scheduleAtFixedRate(task, 1000, 1000);
     }
 
 //    @Scheduled(cron = "* */3 * * * *")
@@ -50,23 +72,36 @@ public class SourceUpdate implements ApplicationRunner {
             e.printStackTrace();
         }
         ChromeOptions options = new ChromeOptions();
-        try{
-            options.addArguments("headless");
-            crawlHobby(options);
-            crawlMocha(options);
-            SeleniumListResponse infoList = talingMacro.sorted();
-            crawlTaling(options, infoList);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        options.addArguments("headless");
+        start();
+//        crawlHobby(options);
+//        minutesAmount[0] = minutesPassed;
+//        minutesPassed = 0;
+//        secondsPassed = 0;
+//        crawlMocha(options);
+//        minutesAmount[1] = minutesPassed;
+//        minutesPassed = 0;
+//        secondsPassed = 0;
+//        SeleniumListResponse infoList = talingMacro.sorted();
+//        crawlTaling(options, infoList);
+//        minutesAmount[2] = minutesPassed;
+//        minutesPassed = 0;
+//        secondsPassed = 0;
     }
 
     //Main method
     @Override
     public void run(ApplicationArguments args) throws Exception{
         fetchUpdate();
-        System.out.println("created amount= " + createAmount);
-        System.out.println("updated amount= " + updateAmount);
+        System.out.println("Hobbyful created amount= " + createAmount[0]);
+        System.out.println("Hobbyful updated amount= " + updateAmount[0]);
+        System.out.println("tot time = " + minutesAmount[0] + " minutes");
+        System.out.println("Mochaclass created amount= " + createAmount[1]);
+        System.out.println("Mochaclass updated amount= " + updateAmount[1]);
+        System.out.println("tot time = " + minutesAmount[1] + " minutes");
+        System.out.println("Taling created amount= " + createAmount[2]);
+        System.out.println("Taling updated amount= " + updateAmount[2]);
+        System.out.println("tot time = " + minutesAmount[2] + " minutes");
 //        H2 checking purpose
 
 //        String name = null;
@@ -172,7 +207,7 @@ public class SourceUpdate implements ApplicationRunner {
                             .category(category)
                             .build();
                     productRepository.save(product);
-                    createAmount++;
+                    createAmount[0] += 1;
                 }else{
                     product.setTitle(title);
                     product.setAuthor(author);
@@ -185,7 +220,7 @@ public class SourceUpdate implements ApplicationRunner {
                     product.setStatus(status);
                     product.setCategory(category);
                     productRepository.save(product);
-                    updateAmount++;
+                    updateAmount[0] += 1;
                 }
             }
 
@@ -298,7 +333,7 @@ public class SourceUpdate implements ApplicationRunner {
                                 .category(category)
                                 .build();
                         productRepository.save(product);
-                        createAmount++;
+                        createAmount[1] += 1;
                     }else{
                         product.setTitle(title);
                         product.setAuthor(author);
@@ -312,7 +347,7 @@ public class SourceUpdate implements ApplicationRunner {
                         product.setStatus(status);
                         product.setCategory(category);
                         productRepository.save(product);
-                        updateAmount++;
+                        updateAmount[1] += 1;
                     }
 
                 }
@@ -342,7 +377,7 @@ public class SourceUpdate implements ApplicationRunner {
         int regionArrayCnt = 0;
         String url = "https://taling.me/Home/Search/?page="+pageCount+"&cateMain=&cateSub="+cateList.get(0).getCategoryNum()+"&region=&orderIdx=&query=&code=&org=&day=&time=&tType=&region=&regionMain=";
         driver.get(url);
-//        start();
+
         while(true) {
             while (true) {
                 while (true) {
@@ -394,9 +429,16 @@ public class SourceUpdate implements ApplicationRunner {
                         String category_temp = cateList.get(cateListCount).getCategoryLabel();
                         //                Image Url
                         String imgUrl_temp = product_base.get(i).findElement(By.className("img")).getAttribute("style");
+                        String found = "";
+                        if(imgUrl_temp.contains("s3.")){
+                            found = "s3.";
+                        }else if(imgUrl_temp.contains("img.")){
+                            found = "img.";
+                        }
+                        int imgUrl_index = imgUrl_temp.indexOf(found);
                         String http = "https://";
-                        int imgUrl_size = imgUrl_temp.length();
-                        String imgUrl = http + imgUrl_temp.substring(25, (imgUrl_size - 1) - 2);
+                        imgUrl_temp = imgUrl_temp.substring(imgUrl_index, imgUrl_temp.length()-3);
+                        String imgUrl = http + imgUrl_temp;
                         //                Author
                         String author = product_base.get(i).findElement(By.className("name")).getText();
                         //                Title
@@ -528,7 +570,7 @@ public class SourceUpdate implements ApplicationRunner {
                                     .category(category)
                                     .build();
                             productRepository.save(product);
-                            createAmount++;
+                            createAmount[2] += 1;
                         }else{
                             product.setTitle(title);
                             product.setAuthor(author);
@@ -542,9 +584,10 @@ public class SourceUpdate implements ApplicationRunner {
                             product.setStatus(status);
                             product.setCategory(category);
                             productRepository.save(product);
-                            updateAmount++;
+                            updateAmount[2] += 1;
                         }
                         productCount+=1;
+                        System.out.println(imgUrl);
                     }
                     if (size == 0) {
                         regionLayerCnt++;
