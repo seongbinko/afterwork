@@ -33,6 +33,9 @@ public class SourceUpdate implements ApplicationRunner {
     private final CategoryRepository categoryRepository;
     private final TalingMacro talingMacro;
 
+    private int createAmount = 0;
+    private int updateAmount = 0;
+
     public SourceUpdate(ProductRepository productRepository, CategoryRepository categoryRepository, TalingMacro talingMacro){
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
@@ -51,8 +54,8 @@ public class SourceUpdate implements ApplicationRunner {
             options.addArguments("headless");
             crawlHobby(options);
             crawlMocha(options);
-//        SeleniumListResponse infoList = talingMacro.sorted();
-//        crawlTaling(options, infoList);
+            SeleniumListResponse infoList = talingMacro.sorted();
+            crawlTaling(options, infoList);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -61,6 +64,9 @@ public class SourceUpdate implements ApplicationRunner {
     //Main method
     @Override
     public void run(ApplicationArguments args) throws Exception{
+        fetchUpdate();
+        System.out.println("created amount= " + createAmount);
+        System.out.println("updated amount= " + updateAmount);
 //        H2 checking purpose
 
 //        String name = null;
@@ -111,6 +117,7 @@ public class SourceUpdate implements ApplicationRunner {
                 final List<WebElement> img = driver.findElements(By.className("class-list-thumb"));
                 final List<WebElement> cont = driver.findElements(By.className("class-list-cont"));
                 final List<WebElement> base2 = driver.findElements(By.className("class-list"));
+                String location = null;
                 String imgUrl = img.get(i).findElement(By.tagName("img")).getAttribute("src");
                 String title = cont.get(i).findElement(By.className("class-list-name")).getText();
                 String author = cont.get(i).findElement(By.className("class-list-lecturer-name")).getText();
@@ -149,11 +156,12 @@ public class SourceUpdate implements ApplicationRunner {
 
                 Category category = categoryRepository.findByName(category_temp).orElse(null);
 
-                Product product = productRepository.findByTitleLikeAndCategory(title, category).orElse(null);
+                Product product = productRepository.findByTitleAndCategoryAndLocation(title, category, location).orElse(null);
 
                 if(product == null){
                     product = Product.builder()
                             .title(title)
+                            .author(author)
                             .price(price)
                             .priceInfo(price_info)
                             .imgUrl(imgUrl)
@@ -164,15 +172,20 @@ public class SourceUpdate implements ApplicationRunner {
                             .category(category)
                             .build();
                     productRepository.save(product);
+                    createAmount++;
                 }else{
                     product.setTitle(title);
+                    product.setAuthor(author);
                     product.setPrice(price);
                     product.setPriceInfo(price_info);
                     product.setImgUrl(imgUrl);
                     product.setOnline(isOnline);
                     product.setSiteUrl(siteUrl);
+                    product.setSiteName(siteName);
                     product.setStatus(status);
+                    product.setCategory(category);
                     productRepository.save(product);
+                    updateAmount++;
                 }
             }
 
@@ -243,6 +256,7 @@ public class SourceUpdate implements ApplicationRunner {
                     String location = desc.get(2).getText();
                     String price_temp = desc.get(3).getText();
                     String price_info = price_temp;
+                    String author = null;
                     int price = 0;
                     if(price_temp.contains("문의")){
                         price = 0;
@@ -267,11 +281,12 @@ public class SourceUpdate implements ApplicationRunner {
                     String siteUrl = base2.get(i).getAttribute("href");
                     Category category = categoryRepository.findByName(category_temp).orElse(null);
 
-                    Product product = productRepository.findByTitleLikeAndCategory(title, category).orElse(null);
+                    Product product = productRepository.findByTitleAndCategoryAndLocation(title, category, location).orElse(null);
 
                     if(product == null){
                         product = Product.builder()
                                 .title(title)
+                                .author(author)
                                 .price(price)
                                 .priceInfo(price_info)
                                 .imgUrl(imgUrl)
@@ -283,17 +298,23 @@ public class SourceUpdate implements ApplicationRunner {
                                 .category(category)
                                 .build();
                         productRepository.save(product);
+                        createAmount++;
                     }else{
                         product.setTitle(title);
+                        product.setAuthor(author);
                         product.setPrice(price);
                         product.setPriceInfo(price_info);
                         product.setImgUrl(imgUrl);
                         product.setOnline(isOnline);
                         product.setLocation(location);
                         product.setSiteUrl(siteUrl);
+                        product.setSiteName(siteName);
                         product.setStatus(status);
+                        product.setCategory(category);
                         productRepository.save(product);
+                        updateAmount++;
                     }
+
                 }
                 if (nextPage.contains("disabled")) {
                     break;
@@ -490,11 +511,12 @@ public class SourceUpdate implements ApplicationRunner {
 
                         Category category = categoryRepository.findByName(category_temp).orElse(null);
 
-                        Product product = productRepository.findByTitle(title).orElse(null);
+                        Product product = productRepository.findByTitleAndCategoryAndLocation(title, category, location).orElse(null);
 
                         if(product == null){
                             product = Product.builder()
                                     .title(title)
+                                    .author(author)
                                     .price(price)
                                     .priceInfo(price_info)
                                     .imgUrl(imgUrl)
@@ -506,16 +528,21 @@ public class SourceUpdate implements ApplicationRunner {
                                     .category(category)
                                     .build();
                             productRepository.save(product);
+                            createAmount++;
                         }else{
                             product.setTitle(title);
+                            product.setAuthor(author);
                             product.setPrice(price);
                             product.setPriceInfo(price_info);
                             product.setImgUrl(imgUrl);
                             product.setOnline(isOnline);
                             product.setLocation(location);
                             product.setSiteUrl(siteUrl);
+                            product.setSiteName(siteName);
                             product.setStatus(status);
+                            product.setCategory(category);
                             productRepository.save(product);
+                            updateAmount++;
                         }
                         productCount+=1;
                     }
