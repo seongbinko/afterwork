@@ -57,7 +57,9 @@ public class RecommendService {
             List<Product> productList = new ArrayList<>();
             Random ran = new Random();
             for(int i = 0; i < 12; i++){
-                productList.add(temp.get(ran.nextInt(temp.size())));
+                if(temp.get(ran.nextInt(temp.size())).getStatus().equals("Y")){
+                    productList.add(temp.get(ran.nextInt(temp.size())));
+                }
             }
 
             List<ProductResponseDto> productResponseDtoList =

@@ -9,16 +9,23 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import java.net.URLDecoder;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.net.URLDecoder;
+import java.util.List;
+
 
 @Component
-public class SeleniumTest implements ApplicationRunner {
+public class SourceUpdate implements ApplicationRunner {
+
+    private static final Logger logger = LoggerFactory.getLogger(SourceUpdate.class);
 
     public static final String WEB_DRIVER_ID = "webdriver.chrome.driver"; // 드라이버 ID
     public static final String WEB_DRIVER_PATH = "C:\\Users\\Jason\\Downloads\\chromedriver.exe"; // 드라이버 경로
@@ -26,65 +33,71 @@ public class SeleniumTest implements ApplicationRunner {
     private final CategoryRepository categoryRepository;
     private final TalingMacro talingMacro;
 
-    public SeleniumTest(ProductRepository productRepository, CategoryRepository categoryRepository, TalingMacro talingMacro){
+    public SourceUpdate(ProductRepository productRepository, CategoryRepository categoryRepository, TalingMacro talingMacro){
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.talingMacro = talingMacro;
     }
 
-//    @Scheduled(fixedDelay = 1000)
-//    public void keepTrack(){
-//        System.out.println("DB update till t - " + new Date());
-//    }
+    int seconds = 180;
 
-//    @Scheduled(cron = "*/5 * * * * *")
-    public void run(ApplicationArguments args) throws Exception{
-        //드라이버 설정
+    @Scheduled(fixedDelay = 1000)
+    public void keepTrack(){
+        System.out.println("DB update till t - " + seconds);
+        seconds--;
+        if(seconds == 0){
+            seconds = 180;
+        }
+    }
+
+//    @Scheduled(cron = "* */3 * * * *")
+    public void fetchUpdate(){
         try {
             System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
         } catch (Exception e){
             e.printStackTrace();
         }
-        // 크롬 설정을 담은 객체 생성
         ChromeOptions options = new ChromeOptions();
-        // 브라우저가 눈에 보이지 않고 내부적으로 돈다.
-        // 설정하지 않을 시 실제 크롬 창이 생성되고, 어떤 순서로 진행되는지 확인할 수 있다.
-        options.addArguments("headless");
-        //        for h2 checking purpose
-        String name = null;
-        for(int i = 0; i < 6; i++){
-            if(i == 0) name = "운동/건강";
-            if(i == 1) name = "요리";
-            if(i == 2) name = "아트";
-            if(i == 3) name = "교육";
-            if(i == 4) name = "공예";
-            if(i == 5) name = "음악";
-            categoryRepository.save(
-                    Category.builder()
-                            .name(name)
-                            .build()
-            );
-        }
-
-//        hobbyful_crawl(options);
-//        mochaclass_crawl(options);
+        try{
+            options.addArguments("headless");
+            crawlHobby(options);
+            crawlMocha(options);
 //        SeleniumListResponse infoList = talingMacro.sorted();
-//        taling_crawl(options, infoList);
+//        crawlTaling(options, infoList);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
+    //Main method
+    @Override
+    public void run(ApplicationArguments args) throws Exception{
+//        String name = null;
+//        for(int i = 0; i < 6; i++){
+//            if(i == 0) name = "운동/건강";
+//            if(i == 1) name = "요리";
+//            if(i == 2) name = "아트";
+//            if(i == 3) name = "교육";
+//            if(i == 4) name = "공예";
+//            if(i == 5) name = "음악";
+//            categoryRepository.save(
+//                    Category.builder()
+//                            .name(name)
+//                            .build());
+//        }
+    }
+
+    //Hobbyful update
     @Transactional
-    public void hobbyful_crawl(ChromeOptions options){
-        //위에서 설정한 옵션들 담은 드라이버 객체 생성
-        //옵션을 설정하지 않았을 때에는 생략 가능하다.seongbinko-springboot-webservice.cdpzofsjdpj2.ap-northeast-2.rds.amazonaws.com
-        //WebDriver 객체가 곧 하나의 브라우저 창이라 생각한다.
+    public void crawlHobby(ChromeOptions options){
+        String siteName = "Hobbyful";
+        statusChange(siteName);
         WebDriver driver = new ChromeDriver(options);
-        //이동을 원하는 url
         String[] moveCategoryName = {"/embroidery", "/macrame", "/drawing", "/digital-drawing", "/knitting", "/ratan", "/leather"
-        , "/soap-candle", "/jewelry-neonsign", "/calligraphy", "/kids"};
+                , "/soap-candle", "/jewelry-neonsign", "/calligraphy", "/kids"};
         int moveCategory = 0;
         while(moveCategory < moveCategoryName.length) {
             String url = "https://hobbyful.co.kr/list/class" + moveCategoryName[moveCategory];
-            //webDriver를 해당 url로 이동한다.
             driver.get(url);
             String category_temp = null;
 
@@ -100,10 +113,6 @@ public class SeleniumTest implements ApplicationRunner {
             else if (moveCategory == 9) category_temp = "아트";
             else if (moveCategory == 10) category_temp = "아트";
 
-            //브라우저 이동시 생기는 로드시간을 기다린다.
-            //HTTP 응답속도보다 자바의 컴파일 속도가 더 빠르기 때문에 임의적으로 1초를 대기한다.
-//        class = "nav"인 모든 태그를 가진 WebElement리스트를 받아온다.
-//        WebElement는 html의 태그를 가지는 클래스이다.
             final List<WebElement> base = driver.findElements(By.className("class-list"));
             int size = base.size();
 
@@ -140,7 +149,6 @@ public class SeleniumTest implements ApplicationRunner {
 
                 boolean isOnline = false;
                 String status = "Y";
-                String siteName = "Hobbyful";
                 String siteUrl = base2.get(i).findElement(By.tagName("a")).getAttribute("href");
                 try{
                     siteUrl = URLDecoder.decode(siteUrl, "UTF-8");
@@ -148,21 +156,36 @@ public class SeleniumTest implements ApplicationRunner {
                     e.printStackTrace();
                 }
 
-                Category category = categoryRepository.findByName(category_temp).get();
+                Category category = categoryRepository.findByName(category_temp).orElse(null);
 
-                Product product = Product.builder()
-                        .title(title)
-                        .price(price)
-                        .priceInfo(price_info)
-                        .author(author)
-                        .imgUrl(imgUrl)
-                        .isOnline(isOnline)
-                        .status(status)
-                        .siteName(siteName)
-                        .siteUrl(siteUrl)
-                        .category(category)
-                        .build();
-                productRepository.save(product);
+                Product product = productRepository.findByTitleLikeAndCategory(title, category).orElse(null);
+
+                if(product == null){
+                    product = Product.builder()
+                            .title(title)
+                            .price(price)
+                            .priceInfo(price_info)
+                            .imgUrl(imgUrl)
+                            .isOnline(isOnline)
+                            .status(status)
+                            .siteName(siteName)
+                            .siteUrl(siteUrl)
+                            .category(category)
+                            .build();
+                    productRepository.save(product);
+                    System.out.println("found new product");
+
+                }else{
+                    product.setTitle(title);
+                    product.setPrice(price);
+                    product.setPriceInfo(price_info);
+                    product.setImgUrl(imgUrl);
+                    product.setOnline(isOnline);
+                    product.setSiteUrl(siteUrl);
+                    product.setStatus(status);
+                    productRepository.save(product);
+                    System.out.println("Updated");
+                }
             }
 
             moveCategory++;
@@ -185,11 +208,13 @@ public class SeleniumTest implements ApplicationRunner {
         }
     }
 
+    //MochaClass Update
     @Transactional
-    public void mochaclass_crawl(ChromeOptions options){
+    public void crawlMocha(ChromeOptions options){
+        String siteName = "Mochaclass";
+        statusChange(siteName);
         WebDriver driver = new ChromeDriver(options);
         String[] moveCategoryName = {"핸드메이드·수공예", "쿠킹+클래스", "플라워+레슨", "드로잉", "음악", "요가·필라테스", "레져·스포츠", "자기계발", "Live+클래스"};
-
         int moveCategory = 0;
         while(moveCategory < moveCategoryName.length) {
             String category_temp = null;
@@ -207,7 +232,7 @@ public class SeleniumTest implements ApplicationRunner {
             driver.get(url);
 
             while (true) {
-                try {
+                try{
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -223,7 +248,7 @@ public class SeleniumTest implements ApplicationRunner {
                 final List<WebElement> multiPage = multiPage_base.findElements(By.tagName("li"));
                 final String nextPage = multiPage.get(multiPage.size() - 1).findElement(By.tagName("button")).getAttribute("class");
                 int size = base2.size();
-                for (int i = 0; i < size-1; i++) {
+                for (int i = 0; i < size; i++) {
                     final List<WebElement> desc = base2.get(i).findElements(By.tagName("p"));
                     String imgUrl = base2.get(i).findElement(By.tagName("img")).getAttribute("src");
                     String title = desc.get(1).getText();
@@ -246,73 +271,60 @@ public class SeleniumTest implements ApplicationRunner {
                             price = Integer.parseInt(price_temp);
                         }
                     }
-                    String siteName = "Mochaclass";
                     boolean isOnline = false;
                     if(moveCategory == moveCategoryName.length-1 || moveCategory == moveCategoryName.length-2){
                         isOnline = true;
                     }
                     String status = "Y";
                     String siteUrl = base2.get(i).getAttribute("href");
-                    Category category = categoryRepository.findByName(category_temp).get();
-                    Product product = Product.builder()
-                            .title(title)
-                            .price(price)
-                            .priceInfo(price_info)
-                            .imgUrl(imgUrl)
-                            .location(location)
-                            .isOnline(isOnline)
-                            .status(status)
-                            .siteName(siteName)
-                            .siteUrl(siteUrl)
-                            .category(category)
-                            .build();
-                    productRepository.save(product);
+                    Category category = categoryRepository.findByName(category_temp).orElse(null);
+
+                    Product product = productRepository.findByTitleLikeAndCategory(title, category).orElse(null);
+
+                    if(product == null){
+                        product = Product.builder()
+                                .title(title)
+                                .price(price)
+                                .priceInfo(price_info)
+                                .imgUrl(imgUrl)
+                                .isOnline(isOnline)
+                                .location(location)
+                                .status(status)
+                                .siteName(siteName)
+                                .siteUrl(siteUrl)
+                                .category(category)
+                                .build();
+                        productRepository.save(product);
+                        System.out.println("found new product");
+                    }else{
+                        product.setTitle(title);
+                        product.setPrice(price);
+                        product.setPriceInfo(price_info);
+                        product.setImgUrl(imgUrl);
+                        product.setOnline(isOnline);
+                        product.setLocation(location);
+                        product.setSiteUrl(siteUrl);
+                        product.setStatus(status);
+                        productRepository.save(product);
+                        System.out.println("Updated");
                     }
-                    if (nextPage.contains("disabled")) {
-                        break;
-                    } else {
-                        multiPage.get(multiPage.size() - 1).click();
-                    }
+                }
+                if (nextPage.contains("disabled")) {
+                    break;
+                } else {
+                    multiPage.get(multiPage.size() - 1).click();
+                }
             }
             moveCategory++;
         }
-
-        try {
-            //드라이버가 null이 아니라면
-            if (driver != null) {
-                // 드라이버 연결 종료
-                driver.close(); // 드라이버 연결해제
-                // 프로세스 종료
-                driver.quit();
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    int totMinutes = 0;
-    int seconds = 0;
-
-    Timer timer = new Timer();
-    TimerTask task = new TimerTask(){
-      public void run(){
-          System.out.println(totMinutes + ":" + seconds);
-          seconds++;
-          if(seconds == 60){
-              totMinutes++;
-              seconds = 0;
-          }
-      }
-    };
-
-    public void start(){
-        timer.scheduleAtFixedRate(task, 1000, 1000);
     }
 
     @Transactional
-    public void taling_crawl(ChromeOptions options, SeleniumListResponse infoList){
-        int productCount = 0;
+    public void crawlTaling(ChromeOptions options, SeleniumListResponse infoList){
+        String siteName = "Taling";
+        statusChange(siteName);
         WebDriver driver = new ChromeDriver(options);
+        int productCount = 0;
         List<CategorySort> cateList = infoList.getCateList();
         List<MainRegionSort> mainRegionList = infoList.getMainRegionList();
         int regionSize = 0;
@@ -481,7 +493,6 @@ public class SeleniumTest implements ApplicationRunner {
                         }
                         //                Site Url/Name
                         String siteUrl = product_base.get(i).findElement(By.tagName("a")).getAttribute("href");
-                        String siteName = "Taling";
                         //                Status
                         String status = null;
                         try {
@@ -491,23 +502,38 @@ public class SeleniumTest implements ApplicationRunner {
                             status = "Y";
                         }
 
-                        Category category = categoryRepository.findByName(category_temp).get();
+                        Category category = categoryRepository.findByName(category_temp).orElse(null);
 
-                        Product product = Product.builder()
-                                .title(title)
-                                .price(price)
-                                .priceInfo(price_info)
-                                .author(author)
-                                .imgUrl(imgUrl)
-                                .isOnline(isOnline)
-                                .location(location)
-                                .popularity(popularity)
-                                .status(status)
-                                .siteName(siteName)
-                                .siteUrl(siteUrl)
-                                .category(category)
-                                .build();
-                        productRepository.save(product);
+                        Product product = productRepository.findByTitle(title).orElse(null);
+
+                        if(product == null){
+                            product = Product.builder()
+                                    .title(title)
+                                    .price(price)
+                                    .priceInfo(price_info)
+                                    .imgUrl(imgUrl)
+                                    .isOnline(isOnline)
+                                    .location(location)
+                                    .status(status)
+                                    .siteName(siteName)
+                                    .siteUrl(siteUrl)
+                                    .category(category)
+                                    .build();
+                            productRepository.save(product);
+                            System.out.println("found new product");
+
+                        }else{
+                            product.setTitle(title);
+                            product.setPrice(price);
+                            product.setPriceInfo(price_info);
+                            product.setImgUrl(imgUrl);
+                            product.setOnline(isOnline);
+                            product.setLocation(location);
+                            product.setSiteUrl(siteUrl);
+                            product.setStatus(status);
+                            productRepository.save(product);
+                            System.out.println("Updated");
+                        }
                         productCount+=1;
                     }
                     if (size == 0) {
@@ -540,6 +566,23 @@ public class SeleniumTest implements ApplicationRunner {
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public void statusChange(String siteName) {
+        System.out.println(siteName + " Changing to all N");
+        List<Product> productList = productRepository.findAllBySiteName(siteName);
+        if(productList.size() > 0){
+            for (Product product : productList) {
+                product.setStatus("N");
+
+                productRepository.save(product);
+            }
+            try {
+                Thread.sleep(30000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
