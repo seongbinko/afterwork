@@ -50,9 +50,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if(userOptional.isPresent()) {
             user = userOptional.get();
             if(!user.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
-                throw new OAuth2AuthenticationProcessingException("Looks like you're signed up with " +
-                        user.getProvider() + " account. Please use your " + user.getProvider() +
-                        " account to login.");
+                throw new OAuth2AuthenticationProcessingException("이미 " +
+                        user.getProvider() + "로 가입된 계정입니다. " + user.getProvider() +
+                        "로 로그인을 시도해 주세요");
             }
             user = updateExistingUser(user, oAuth2UserInfo);
         } else {
