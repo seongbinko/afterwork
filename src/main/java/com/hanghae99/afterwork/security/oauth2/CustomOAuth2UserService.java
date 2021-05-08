@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -50,9 +51,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if(userOptional.isPresent()) {
             user = userOptional.get();
             if(!user.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
-                throw new OAuth2AuthenticationProcessingException("이미 " +
-                        user.getProvider() + "로 가입된 계정입니다. " + user.getProvider() +
-                        "로 로그인을 시도해 주세요");
+                throw new OAuth2AuthenticationProcessingException(user.getProvider().toString().toUpperCase());
             }
             user = updateExistingUser(user, oAuth2UserInfo);
         } else {
