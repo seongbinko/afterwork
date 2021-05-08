@@ -26,5 +26,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     boolean existsByProductId(Long productId);
     Product findByProductId(Long productId);
     Optional<Product> findByTitleLikeAndCategory(String title, Category category);
+    Optional<Product> findByTitleLikeAndCategoryAndLocation(String title, Category category, String location);
     List<Product>findAllBySiteName(String siteName);
 }

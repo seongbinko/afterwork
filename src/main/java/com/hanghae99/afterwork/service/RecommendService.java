@@ -39,11 +39,11 @@ public class RecommendService {
             StringBuilder jpql = new StringBuilder();
             for(int i = 0; i < locations.size(); i++){
                 if(locations.size() == 1 && i == 0){
-                    jpql.append("SELECT p FROM Product p WHERE p.location ");
+                    jpql.append("SELECT p FROM Product p WHERE p.status = 'Y' AND p.location ");
                     jpql.append("LIKE '%" + locations.get(i).getName()+"%'");
                 }else if(locations.size() > 1){
                     if(i == 0){
-                        jpql.append("SELECT p FROM Product p WHERE p.location ");
+                        jpql.append("SELECT p FROM Product p WHERE p.status = 'Y' AND p.location ");
                         jpql.append("LIKE '%" + locations.get(i).getName()+"%' ");
                     }else if(i != locations.size()-1){
                         jpql.append("OR p.location LIKE '%" + locations.get(i).getName()+"%' ");

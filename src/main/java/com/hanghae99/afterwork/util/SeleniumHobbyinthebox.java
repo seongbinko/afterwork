@@ -46,7 +46,7 @@ public class SeleniumHobbyinthebox implements ApplicationRunner {
         }
 
         //status 상태 Y -> N 처리
-//        statusChange("hobbyinthebox");
+//        statusChange("하비인더박스");
 
 //        hobbyinthebox();
     }
@@ -96,7 +96,7 @@ public class SeleniumHobbyinthebox implements ApplicationRunner {
                     String strPriceInfo = null;
                     String strImgUrl = null;
                     String strSiteUrl = null;
-                    String strSiteName = "hobbyinthebox";
+                    String strSiteName = "하비인더박스";
                     String strCategory = null;
                     String strStatus = "Y";
                     int intPopularity = 0;
@@ -194,6 +194,7 @@ public class SeleniumHobbyinthebox implements ApplicationRunner {
                         product.setPriceInfo(strPriceInfo);
                         product.setImgUrl(strImgUrl);
                         product.setStatus(strStatus);
+                        product.setSiteName(strSiteName);
                     }
 
                     productRepository.save(product);
