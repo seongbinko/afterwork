@@ -116,6 +116,6 @@ class CategoryControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("content").exists())
                 .andExpect(jsonPath("pageable").exists())
-                .andExpect(jsonPath("numberOfElements").value("12"));
+                .andExpect(jsonPath("numberOfElements").value(strSize));
     }
 }
