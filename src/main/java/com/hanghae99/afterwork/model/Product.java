@@ -33,6 +33,8 @@ public class Product extends BaseTimeEntity{
 
     private boolean isOnline;
 
+    private boolean isOffline;
+
     private String location;
 
     private int popularity;
