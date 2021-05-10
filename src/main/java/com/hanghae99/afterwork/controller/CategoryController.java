@@ -54,19 +54,19 @@ public class CategoryController {
         }
 
         boolean isOnline = true;
-        String location = " ";
+        boolean isOffline = true;
 
         if (strFilter.equals("offline")){
             isOnline = false;
         }
         else if(strFilter.equals("online")){
-            location = null;
+            isOffline = false;
         }
 
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, strSort));
 
         Category category = categoryRepository.findById(categoryId).orElse(null);
-        Page<Product> productList = productRepository.findAllByCategoryAndOnlineAndLocation(category, isOnline, location, pageRequest);
+        Page<Product> productList = productRepository.findAllByCategoryAndOnlineAndLocation(category, isOnline, isOffline, pageRequest);
 
         Page<ProductResponseDto> productResponseDtoList =
                 productList.map(

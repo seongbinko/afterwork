@@ -13,15 +13,18 @@ import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    @Query(value = "select * from products " +
-            "where category_id = :#{#category.categoryId} and status = 'Y' and if(:location IS Not null, if(:isOnline = true, true, is_online = :isOnline), is_online = :isOnline) " +
-            "and if(:isOnline = true, if(:location IS null, location IS NULL or location like '%온라인%', true) , location IS NOT NULL) group by title",nativeQuery = true)
-    Page<Product> findAllByCategoryAndOnlineAndLocation(Category category, Boolean isOnline, String location, Pageable pageable);
 
-    @Query(value = "select * from products " +
-            "where title like :keyword and status = 'Y' and if(:location IS Not null, if(:isOnline = true, true, is_online = :isOnline), is_online = :isOnline) " +
-            "and if(:isOnline = true, if(:location IS null, location IS NULL or location like '%온라인%', true) , location IS NOT NULL) group by title",nativeQuery = true)
-    Page<Product> findAllByTitleLikeAndOnlineAndLocation(String keyword, Boolean isOnline, String location, Pageable pageable);
+    @Query(value = "select p from Product p where p.category = :#{#category} and p.status = 'Y' and " +
+            "(((:isOnline = true and :isOffline = false) and (p.isOnline = :isOnline and p.isOffline = :isOffline)) or " +
+            "((:isOnline = false and :isOffline = true) and (p.isOnline = :isOnline and p.isOffline = :isOffline)) or" +
+            "((:isOnline = true and :isOffline = true) and (p.isOnline = true or p.isOnline = false and p.isOffline = true or p.isOffline = false)))")
+    Page<Product> findAllByCategoryAndOnlineAndLocation(Category category, Boolean isOnline, Boolean isOffline, Pageable pageable);
+
+    @Query(value = "select p from Product p where p.title like :keyword and p.status = 'Y' and " +
+            "(((:isOnline = true and :isOffline = false) and (p.isOnline = :isOnline and p.isOffline = :isOffline)) or " +
+            "((:isOnline = false and :isOffline = true) and (p.isOnline = :isOnline and p.isOffline = :isOffline)) or" +
+            "((:isOnline = true and :isOffline = true) and (p.isOnline = true or p.isOnline = false and p.isOffline = true or p.isOffline = false)))")
+    Page<Product> findAllByTitleLikeAndOnlineAndLocation(String keyword, Boolean isOnline, Boolean isOffline, Pageable pageable);
 
     boolean existsByProductId(Long productId);
     Product findByProductId(Long productId);
