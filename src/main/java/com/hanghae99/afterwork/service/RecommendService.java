@@ -1,6 +1,7 @@
 package com.hanghae99.afterwork.service;
 
 import com.hanghae99.afterwork.dto.ProductResponseDto;
+import com.hanghae99.afterwork.model.Interest;
 import com.hanghae99.afterwork.model.Location;
 import com.hanghae99.afterwork.model.Product;
 import com.hanghae99.afterwork.model.User;
@@ -15,6 +16,7 @@ import javax.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -79,5 +81,49 @@ public class RecommendService {
             return productResponseDtoList;
         }
         return null;
+    }
+
+    public List<ProductResponseDto> recommendCategoryProduct(UserPrincipal userPrincipal){
+        User user = userRepository.findByUserId(userPrincipal.getId());
+        List<Interest> interestList = user.getInterests();
+        if(!interestList.isEmpty()){
+            //JPQL query parameter builder
+            StringBuilder jpql = new StringBuilder();
+            jpql.append("SELECT p FROM Product p WHERE p.status = 'Y'");
+            for(int i = 0; i < interestList.size(); i++){
+                if (i == 0){
+                    jpql.append(" AND p.category = ").append(interestList.get(i).getCategory().getCategoryId());
+                }
+                else{
+                    jpql.append(" OR p.category = ").append(interestList.get(i).getCategory().getCategoryId());
+                }
+            }
+            Query query = em.createQuery(String.valueOf(jpql));
+            List<Product> temp = query.getResultList();
+            List<Product> productList = new ArrayList<>();
+            Random ran = new Random();
+            for(int i = 0; i < 12; i++){
+                productList.add(temp.get(ran.nextInt(temp.size())));
+            }
+
+            List<ProductResponseDto> productResponseDtoList =
+                    productList.stream().map(
+                            product -> new ProductResponseDto(
+                                    product.getProductId(),
+                                    product.getTitle(),
+                                    product.getPrice(),
+                                    product.getPriceInfo(),
+                                    product.getAuthor(),
+                                    product.getImgUrl(),
+                                    product.isOnline(),
+                                    product.getLocation(),
+                                    product.getPopularity(),
+                                    product.getStatus(),
+                                    product.getSiteName(),
+                                    product.getSiteUrl()
+                            )).collect(Collectors.toList());
+            return productResponseDtoList;
         }
+        return null;
+    }
 }
