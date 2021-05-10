@@ -24,7 +24,7 @@ public class RecommendController {
         return recommendService.recommendProduct(userPrincipal);
     }
 
-//    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/api/recommend/category")
     public List<ProductResponseDto> recommendCategoryProduct(@CurrentUser UserPrincipal userPrincipal){
         return recommendService.recommendCategoryProduct(userPrincipal);
