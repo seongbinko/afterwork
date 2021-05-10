@@ -30,20 +30,20 @@ public class SearchController {
         }
 
         boolean isOnline = true;
-        String location = " ";
+        boolean isOffline = true;
 
         if (strFilter.equals("offline")){
             isOnline = false;
         }
         else if(strFilter.equals("online")){
-            location = null;
+            isOffline = false;
         }
 
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, strSort));
 
         keyword = "%" + keyword + "%";
 
-        Page<Product> productList = productRepository.findAllByTitleLikeAndOnlineAndLocation(keyword, isOnline, location, pageRequest);
+        Page<Product> productList = productRepository.findAllByTitleLikeAndOnlineAndLocation(keyword, isOnline, isOffline, pageRequest);
         Page<ProductResponseDto> productResponseDtoList =
                 productList.map(
                         product -> new ProductResponseDto(
