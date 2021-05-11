@@ -27,6 +27,10 @@ public class ProductResponseDto {
 
     List<Collect> collects = new ArrayList<>();
 
+    public ProductResponseDto(){
+
+    }
+
     public ProductResponseDto(Long productId, String title, int price, String priceInfo, String author, String imgUrl,
                               boolean isOnline, String location, int popularity, String status, String siteName,
                               String siteUrl)
