@@ -61,7 +61,7 @@ class SearchControllerTest {
     }
 
     @Test
-    @DisplayName("검색")
+    @DisplayName("검색 - 정상")
     void getProductByCategoryTestSuccess() throws Exception{
 
         String strPage = "0";
