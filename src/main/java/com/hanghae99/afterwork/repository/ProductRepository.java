@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -19,14 +20,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "((:isOnline = false and :isOffline = true) and (p.isOnline = :isOnline and p.isOffline = :isOffline)) or" +
             "((:isOnline = true and :isOffline = true) and (p.isOnline = true or p.isOnline = false and p.isOffline = true or p.isOffline = false)))" +
             "group by p.title")
-    Page<Product> findAllByCategoryAndOnlineAndLocation(Category category, Boolean isOnline, Boolean isOffline, Pageable pageable);
+    Page<Product> findAllByCategoryAndOnlineAndLocation(@Param("category") Category category, @Param("isOnline") Boolean isOnline, @Param("isOffline") Boolean isOffline, Pageable pageable);
 
     @Query(value = "select p from Product p where p.title like :keyword and p.status = 'Y' and " +
             "(((:isOnline = true and :isOffline = false) and (p.isOnline = :isOnline and p.isOffline = :isOffline)) or " +
             "((:isOnline = false and :isOffline = true) and (p.isOnline = :isOnline and p.isOffline = :isOffline)) or" +
             "((:isOnline = true and :isOffline = true) and (p.isOnline = true or p.isOnline = false and p.isOffline = true or p.isOffline = false)))" +
             "group by p.title")
-    Page<Product> findAllByTitleLikeAndOnlineAndLocation(String keyword, Boolean isOnline, Boolean isOffline, Pageable pageable);
+    Page<Product> findAllByTitleLikeAndOnlineAndLocation(@Param("keyword")String keyword, @Param("isOnline") Boolean isOnline, @Param("isOffline") Boolean isOffline, Pageable pageable);
 
     boolean existsByProductId(Long productId);
     Product findByProductId(Long productId);
