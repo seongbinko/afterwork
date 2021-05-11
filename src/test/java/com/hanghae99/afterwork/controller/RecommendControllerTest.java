@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanghae99.afterwork.dto.ProductResponseDto;
 import com.hanghae99.afterwork.exception.ResourceNotFoundException;
 import com.hanghae99.afterwork.model.*;
-import com.hanghae99.afterwork.repository.CategoryRepository;
-import com.hanghae99.afterwork.repository.InterestRepository;
-import com.hanghae99.afterwork.repository.ProductRepository;
-import com.hanghae99.afterwork.repository.UserRepository;
+import com.hanghae99.afterwork.repository.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,6 +45,9 @@ class RecommendControllerTest {
     InterestRepository interestRepository;
 
     @Autowired
+    LocationRepository locationRepository;
+
+    @Autowired
     MockMvc mockMvc;
 
     Long userId;
@@ -83,7 +83,64 @@ class RecommendControllerTest {
         interestRepository.deleteAll();
         productRepository.deleteAll();
         categoryRepository.deleteAll();
+        locationRepository.deleteAll();
         userRepository.deleteAll();
+    }
+
+    @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("회원 추천 상품 - 정상")
+    @Test
+    void recommendProduct() throws Exception{
+
+        int intSize = 12;
+        String locationName = "서울";
+
+        Optional<User> user = userRepository.findById(userId);
+        if(!user.isPresent()) {
+            throw new ResourceNotFoundException("User", "id", userId);
+        }
+        User user1 = userRepository.findByUserId(userId);
+
+        Location location = Location.builder()
+                .name(locationName)
+                .user(user1)
+                .build();
+        locationRepository.save(location);
+
+        Category category = categoryRepository.findByName(arr[0]).orElse(null);
+
+        for (int i = 0; i < intSize; i++) {
+            Product product = Product.builder()
+                    .title("title" + i)
+                    .isOnline(true)
+                    .popularity(1000)
+                    .price(50000)
+                    .priceInfo("50,000")
+                    .siteName("Test")
+                    .siteUrl(null)
+                    .location(locationName)
+                    .status("Y")
+                    .category(category)
+                    .build();
+            productRepository.save(product);
+        }
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/recommend")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(authenticated())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<ProductResponseDto> productResponseDtoList = objectMapper.readValue(contentAsString, new TypeReference<List<ProductResponseDto>>() {});
+
+        assertEquals(intSize,productResponseDtoList.size());
+
+        for (ProductResponseDto productResponseDto : productResponseDtoList) {
+            assertEquals("Y", productResponseDto.getStatus());
+        }
     }
 
     @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
@@ -144,6 +201,4 @@ class RecommendControllerTest {
             assertEquals("Y", productResponseDto.getStatus());
         }
     }
-
-
 }
