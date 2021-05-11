@@ -77,7 +77,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    @DisplayName("카테고리별 리스트 / 검색 - 정상")
+    @DisplayName("카테고리별 리스트 - 정상")
     void getProductByCategoryTestSuccess() throws Exception{
 
         String strPage = "0";
