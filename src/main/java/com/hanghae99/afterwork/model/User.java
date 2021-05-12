@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Getter @Setter
 @AllArgsConstructor @Builder
-@NoArgsConstructor//(access = AccessLevel.PROTECTED)// protected로 기본생성자 생성
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })

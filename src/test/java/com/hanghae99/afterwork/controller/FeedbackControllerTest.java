@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanghae99.afterwork.dto.FeedbackRequestDto;
 import com.hanghae99.afterwork.model.Feedback;
 import com.hanghae99.afterwork.repository.FeedbackRepository;
-import com.hanghae99.afterwork.service.FeedbackService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -68,8 +67,7 @@ class FeedbackControllerTest {
     private String getFeedbackJsonBody(String content) throws JsonProcessingException {
         FeedbackRequestDto feedbackRequestDto = new FeedbackRequestDto();
         feedbackRequestDto.setContent(content);
-        String feedbackContent =  objectMapper.writeValueAsString(feedbackRequestDto);
-        return feedbackContent;
+        return objectMapper.writeValueAsString(feedbackRequestDto);
     }
 
 }

@@ -1,6 +1,8 @@
 package com.hanghae99.afterwork.config;
 
-import com.hanghae99.afterwork.security.*;
+import com.hanghae99.afterwork.security.CustomUserDetailsService;
+import com.hanghae99.afterwork.security.RestAuthenticationEntryPoint;
+import com.hanghae99.afterwork.security.TokenAuthenticationFilter;
 import com.hanghae99.afterwork.security.oauth2.CustomOAuth2UserService;
 import com.hanghae99.afterwork.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.hanghae99.afterwork.security.oauth2.OAuth2AuthenticationFailureHandler;
@@ -18,8 +20,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.frameoptions.WhiteListedAllowFromStrategy;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;

@@ -1,6 +1,7 @@
 package com.hanghae99.afterwork.controller;
 
-import com.hanghae99.afterwork.dto.*;
+import com.hanghae99.afterwork.dto.UserRequestDto;
+import com.hanghae99.afterwork.dto.UserResponseDto;
 import com.hanghae99.afterwork.security.CurrentUser;
 import com.hanghae99.afterwork.security.UserPrincipal;
 import com.hanghae99.afterwork.service.UserService;

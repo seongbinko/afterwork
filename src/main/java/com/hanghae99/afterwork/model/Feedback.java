@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Table(name = "feedbacks")
 @Getter @Setter
 @AllArgsConstructor @Builder
-@NoArgsConstructor (access = AccessLevel.PROTECTED)// protected로 기본생성자 생성
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Feedback extends BaseTimeEntity{
 
     @Id

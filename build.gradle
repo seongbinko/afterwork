@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.hanghae99'
-version = '0.0.1-SNAPSHOT-'+new Date().format("yyyyMMddHHmmss")
+version = '1.0.0-SNAPSHOT-'+new Date().format("yyyyMMddHHmmss")
 sourceCompatibility = '1.8'
 
 configurations {
@@ -35,8 +35,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.batch:spring-batch-test'
     testImplementation 'org.springframework.security:spring-security-test'
-
-    // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
 }
