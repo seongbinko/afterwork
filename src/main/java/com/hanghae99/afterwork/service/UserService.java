@@ -1,13 +1,16 @@
 package com.hanghae99.afterwork.service;
 
-import com.hanghae99.afterwork.dto.UserRequestDto;
+import com.hanghae99.afterwork.dto.*;
+import com.hanghae99.afterwork.exception.ResourceNotFoundException;
 import com.hanghae99.afterwork.model.*;
 import com.hanghae99.afterwork.repository.*;
+import com.hanghae99.afterwork.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -19,11 +22,45 @@ public class UserService {
     private final CategoryRepository categoryRepository;
     private final CollectRepository collectRepository;
 
-    public Long modifyUser(UserRequestDto userRequestDto, User user){
+    public UserResponseDto getCurrentUser(UserPrincipal userPrincipal) {
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
+
+        return new UserResponseDto(
+                user.getUserId(),
+                user.getEmail(),
+                user.getName(),
+                user.getImageUrl(),
+                user.getOffTime(),
+                user.getLocations().stream().map(
+                        location -> new LocationResponseDto(
+                                location.getLocationId(),
+                                location.getName()
+                        )
+                ).collect(Collectors.toList()),
+                user.getInterests().stream().map(
+                        interest -> new InterestResponseDto(
+                                interest.getInterestId(),
+                                interest.getCategory().getCategoryId()
+                        )
+                ).collect(Collectors.toList()),
+                user.getCollects().stream().map(
+                        collect -> new CollectResponseDto(
+                                collect.getCollectId(),
+                                collect.getProduct().getProductId()
+                        )
+                ).collect(Collectors.toList())
+        );
+    }
+
+    public Long modifyUser(UserRequestDto userRequestDto, UserPrincipal userPrincipal){
 
         String offTime = userRequestDto.getOffTime();
         List<String> locationList = userRequestDto.getLocations();
         List<Long> categoryList = userRequestDto.getCategorys();
+
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
 
         deleteLocation(user);
         deleteInterest(user);
@@ -56,7 +93,10 @@ public class UserService {
         return user.getUserId();
     }
 
-    public void deleteUser(User user){
+    public void deleteUser(UserPrincipal userPrincipal){
+
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
 
         deleteLocation(user);
         deleteInterest(user);
@@ -91,5 +131,4 @@ public class UserService {
             collectRepository.delete(collect);
         }
     }
-
 }

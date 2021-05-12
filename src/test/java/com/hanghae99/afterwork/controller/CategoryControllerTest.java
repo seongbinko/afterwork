@@ -84,6 +84,7 @@ class CategoryControllerTest {
         String strSize = "12";
         String strSort = "price";
         String strDirection = "asc";
+        String strFilter = "total";
 
         List<Category> categoryList = categoryRepository.findAll();
 
@@ -108,6 +109,7 @@ class CategoryControllerTest {
                 .param("size",strSize)
                 .param("sort",strSort)
                 .param("direction",strDirection)
+                .param("filter",strFilter)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(unauthenticated());
