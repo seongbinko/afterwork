@@ -58,20 +58,14 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity modifyUser(@CurrentUser UserPrincipal userPrincipal, @RequestBody UserRequestDto userRequestDto){
 
-        User user = userRepository.findById(userPrincipal.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
-
-        return ResponseEntity.ok().body(userService.modifyUser(userRequestDto, user));
+        return ResponseEntity.ok().body(userService.modifyUser(userRequestDto, userPrincipal));
     }
 
     @DeleteMapping("/api/user")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity deleteUser(@CurrentUser UserPrincipal userPrincipal)
     {
-        User user = userRepository.findById(userPrincipal.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
-
-        userService.deleteUser(user);
+        userService.deleteUser(userPrincipal);
 
         return ResponseEntity.ok().build();
     }

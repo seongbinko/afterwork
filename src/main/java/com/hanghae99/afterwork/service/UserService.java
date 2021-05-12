@@ -1,8 +1,10 @@
 package com.hanghae99.afterwork.service;
 
 import com.hanghae99.afterwork.dto.UserRequestDto;
+import com.hanghae99.afterwork.exception.ResourceNotFoundException;
 import com.hanghae99.afterwork.model.*;
 import com.hanghae99.afterwork.repository.*;
+import com.hanghae99.afterwork.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +21,14 @@ public class UserService {
     private final CategoryRepository categoryRepository;
     private final CollectRepository collectRepository;
 
-    public Long modifyUser(UserRequestDto userRequestDto, User user){
+    public Long modifyUser(UserRequestDto userRequestDto, UserPrincipal userPrincipal){
 
         String offTime = userRequestDto.getOffTime();
         List<String> locationList = userRequestDto.getLocations();
         List<Long> categoryList = userRequestDto.getCategorys();
+
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
 
         deleteLocation(user);
         deleteInterest(user);
@@ -56,7 +61,10 @@ public class UserService {
         return user.getUserId();
     }
 
-    public void deleteUser(User user){
+    public void deleteUser(UserPrincipal userPrincipal){
+
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
 
         deleteLocation(user);
         deleteInterest(user);
