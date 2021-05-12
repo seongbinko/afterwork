@@ -1,12 +1,10 @@
 package com.hanghae99.afterwork.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
 import com.hanghae99.afterwork.dto.UserRequestDto;
 import com.hanghae99.afterwork.dto.UserResponseDto;
 import com.hanghae99.afterwork.exception.ResourceNotFoundException;
 import com.hanghae99.afterwork.model.AuthProvider;
-import com.hanghae99.afterwork.model.Location;
 import com.hanghae99.afterwork.model.User;
 import com.hanghae99.afterwork.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -18,20 +16,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.TestExecutionEvent;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
-import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -80,7 +76,6 @@ class UserControllerTest {
 
     @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION) //BeforEach 실행 이후에 실행시킨다
     @DisplayName("프로필 수정하기 - 입력값 정상")
-    // Todo Location과 Interest는 추가적인 작업 필요 keyword : @Transactional
     @Test
     void modifyUser() throws Exception {
         String offTime = "18:00:28";
@@ -104,7 +99,7 @@ class UserControllerTest {
         assertEquals(offTime, user.get().getOffTime());
     }
 
-    @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION) //BeforEach 실행 이후에 실행시킨다
+    @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("프로필 삭제 - 입력값 정상")
     @Test
     void deleteUser() throws Exception {
