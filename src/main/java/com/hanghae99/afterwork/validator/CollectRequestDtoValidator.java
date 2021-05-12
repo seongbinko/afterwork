@@ -1,16 +1,10 @@
 package com.hanghae99.afterwork.validator;
 
 import com.hanghae99.afterwork.dto.CollectRequestDto;
-import com.hanghae99.afterwork.model.Collect;
-import com.hanghae99.afterwork.model.Product;
-import com.hanghae99.afterwork.repository.CollectRepository;
 import com.hanghae99.afterwork.repository.ProductRepository;
-import com.hanghae99.afterwork.security.UserPrincipal;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-
-import java.util.List;
 
 @Component
 public class CollectRequestDtoValidator implements Validator {

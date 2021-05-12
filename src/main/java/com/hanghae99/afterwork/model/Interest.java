@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter @Setter
 @AllArgsConstructor
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)// protected로 기본생성자 생성
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Interest extends BaseTimeEntity{
 
     @Id

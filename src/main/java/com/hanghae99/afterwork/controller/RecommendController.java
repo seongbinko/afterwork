@@ -1,7 +1,6 @@
 package com.hanghae99.afterwork.controller;
 
 import com.hanghae99.afterwork.dto.ProductResponseDto;
-import com.hanghae99.afterwork.model.User;
 import com.hanghae99.afterwork.security.CurrentUser;
 import com.hanghae99.afterwork.security.UserPrincipal;
 import com.hanghae99.afterwork.service.RecommendService;

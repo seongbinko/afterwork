@@ -12,4 +12,5 @@ public interface CollectRepository extends JpaRepository<Collect, Long> {
     void deleteByCollectId(Long collectId);
     List<Collect> findAllByUser(User user);
     boolean existsByUserAndProduct (User user, Product product);
+    Collect findByProductAndUser(Product product, User user);
 }

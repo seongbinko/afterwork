@@ -1,6 +1,7 @@
 package com.hanghae99.afterwork.service;
 
 import com.hanghae99.afterwork.dto.ProductResponseDto;
+import com.hanghae99.afterwork.exception.ResourceNotFoundException;
 import com.hanghae99.afterwork.model.Interest;
 import com.hanghae99.afterwork.model.Location;
 import com.hanghae99.afterwork.model.Product;
@@ -13,10 +14,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -34,7 +33,8 @@ public class RecommendService {
     }
 
     public List<ProductResponseDto> recommendProduct(UserPrincipal userPrincipal){
-        User user = userRepository.findByUserId(userPrincipal.getId());
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
         List<Location> locations = user.getLocations();
         if(locations.size() > 0){
             //JPQL query parameter builder

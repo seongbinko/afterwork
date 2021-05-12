@@ -1,13 +1,7 @@
 package com.hanghae99.afterwork.dto;
 
-import com.hanghae99.afterwork.model.Category;
-import com.hanghae99.afterwork.model.Collect;
-import com.hanghae99.afterwork.model.Interest;
-import com.hanghae99.afterwork.model.Location;
-import lombok.Builder;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
