@@ -1,6 +1,7 @@
 package com.hanghae99.afterwork.service;
 
 import com.hanghae99.afterwork.dto.ProductResponseDto;
+import com.hanghae99.afterwork.exception.ResourceNotFoundException;
 import com.hanghae99.afterwork.model.Interest;
 import com.hanghae99.afterwork.model.Location;
 import com.hanghae99.afterwork.model.Product;
@@ -34,7 +35,8 @@ public class RecommendService {
     }
 
     public List<ProductResponseDto> recommendProduct(UserPrincipal userPrincipal){
-        User user = userRepository.findByUserId(userPrincipal.getId());
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
         List<Location> locations = user.getLocations();
         if(locations.size() > 0){
             //JPQL query parameter builder
