@@ -42,18 +42,18 @@
 
 - [Postman document](https://documenter.getpostman.com/view/11580833/TzRVdRFD)
 
-|기능|Method|URL|Param|
+|기능|Method|URL|Params / Body|
 |:---|:---:|:---:|:---:|
 |카테고리 목록|GET|/api/categorys||
-|카테고리 별 리스트|GET|/api/categorys/{categoryId}|page=0&size=10&sort=price&direction=desc&filter=total|
+|카테고리 별 리스트|GET|/api/categorys/{categoryId}|page, size, sort, direction,filter|
 |찜 목록 불러오기|GET|/api/collects||
 |찜 등록|POST|/api/collects||
 |찜 목록 전체 삭제|DELETE|/api/collects||
 |찜 목록 개별 삭제|DELETE|/api/collects/{collectId}||
 |위치별 추천 리스트|GET|/api/recommend||
 |관심카테고리 별 추천 리스트|GET|/api/recommend/categorys||
-|검색|GET|/api/search|page=0&size=10&sort=price&direction=desc&filter=total|
-|로그인한 회원정보 조회|GET|/api/user/me||
+|검색|GET|/api/search|page, size, sort, direction,filter|
+|로그인한 회원정보 조회|GET|/api/user/me| offtime, locations, categorys |
 |회원정보 수정|POST|/api/user||
 |회원정보 탈퇴|DELETE|/api/user||
 
