@@ -23,7 +23,7 @@
   - 고성빈
     - 인프라 구축
     - 테이블 설계
-    - 소셜 로그인(Google, Kakao, Naver)
+    - 소셜 로그인(Google, Kakao, Naver), 회원정보 조회 api 구현
     - Http -> Https 전환
     - 빌드 자동화 및 서비스 무중단 배포 구현
   - 김남석
@@ -53,20 +53,20 @@
 
 - [Postman document](https://documenter.getpostman.com/view/11580833/TzRVdRFD)
 
-|기능|Method|URL|Params / Body|
+|기능|Method|URL| Request Params / Body|
 |:---|:---:|:---:|:---:|
 |카테고리 목록|GET|/api/categorys||
 |카테고리 별 리스트|GET|/api/categorys/{categoryId}|page, size, sort, direction,filter|
 |찜 목록 불러오기|GET|/api/collects||
-|찜 등록|POST|/api/collects||
+|찜 등록|POST|/api/collects| productId |
 |찜 목록 전체 삭제|DELETE|/api/collects||
 |찜 목록 개별 삭제|DELETE|/api/collects/{collectId}||
 |위치별 추천 리스트|GET|/api/recommend||
 |관심카테고리 별 추천 리스트|GET|/api/recommend/categorys||
 |검색|GET|/api/search|page, size, sort, direction,filter|
-|로그인한 회원정보 조회|GET|/api/user/me| offtime, locations, categorys |
-|회원정보 수정|POST|/api/user||
+|회원정보 수정|POST|/api/user| offtime, locations, categorys |
 |회원정보 탈퇴|DELETE|/api/user||
+|로그인 회원정보 조회|GET|/api/user/me| |
 
 ## 타임라인
 
