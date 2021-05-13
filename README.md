@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/seongbinko/afterwork.svg?branch=master)](https://travis-ci.com/seongbinko/afterwork)
 
-# AFTER WORK - BACKEND REPOSITORY
+# AFTER WORK - BACKEND SERVER REPOSITORY
 
 ### AFTER WORK SERVICE URL
 
