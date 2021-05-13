@@ -23,7 +23,10 @@
     - Http -> Https 전환
     - 빌드 자동화 및 서비스 무중단 배포 구현
   - 김남석:
-  - 최재성:
+  - 최재성
+    - 하비풀, 모카클래스, 탈잉 웹사이트 자동 크롤링 구현
+    - 찜 항목 저장, 개별 및 전체 삭제, 조회 api 구현
+    - 지역별 추천 상품 api 구현
 - 개발 환경 : Springboot 2.4.5, Spring Security, Spring JPA, Junit5
 - 배포 환경 : Gradle, Travis CI, AWS S3, AWS CodeDeploy
 - 서버 : Nginx, AWS EC2
