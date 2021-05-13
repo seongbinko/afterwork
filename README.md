@@ -12,13 +12,18 @@
 
 ## 개요
 
-- 명칭 : [AFTER WORK](https://afterwork.co.kr/)
+- 명칭 : AFTER WORK - SERVER
 - 개발 인원 : 프론트(React) 3명, 백엔드(Spring) 3명, 디자이너 1명
 - 개발 기간 : 2021.04.25 ~ 2021.05.12
 - 담당 업무 :
-    - 고성빈: 프로젝트 인프라 구축, 테이블 설계, 테스트코드 작성
-    - 김남석:
-    - 최재성:
+  - 고성빈
+    - 인프라 구축
+    - 테이블 설계
+    - 소셜 로그인(Google, Kakao, Naver)
+    - Http -> Https 전환
+    - 빌드 자동화 및 서비스 무중단 배포 구현
+  - 김남석:
+  - 최재성:
 - 개발 환경 : Springboot 2.4.5, Spring Security, Spring JPA, Junit5
 - 배포 환경 : Gradle, Travis CI, AWS S3, AWS CodeDeploy
 - 서버 : Nginx, AWS EC2
@@ -27,13 +32,15 @@
 - 간단 소개 : 퇴근하고 뭐할지 고민하는 사람들을 위한, 모든 플랫폼들의 취미들을 한 곳에서 비교가능한 서비스 <br/> 사용자는 관심 지역, 관심 카테고리에 따라 클래스를 추천받을 수 있다
 - 주요 기능 : 소셜 로그인(Google, Kakao, Naver), 검색기능, 찜 기능, 사용자 관심지역, 카테고리별 추천 기능
 - 특징 : 서비스의 데이터를 정기적으로 최신화 ([Afterwork-Scheduler-Repository](https://github.com/seongbinko/afterwork-scheduler)) <br/>
-  빌드 자동화를 통한 서비스 무중단 배포 구현 <br/>
+  빌드 자동화를 통한 서비스 무중단 배포 구현
 
 ## 테이블 설계
 
 <img width="642" alt="스크린샷 2021-05-13 오후 4 24 13" src="https://user-images.githubusercontent.com/60464424/118092957-b8046a80-b407-11eb-9ca0-d18c84239d86.png">
 
 ## API 설계
+
+- [Postman document](https://documenter.getpostman.com/view/11580833/TzRVdRFD)
 
 |기능|Method|URL|Param|
 |:---|:---:|:---:|:---:|
@@ -43,9 +50,8 @@
 |찜 등록|POST|/api/collects||
 |찜 목록 전체 삭제|DELETE|/api/collects||
 |찜 목록 개별 삭제|DELETE|/api/collects/{collectId}||
-|피드백 등록|POST|/api/feedback||
 |위치별 추천 리스트|GET|/api/recommend||
-|관심카테고리 별 추천 리스트|GET|/api/recommend/category||
+|관심카테고리 별 추천 리스트|GET|/api/recommend/categorys||
 |검색|GET|/api/search|page=0&size=10&sort=price&direction=desc&filter=total|
 |로그인한 회원정보 조회|GET|/api/user/me||
 |회원정보 수정|POST|/api/user||
