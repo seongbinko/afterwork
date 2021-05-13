@@ -35,6 +35,22 @@
 
 ## API 설계
 
+|기능|Method|URL|Param|
+|:---|:---:|:---:|:---:|
+|카테고리 목록|GET|/api/categorys||
+|카테고리 별 리스트|GET|/api/categorys/{categoryId}|page=0&size=10&sort=price&direction=desc&filter=total|
+|찜 목록 불러오기|GET|/api/collects||
+|찜 등록|POST|/api/collects||
+|찜 목록 전체 삭제|DELETE|/api/collects||
+|찜 목록 개별 삭제|DELETE|/api/collects/{collectId}||
+|피드백 등록|POST|/api/feedback||
+|위치별 추천 리스트|GET|/api/recommend||
+|관심카테고리 별 추천 리스트|GET|/api/recommend/category||
+|검색|GET|/api/search|page=0&size=10&sort=price&direction=desc&filter=total|
+|로그인한 회원정보 조회|GET|/api/user/me||
+|회원정보 수정|POST|/api/user||
+|회원정보 탈퇴|DELETE|/api/user||
+
 ## 타임라인
 
 | 일자       | 진행 목록                                                    |
