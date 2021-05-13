@@ -10,6 +10,10 @@
 
 - https://github.com/miniPinetree/_AfterWork
 
+### AFTER WORK - BACKEND SCHEDULER REPOSITORY
+
+- https://github.com/seongbinko/afterwork-scheduler
+
 ## 개요
 
 - 명칭 : AFTER WORK - SERVER
