@@ -55,11 +55,13 @@ public class RecommendService {
                 }
             }
             Query query = em.createQuery(String.valueOf(jpql));
-            List<Product> temp = query.getResultList();
+            List<Product> foundList = query.getResultList();
             List<Product> productList = new ArrayList<>();
-            Random ran = new Random();
-            for(int i = 0; i < 12; i++){
-                productList.add(temp.get(ran.nextInt(temp.size())));
+
+            int[] randomItem = getRandomItem(foundList.size());
+
+            for(int i = 0; i < randomItem.length; i++){
+                productList.add(foundList.get(randomItem[i]));
             }
 
             List<ProductResponseDto> productResponseDtoList =
@@ -99,11 +101,13 @@ public class RecommendService {
                 }
             }
             Query query = em.createQuery(String.valueOf(jpql));
-            List<Product> temp = query.getResultList();
+            List<Product> foundList = query.getResultList();
             List<Product> productList = new ArrayList<>();
-            Random ran = new Random();
-            for(int i = 0; i < 12; i++){
-                productList.add(temp.get(ran.nextInt(temp.size())));
+
+            int[] randomItem = getRandomItem(foundList.size());
+
+            for(int i = 0; i < randomItem.length; i++){
+                productList.add(foundList.get(randomItem[i]));
             }
 
             List<ProductResponseDto> productResponseDtoList =
@@ -125,5 +129,40 @@ public class RecommendService {
             return productResponseDtoList;
         }
         return null;
+    }
+
+    public int[] getRandomItem (int foundListSize){
+
+        int arrSize = 0;
+
+        if(foundListSize >= 12){
+            arrSize = 12;
+        }else{
+            arrSize = foundListSize;
+        }
+
+        Random ran = new Random();
+        int[] arr = new int[arrSize];
+
+        int j = 0;
+        //뽑을 번호의 방 만큼 돌기
+        while(j < arrSize){
+            //긁어온 상품 리스트 크기 만큼 랜덤값 뽑기
+            int rNum = ran.nextInt(foundListSize);
+            int check = 1;
+            int k = 0;
+            //랜덤 중복 유효 검사
+            while(k < j){
+                if(rNum == arr[k]){
+                    check = -1;
+                }
+                k += 1;
+            }
+            if(check == 1){
+                arr[j] = rNum;
+                j += 1;
+            }
+        }
+        return arr;
     }
 }
