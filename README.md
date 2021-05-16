@@ -46,9 +46,9 @@
     - 하비풀, 모카클래스, 탈잉 웹사이트 자동 크롤링 구현
     - 찜 항목 저장, 개별 및 전체 삭제, 조회 api 구현
     - 지역별 추천 상품 api 구현
-- 개발 환경 : Springboot 2.4.5, Spring Security, Spring JPA, Junit5
-- 배포 환경 : Gradle, Travis CI, AWS S3, AWS CodeDeploy
-- 서버 : Nginx, AWS EC2
+- 개발 환경 : Springboot 2.4.5, Jdk 1.8, Spring Security, Spring JPA, Junit5
+- 배포 환경 : Gradle, Travis CI, AWS S3, AWS CodeDeploy, AWS EC2
+- 웹 서버 : Nginx, Tomcat 9.0
 - 데이터베이스 : MariaDB 10.4 (AWS RDS)
 - 협업툴: Git, Notion, Slack
 - 간단 소개 : 퇴근하고 뭐할지 고민하는 사람들을 위한, 모든 플랫폼들의 취미들을 한 곳에서 비교가능한 서비스 <br/> 사용자는 관심 지역, 관심 카테고리에 따라 클래스를 추천받을 수 있다
