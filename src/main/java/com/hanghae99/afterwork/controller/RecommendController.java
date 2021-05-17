@@ -28,4 +28,14 @@ public class RecommendController {
     public List<ProductResponseDto> recommendCategoryProduct(@CurrentUser UserPrincipal userPrincipal){
         return recommendService.recommendCategoryProduct(userPrincipal);
     }
+
+    @GetMapping("/api/recommend/online")
+    public List<ProductResponseDto> recommendOnlineProduct(){
+        return recommendService.recommendOnlineProduct();
+    }
+
+    @GetMapping("/api/recommend/offline")
+    public List<ProductResponseDto> recommendOfflineProduct(){
+        return recommendService.recommendOfflineProduct();
+    }
 }

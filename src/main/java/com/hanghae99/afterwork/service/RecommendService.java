@@ -6,6 +6,7 @@ import com.hanghae99.afterwork.model.Interest;
 import com.hanghae99.afterwork.model.Location;
 import com.hanghae99.afterwork.model.Product;
 import com.hanghae99.afterwork.model.User;
+import com.hanghae99.afterwork.repository.ProductRepository;
 import com.hanghae99.afterwork.repository.UserRepository;
 import com.hanghae99.afterwork.security.UserPrincipal;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,14 @@ import java.util.stream.Collectors;
 public class RecommendService {
 
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
     @PersistenceContext
     EntityManager em;
 
-    public RecommendService(UserRepository userRepository){
+    public RecommendService(UserRepository userRepository, ProductRepository productRepository){
         this.userRepository = userRepository;
+        this.productRepository = productRepository;
     }
 
     public List<ProductResponseDto> recommendProduct(UserPrincipal userPrincipal){
@@ -129,6 +132,50 @@ public class RecommendService {
             return productResponseDtoList;
         }
         return null;
+    }
+
+    public List<ProductResponseDto> recommendOnlineProduct(){
+        List<Product> productList = productRepository.findByRecommendOnline();
+
+        List<ProductResponseDto> productResponseDtoList =
+                productList.stream().map(
+                        product -> new ProductResponseDto(
+                                product.getProductId(),
+                                product.getTitle(),
+                                product.getPrice(),
+                                product.getPriceInfo(),
+                                product.getAuthor(),
+                                product.getImgUrl(),
+                                product.isOnline(),
+                                product.getLocation(),
+                                product.getPopularity(),
+                                product.getStatus(),
+                                product.getSiteName(),
+                                product.getSiteUrl()
+                        )).collect(Collectors.toList());
+        return productResponseDtoList;
+    }
+
+    public List<ProductResponseDto> recommendOfflineProduct(){
+        List<Product> productList = productRepository.findByRecommendOffline();
+
+        List<ProductResponseDto> productResponseDtoList =
+                productList.stream().map(
+                        product -> new ProductResponseDto(
+                                product.getProductId(),
+                                product.getTitle(),
+                                product.getPrice(),
+                                product.getPriceInfo(),
+                                product.getAuthor(),
+                                product.getImgUrl(),
+                                product.isOnline(),
+                                product.getLocation(),
+                                product.getPopularity(),
+                                product.getStatus(),
+                                product.getSiteName(),
+                                product.getSiteUrl()
+                        )).collect(Collectors.toList());
+        return productResponseDtoList;
     }
 
     public int[] getRandomItem (int foundListSize){

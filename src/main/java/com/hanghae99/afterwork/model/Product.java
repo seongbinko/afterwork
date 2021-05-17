@@ -54,4 +54,8 @@ public class Product extends BaseTimeEntity{
     @OneToMany(mappedBy = "product")
     @Builder.Default
     List<Collect> collects = new ArrayList<>();
+
+    private boolean isRecommendOnline;
+
+    private boolean isRecommendOffline;
 }
