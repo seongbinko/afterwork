@@ -29,6 +29,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "group by p.title")
     Page<Product> findAllByTitleLikeAndOnlineAndLocation(@Param("keyword")String keyword, @Param("isOnline") Boolean isOnline, @Param("isOffline") Boolean isOffline, Pageable pageable);
 
+    @Query("select p from Product p where p.isRecommendOnline = true")
+    List<Product> findByRecommendOnline();
+
+    @Query("select p from Product p where p.isRecommendOffline = true")
+    List<Product> findByRecommendOffline();
+
     boolean existsByProductId(Long productId);
     Product findByProductId(Long productId);
     Optional<Product> findByTitleLikeAndCategory(String title, Category category);
