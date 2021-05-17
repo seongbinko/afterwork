@@ -58,7 +58,7 @@
 
 ## 테이블 설계
 
-<img width="642" alt="스크린샷 2021-05-13 오후 4 24 13" src="https://user-images.githubusercontent.com/60464424/118092957-b8046a80-b407-11eb-9ca0-d18c84239d86.png">
+![스크린샷 2021-05-17 오후 2 06 13](https://user-images.githubusercontent.com/60464424/118435052-163b9100-b719-11eb-9214-977d95a696b0.png)
 
 ## API 설계
 
