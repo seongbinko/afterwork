@@ -19,6 +19,7 @@ public class ProductResponseDto {
     private String author;
     private String imgUrl;
     private boolean isOnline;
+    private boolean isOffline;
     private String location;
     private int popularity;
     private String status;
@@ -33,7 +34,7 @@ public class ProductResponseDto {
     }
 
     public ProductResponseDto(Long productId, String title, int price, String priceInfo, String author, String imgUrl,
-                              boolean isOnline, String location, int popularity, String status, String siteName,
+                              boolean isOnline, boolean isOffline,String location, int popularity, String status, String siteName,
                               String siteUrl)
     {
         this.productId = productId;
@@ -43,6 +44,7 @@ public class ProductResponseDto {
         this.author = author;
         this.imgUrl = imgUrl;
         this.isOnline = isOnline;
+        this.isOffline = isOffline;
         this.location = location;
         this.popularity = popularity;
         this.status = status;
@@ -65,7 +67,6 @@ public class ProductResponseDto {
         this.status = product.getStatus();
         this.siteName = product.getSiteName();
         this.siteUrl = product.getSiteUrl();
-
     }
 
 }
