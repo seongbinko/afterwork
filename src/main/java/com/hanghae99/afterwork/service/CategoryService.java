@@ -70,6 +70,7 @@ public class CategoryService {
                         product.getAuthor(),
                         product.getImgUrl(),
                         product.isOnline(),
+                        product.isOffline(),
                         product.getLocation(),
                         product.getPopularity(),
                         product.getStatus(),

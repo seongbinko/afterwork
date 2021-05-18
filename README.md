@@ -101,4 +101,5 @@
 | 2021.05.12 | Controller 에 구현한 api 를 service 로 refactoring - [김남석] [고성빈] <br/> Collect, Recommend api 에 예외 처리 추가 - [최재성] <br/> 프로젝트 성능 개선을 위해 불필요한 import , 주석, 출력 모두 제거 - [고성빈] <br/> License 구현 - [고성빈] |
 | 2021.05.13 | SecurityConfig /api/** permit 에서 사용하는 api만 permit 으로 fit - [김남석] <br/> 검색 필터 오류(online,offline 둘다 되는 경우 total일 경우에만 나타나는 현상) fit - [김남석] <br/> start.sh log파일 생성하도록 변경 - [고성빈]|
 | 2021.05.15 | Recommend service, Recommend category 중복 값 제거 메소드 추가 - [김남석] [최재성] |
-| 2021.05.17 | 오늘의 오프라인 클래스, 온라인 클래스 추천을 위한 컬럼 추가 (is_recommend_offline, is_recommend_online) - [고성빈] <br/> 정확한 로그 확인을 위한 application.yml 정보 수정 <br/> 온라인/오프라인 랜덤추천 기능 추가 - [김남석]|
+| 2021.05.17 | 오늘의 오프라인 클래스, 온라인 클래스 추천을 위한 컬럼 추가 (is_recommend_offline, is_recommend_online) - [고성빈] <br/> 정확한 로그 확인을 위한 application.yml 정보 수정 - [고성빈] <br/> 온라인/오프라인 랜덤추천 기능 추가 - [김남석]|
+| 2021.05.18 | 온라인/오프라인 랜덤추천 기능 테스트코드 추가 - [김남석]|
