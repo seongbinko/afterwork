@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -199,6 +200,100 @@ class RecommendControllerTest {
 
         for (ProductResponseDto productResponseDto : productResponseDtoList) {
             assertEquals("Y", productResponseDto.getStatus());
+        }
+    }
+
+    @DisplayName("온라인 랜덤 추천 - 정상")
+    @Test
+    void recommendOnlineProduct() throws Exception {
+
+        int intSize = 12;
+
+        Category category = categoryRepository.findByName(arr[0]).orElse(null);
+
+        for (int i = 0; i < 24; i++) {
+            boolean isRecommendOnline = true;
+            if ( i > 11) {
+                isRecommendOnline = false;
+            }
+            Product product = Product.builder()
+                    .title("title" + i)
+                    .isOnline(true)
+                    .popularity(1000)
+                    .price(50000)
+                    .priceInfo("50,000")
+                    .siteName("Test")
+                    .siteUrl(null)
+                    .status("Y")
+                    .category(category)
+                    .isRecommendOnline(isRecommendOnline)
+                    .build();
+
+            productRepository.save(product);
+        }
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/recommend/online")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(unauthenticated())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<ProductResponseDto> productResponseDtoList = objectMapper.readValue(contentAsString, new TypeReference<List<ProductResponseDto>>() {});
+
+        assertEquals(intSize,productResponseDtoList.size());
+
+        for (ProductResponseDto productResponseDto : productResponseDtoList) {
+            assertEquals(true, productResponseDto.isOnline());
+        }
+    }
+
+    @DisplayName("오프라인 랜덤 추천 - 정상")
+    @Test
+    void recommendOfflineProduct() throws Exception {
+
+        int intSize = 12;
+
+        Category category = categoryRepository.findByName(arr[0]).orElse(null);
+
+        for (int i = 0; i < 24; i++) {
+            boolean isRecommendOffline = true;
+            if ( i > 11) {
+                isRecommendOffline = false;
+            }
+            Product product = Product.builder()
+                    .title("title" + i)
+                    .isOffline(true)
+                    .popularity(1000)
+                    .price(50000)
+                    .priceInfo("50,000")
+                    .siteName("Test")
+                    .siteUrl(null)
+                    .status("Y")
+                    .category(category)
+                    .isRecommendOffline(isRecommendOffline)
+                    .build();
+
+            productRepository.save(product);
+        }
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/recommend/offline")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(unauthenticated())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<ProductResponseDto> productResponseDtoList = objectMapper.readValue(contentAsString, new TypeReference<List<ProductResponseDto>>() {});
+
+        assertEquals(intSize,productResponseDtoList.size());
+
+        for (ProductResponseDto productResponseDto : productResponseDtoList) {
+            assertEquals(true, productResponseDto.isOffline());
         }
     }
 }
