@@ -80,7 +80,7 @@ public class SearchService {
             }
         }
 
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, strSort));
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, strSort).and(Sort.by(Sort.Direction.ASC,"title")));
 
         keyword = "%" + keyword + "%";
 
