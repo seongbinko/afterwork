@@ -39,7 +39,7 @@
     - 빌드 자동화 및 서비스 무중단 배포 구현
   - 김남석
     - 클래스톡, 하비인더박스, 마이비스킷, 클래스101 웹사이트 자동 크롤링 구현
-    - 카테고리 별 리스트, 검색, 카테고리별 추천 리스트 api 구현
+    - 카테고리 별 리스트, 검색, 카테고리별 추천 리스트, 온라인 추천 리스트, 오프라인 추천 리스트 api 구현
     - 카테고리 조회 api 구현
     - 회원정보 수정 / 탈퇴 api 구현    
   - 최재성
@@ -67,13 +67,15 @@
 |기능|Method|URL| Request Params / Body|
 |:---|:---:|:---:|:---:|
 |카테고리 목록|GET|/api/categorys||
-|카테고리 별 리스트|GET|/api/categorys/{categoryId}|page, size, sort, direction,filter|
+|카테고리 별 리스트|GET|/api/categorys/{categoryId}|page, size, sort, direction, filter, sitename|
 |찜 목록 불러오기|GET|/api/collects||
 |찜 등록|POST|/api/collects| productId |
 |찜 목록 전체 삭제|DELETE|/api/collects||
 |찜 목록 개별 삭제|DELETE|/api/collects/{collectId}||
 |위치별 추천 리스트|GET|/api/recommend||
 |관심카테고리 별 추천 리스트|GET|/api/recommend/categorys||
+|온라인 추천 리스트|GET|/api/recommend/online||
+|오프라인 추천 리스트|GET|/api/recommend/offline||
 |검색|GET|/api/search|page, size, sort, direction,filter|
 |회원정보 수정|POST|/api/user| offtime, locations, categorys |
 |회원정보 탈퇴|DELETE|/api/user||
