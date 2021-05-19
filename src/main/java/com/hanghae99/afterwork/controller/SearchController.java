@@ -15,8 +15,12 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping("/api/search")
-    public Page<ProductResponseDto> getProductByKeyword(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String strSort, @RequestParam(value = "direction", required = false, defaultValue = "desc") String strDirection, @RequestParam(value = "filter", required = false, defaultValue = "total") String strFilter) {
-        return searchService.getProductByKeyword(keyword, page, size, strSort, strDirection, strFilter);
+    public Page<ProductResponseDto> getProductByKeyword(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+                                                        @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String strSort,
+                                                        @RequestParam(value = "direction", required = false, defaultValue = "desc") String strDirection,
+                                                        @RequestParam(value = "filter", required = false, defaultValue = "total") String strFilter,
+                                                        @RequestParam(value = "sitename", required = false, defaultValue = "전체") String strSiteName) {
+        return searchService.getProductByKeyword(keyword, page, size, strSort, strDirection, strFilter, strSiteName);
     }
 
 }

@@ -23,9 +23,13 @@ public class CategoryController {
     }
 
     @GetMapping("/api/categorys/{id}")
-    public Page<ProductResponseDto> getProductByCategory(@PathVariable("id") Long categoryId, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String strSort, @RequestParam(value = "direction", required = false, defaultValue = "desc") String strDirection, @RequestParam(value = "filter", required = false, defaultValue = "total") String strFilter) {
+    public Page<ProductResponseDto> getProductByCategory(@PathVariable("id") Long categoryId, @RequestParam("page") int page,
+                                                         @RequestParam("size") int size, @RequestParam("sort") String strSort,
+                                                         @RequestParam(value = "direction", required = false, defaultValue = "desc") String strDirection,
+                                                         @RequestParam(value = "filter", required = false, defaultValue = "total") String strFilter,
+                                                         @RequestParam(value = "sitename", required = false, defaultValue = "전체") String strSiteName) {
 
-        return categoryService.getProductByCategory(categoryId, page, size, strSort, strDirection, strFilter);
+        return categoryService.getProductByCategory(categoryId, page, size, strSort, strDirection, strFilter, strSiteName);
     }
 
 }
