@@ -98,16 +98,8 @@ public class CategoryService {
                 isHobbyful = true;
             }
         }
-
-        System.out.println("isTaling = " + isTaling);
-        System.out.println("isClass101 = " + isClass101);
-        System.out.println("isHobyInTheBox = " + isHobyInTheBox);
-        System.out.println("isIdus = " + isIdus);
-        System.out.println("isMybiskit = " + isMybiskit);
-        System.out.println("isMochaClass = " + isMochaClass);
-        System.out.println("isHobbyful = " + isHobbyful);
-
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, strSort));
+        
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, strSort).and(Sort.by(Sort.Direction.ASC,"title")));
 
         Category category = categoryRepository.findById(categoryId).orElse(null);
         Page<Product> productList = productRepository.findAllByCategoryAndOnline(category, isOnline, isOffline, isTaling,
