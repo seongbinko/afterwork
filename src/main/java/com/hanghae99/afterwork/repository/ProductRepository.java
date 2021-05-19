@@ -18,16 +18,40 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "select p from Product p where p.category = :#{#category} and p.status = 'Y' and " +
             "(((:isOnline = true and :isOffline = false) and (p.isOnline = :isOnline)) or " +
             "((:isOnline = false and :isOffline = true) and (p.isOffline = :isOffline)) or" +
-            "((:isOnline = true and :isOffline = true) and (p.isOnline = true or p.isOnline = false and p.isOffline = true or p.isOffline = false)))" +
+            "((:isOnline = true and :isOffline = true) and (p.isOnline = true or p.isOnline = false and p.isOffline = true or p.isOffline = false))) and" +
+            "(((:isTaling = true) and (p.siteName like '탈잉')) or" +
+            "((:isClass101 = true) and (p.siteName like '클래스101')) or" +
+            "((:isHobyInTheBox = true) and (p.siteName like '하비인더박스')) or" +
+            "((:isIdus = true) and (p.siteName like '아이디어스')) or" +
+            "((:isMybiskit = true) and (p.siteName like '마이비스킷')) or" +
+            "((:isMochaClass = true) and (p.siteName like '모카클래스')) or" +
+            "((:isHobbyful = true) and (p.siteName like '하비풀')))" +
             "group by p.title")
-    Page<Product> findAllByCategoryAndOnlineAndLocation(@Param("category") Category category, @Param("isOnline") Boolean isOnline, @Param("isOffline") Boolean isOffline, Pageable pageable);
+    Page<Product> findAllByCategoryAndOnline(@Param("category") Category category, @Param("isOnline") Boolean isOnline,
+                                             @Param("isOffline") Boolean isOffline, @Param("isTaling") Boolean isTaling,
+                                             @Param("isClass101") Boolean isClass101, @Param("isHobyInTheBox") Boolean isHobyInTheBox,
+                                             @Param("isIdus") Boolean isIdus, @Param("isMybiskit") Boolean isMybiskit,
+                                             @Param("isMochaClass") Boolean isMochaClass, @Param("isHobbyful") Boolean isHobbyful,
+                                             Pageable pageable);
 
     @Query(value = "select p from Product p where p.title like :keyword and p.status = 'Y' and " +
             "(((:isOnline = true and :isOffline = false) and (p.isOnline = :isOnline)) or " +
             "((:isOnline = false and :isOffline = true) and (p.isOffline = :isOffline)) or" +
-            "((:isOnline = true and :isOffline = true) and (p.isOnline = true or p.isOnline = false and p.isOffline = true or p.isOffline = false)))" +
+            "((:isOnline = true and :isOffline = true) and (p.isOnline = true or p.isOnline = false and p.isOffline = true or p.isOffline = false))) and" +
+            "(((:isTaling = true) and (p.siteName like '탈잉')) or" +
+            "((:isClass101 = true) and (p.siteName like '클래스101')) or" +
+            "((:isHobyInTheBox = true) and (p.siteName like '하비인더박스')) or" +
+            "((:isIdus = true) and (p.siteName like '아이디어스')) or" +
+            "((:isMybiskit = true) and (p.siteName like '마이비스킷')) or" +
+            "((:isMochaClass = true) and (p.siteName like '모카클래스')) or" +
+            "((:isHobbyful = true) and (p.siteName like '하비풀')))" +
             "group by p.title")
-    Page<Product> findAllByTitleLikeAndOnlineAndLocation(@Param("keyword")String keyword, @Param("isOnline") Boolean isOnline, @Param("isOffline") Boolean isOffline, Pageable pageable);
+    Page<Product> findAllByTitleLikeAndOnline(@Param("keyword")String keyword, @Param("isOnline") Boolean isOnline,
+                                              @Param("isOffline") Boolean isOffline, @Param("isTaling") Boolean isTaling,
+                                              @Param("isClass101") Boolean isClass101, @Param("isHobyInTheBox") Boolean isHobyInTheBox,
+                                              @Param("isIdus") Boolean isIdus, @Param("isMybiskit") Boolean isMybiskit,
+                                              @Param("isMochaClass") Boolean isMochaClass, @Param("isHobbyful") Boolean isHobbyful,
+                                              Pageable pageable);
 
     @Query("select p from Product p where p.isRecommendOnline = true")
     List<Product> findByRecommendOnline();

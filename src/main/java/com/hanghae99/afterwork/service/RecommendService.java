@@ -114,24 +114,22 @@ public class RecommendService {
                 productList.add(foundList.get(randomItem[i]));
             }
 
-            List<ProductResponseDto> productResponseDtoList =
-                    productList.stream().map(
-                            product -> new ProductResponseDto(
-                                    product.getProductId(),
-                                    product.getTitle(),
-                                    product.getPrice(),
-                                    product.getPriceInfo(),
-                                    product.getAuthor(),
-                                    product.getImgUrl(),
-                                    product.isOnline(),
-                                    product.isOffline(),
-                                    product.getLocation(),
-                                    product.getPopularity(),
-                                    product.getStatus(),
-                                    product.getSiteName(),
-                                    product.getSiteUrl()
-                            )).collect(Collectors.toList());
-            return productResponseDtoList;
+            return productList.stream().map(
+                    product -> new ProductResponseDto(
+                            product.getProductId(),
+                            product.getTitle(),
+                            product.getPrice(),
+                            product.getPriceInfo(),
+                            product.getAuthor(),
+                            product.getImgUrl(),
+                            product.isOnline(),
+                            product.isOffline(),
+                            product.getLocation(),
+                            product.getPopularity(),
+                            product.getStatus(),
+                            product.getSiteName(),
+                            product.getSiteUrl()
+                    )).collect(Collectors.toList());
         }
         return null;
     }
@@ -139,47 +137,43 @@ public class RecommendService {
     public List<ProductResponseDto> recommendOnlineProduct(){
         List<Product> productList = productRepository.findByRecommendOnline();
 
-        List<ProductResponseDto> productResponseDtoList =
-                productList.stream().map(
-                        product -> new ProductResponseDto(
-                                product.getProductId(),
-                                product.getTitle(),
-                                product.getPrice(),
-                                product.getPriceInfo(),
-                                product.getAuthor(),
-                                product.getImgUrl(),
-                                product.isOnline(),
-                                product.isOffline(),
-                                product.getLocation(),
-                                product.getPopularity(),
-                                product.getStatus(),
-                                product.getSiteName(),
-                                product.getSiteUrl()
-                        )).collect(Collectors.toList());
-        return productResponseDtoList;
+        return productList.stream().map(
+                product -> new ProductResponseDto(
+                        product.getProductId(),
+                        product.getTitle(),
+                        product.getPrice(),
+                        product.getPriceInfo(),
+                        product.getAuthor(),
+                        product.getImgUrl(),
+                        product.isOnline(),
+                        product.isOffline(),
+                        product.getLocation(),
+                        product.getPopularity(),
+                        product.getStatus(),
+                        product.getSiteName(),
+                        product.getSiteUrl()
+                )).collect(Collectors.toList());
     }
 
     public List<ProductResponseDto> recommendOfflineProduct(){
         List<Product> productList = productRepository.findByRecommendOffline();
 
-        List<ProductResponseDto> productResponseDtoList =
-                productList.stream().map(
-                        product -> new ProductResponseDto(
-                                product.getProductId(),
-                                product.getTitle(),
-                                product.getPrice(),
-                                product.getPriceInfo(),
-                                product.getAuthor(),
-                                product.getImgUrl(),
-                                product.isOnline(),
-                                product.isOffline(),
-                                product.getLocation(),
-                                product.getPopularity(),
-                                product.getStatus(),
-                                product.getSiteName(),
-                                product.getSiteUrl()
-                        )).collect(Collectors.toList());
-        return productResponseDtoList;
+        return productList.stream().map(
+                product -> new ProductResponseDto(
+                        product.getProductId(),
+                        product.getTitle(),
+                        product.getPrice(),
+                        product.getPriceInfo(),
+                        product.getAuthor(),
+                        product.getImgUrl(),
+                        product.isOnline(),
+                        product.isOffline(),
+                        product.getLocation(),
+                        product.getPopularity(),
+                        product.getStatus(),
+                        product.getSiteName(),
+                        product.getSiteUrl()
+                )).collect(Collectors.toList());
     }
 
     public int[] getRandomItem (int foundListSize){

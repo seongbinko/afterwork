@@ -38,17 +38,26 @@ public class CategoryService {
     }
 
 
-    public Page<ProductResponseDto> getProductByCategory(Long categoryId, int page, int size, String strSort, String strDirection, String strFilter){
+    public Page<ProductResponseDto> getProductByCategory(Long categoryId, int page, int size, String strSort, String strDirection, String strFilter, String strSiteName){
 
         Sort.Direction direction = Sort.Direction.DESC;
+        boolean isOnline = true;
+        boolean isOffline = true;
+        boolean isTaling = false;
+        boolean isClass101 = false;
+        boolean isHobyInTheBox = false;
+        boolean isIdus = false;
+        boolean isMybiskit = false;
+        boolean isMochaClass = false;
+        boolean isHobbyful = false;
 
+
+        //오름차순 내림차순
         if (strDirection.toLowerCase(Locale.ROOT).equals("asc")) {
             direction = Sort.Direction.ASC;
         }
 
-        boolean isOnline = true;
-        boolean isOffline = true;
-
+        //온라인 오프라인
         if (strFilter.equals("offline")){
             isOnline = false;
         }
@@ -56,10 +65,53 @@ public class CategoryService {
             isOffline = false;
         }
 
+        //사이트 별 검색 필터 조건
+        if (strSiteName.contains("전체")){
+            isTaling = true;
+            isClass101 = true;
+            isHobyInTheBox = true;
+            isIdus = true;
+            isMybiskit = true;
+            isMochaClass = true;
+            isHobbyful = true;
+        }
+        else{
+            if (strSiteName.contains("탈잉")){
+                isTaling = true;
+            }
+            if (strSiteName.contains("클래스101")){
+                isClass101 = true;
+            }
+            if (strSiteName.contains("하비인더박스")){
+                isHobyInTheBox = true;
+            }
+            if (strSiteName.contains("아이디어스")){
+                isIdus = true;
+            }
+            if (strSiteName.contains("마이비스킷")){
+                isMybiskit = true;
+            }
+            if (strSiteName.contains("모카클래스")){
+                isMochaClass = true;
+            }
+            if (strSiteName.contains("하비풀")){
+                isHobbyful = true;
+            }
+        }
+
+        System.out.println("isTaling = " + isTaling);
+        System.out.println("isClass101 = " + isClass101);
+        System.out.println("isHobyInTheBox = " + isHobyInTheBox);
+        System.out.println("isIdus = " + isIdus);
+        System.out.println("isMybiskit = " + isMybiskit);
+        System.out.println("isMochaClass = " + isMochaClass);
+        System.out.println("isHobbyful = " + isHobbyful);
+
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, strSort));
 
         Category category = categoryRepository.findById(categoryId).orElse(null);
-        Page<Product> productList = productRepository.findAllByCategoryAndOnlineAndLocation(category, isOnline, isOffline, pageRequest);
+        Page<Product> productList = productRepository.findAllByCategoryAndOnline(category, isOnline, isOffline, isTaling,
+                isClass101, isHobyInTheBox, isIdus, isMybiskit, isMochaClass, isHobbyful, pageRequest);
 
         return productList.map(
                 product -> new ProductResponseDto(

@@ -69,6 +69,7 @@ class SearchControllerTest {
         String strSort = "price";
         String strDirection = "asc";
         String strFilter = "total";
+        String strSitename = "전체";
         boolean isOnline;
         boolean isOffline;
 
@@ -93,7 +94,7 @@ class SearchControllerTest {
                     .popularity(1000)
                     .price(50000)
                     .priceInfo("50,000")
-                    .siteName("Test")
+                    .siteName("탈잉")
                     .siteUrl(null)
                     .status("Y")
                     .category(categoryList.get(categoryList.size() - 1))
@@ -108,6 +109,7 @@ class SearchControllerTest {
                 .param("sort",strSort)
                 .param("direction",strDirection)
                 .param("filter",strFilter)
+                .param("sitename",strSitename)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(unauthenticated());
