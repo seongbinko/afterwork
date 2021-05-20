@@ -1,6 +1,7 @@
 package com.hanghae99.afterwork.service;
 
 import com.hanghae99.afterwork.dto.CategoryResponseDto;
+import com.hanghae99.afterwork.dto.ProductByCategoryRequestDto;
 import com.hanghae99.afterwork.dto.ProductResponseDto;
 import com.hanghae99.afterwork.model.Category;
 import com.hanghae99.afterwork.model.Product;
@@ -37,8 +38,7 @@ public class CategoryService {
                 )).collect(Collectors.toList());
     }
 
-
-    public Page<ProductResponseDto> getProductByCategory(Long categoryId, int page, int size, String strSort, String strDirection, String strFilter, String strSiteName){
+    public Page<ProductResponseDto> getProductByCategory(Long categoryId, ProductByCategoryRequestDto productByCategoryRequestDto){
 
         Sort.Direction direction = Sort.Direction.DESC;
         boolean isOnline = true;
@@ -51,6 +51,12 @@ public class CategoryService {
         boolean isMochaClass = false;
         boolean isHobbyful = false;
 
+        String strDirection = productByCategoryRequestDto.getDirection();
+        String strFilter = productByCategoryRequestDto.getFilter();
+        String strSiteName = productByCategoryRequestDto.getSitename();
+        String strSort = productByCategoryRequestDto.getSort();
+        int page = productByCategoryRequestDto.getPage();
+        int size = productByCategoryRequestDto.getSize();
 
         //오름차순 내림차순
         if (strDirection.toLowerCase(Locale.ROOT).equals("asc")) {
@@ -66,37 +72,26 @@ public class CategoryService {
         }
 
         //사이트 별 검색 필터 조건
-        if (strSiteName.contains("전체")){
+        if (strSiteName.contains("탈잉")){
             isTaling = true;
-            isClass101 = true;
-            isHobyInTheBox = true;
-            isIdus = true;
-            isMybiskit = true;
-            isMochaClass = true;
-            isHobbyful = true;
         }
-        else{
-            if (strSiteName.contains("탈잉")){
-                isTaling = true;
-            }
-            if (strSiteName.contains("클래스101")){
-                isClass101 = true;
-            }
-            if (strSiteName.contains("하비인더박스")){
-                isHobyInTheBox = true;
-            }
-            if (strSiteName.contains("아이디어스")){
-                isIdus = true;
-            }
-            if (strSiteName.contains("마이비스킷")){
-                isMybiskit = true;
-            }
-            if (strSiteName.contains("모카클래스")){
-                isMochaClass = true;
-            }
-            if (strSiteName.contains("하비풀")){
-                isHobbyful = true;
-            }
+        if (strSiteName.contains("클래스101")){
+            isClass101 = true;
+        }
+        if (strSiteName.contains("하비인더박스")){
+            isHobyInTheBox = true;
+        }
+        if (strSiteName.contains("아이디어스")){
+            isIdus = true;
+        }
+        if (strSiteName.contains("마이비스킷")){
+            isMybiskit = true;
+        }
+        if (strSiteName.contains("모카클래스")){
+            isMochaClass = true;
+        }
+        if (strSiteName.contains("하비풀")){
+            isHobbyful = true;
         }
         
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, strSort).and(Sort.by(Sort.Direction.ASC,"title")));
