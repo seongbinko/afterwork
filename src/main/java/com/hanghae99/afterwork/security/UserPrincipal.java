@@ -1,6 +1,6 @@
 package com.hanghae99.afterwork.security;
 
-import com.hanghae99.afterwork.model.User;
+import com.hanghae99.afterwork.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

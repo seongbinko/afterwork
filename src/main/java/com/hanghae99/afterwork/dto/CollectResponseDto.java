@@ -1,6 +1,6 @@
 package com.hanghae99.afterwork.dto;
 
-import com.hanghae99.afterwork.model.Collect;
+import com.hanghae99.afterwork.entity.Collect;
 import lombok.Data;
 
 @Data

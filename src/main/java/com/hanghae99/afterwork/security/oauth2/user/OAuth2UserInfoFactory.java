@@ -1,7 +1,7 @@
 package com.hanghae99.afterwork.security.oauth2.user;
 
+import com.hanghae99.afterwork.entity.AuthProvider;
 import com.hanghae99.afterwork.exception.OAuth2AuthenticationProcessingException;
-import com.hanghae99.afterwork.model.AuthProvider;
 
 import java.util.Map;
 

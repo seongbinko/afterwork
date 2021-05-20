@@ -2,10 +2,10 @@ package com.hanghae99.afterwork.service;
 
 import com.hanghae99.afterwork.dto.CollectRequestDto;
 import com.hanghae99.afterwork.dto.ProductResponseDto;
+import com.hanghae99.afterwork.entity.Collect;
+import com.hanghae99.afterwork.entity.Product;
+import com.hanghae99.afterwork.entity.User;
 import com.hanghae99.afterwork.exception.ResourceNotFoundException;
-import com.hanghae99.afterwork.model.Collect;
-import com.hanghae99.afterwork.model.Product;
-import com.hanghae99.afterwork.model.User;
 import com.hanghae99.afterwork.repository.CollectRepository;
 import com.hanghae99.afterwork.repository.ProductRepository;
 import com.hanghae99.afterwork.repository.UserRepository;

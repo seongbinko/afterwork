@@ -1,27 +1,29 @@
 package com.hanghae99.afterwork.service;
 
 import com.hanghae99.afterwork.dto.ProductResponseDto;
+import com.hanghae99.afterwork.entity.Interest;
+import com.hanghae99.afterwork.entity.Location;
+import com.hanghae99.afterwork.entity.Product;
+import com.hanghae99.afterwork.entity.User;
 import com.hanghae99.afterwork.exception.ResourceNotFoundException;
-import com.hanghae99.afterwork.model.Interest;
-import com.hanghae99.afterwork.model.Location;
-import com.hanghae99.afterwork.model.Product;
-import com.hanghae99.afterwork.model.User;
 import com.hanghae99.afterwork.repository.ProductRepository;
 import com.hanghae99.afterwork.repository.UserRepository;
 import com.hanghae99.afterwork.security.UserPrincipal;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-@Transactional
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class RecommendService {
 
     private final UserRepository userRepository;
@@ -29,11 +31,6 @@ public class RecommendService {
 
     @PersistenceContext
     EntityManager em;
-
-    public RecommendService(UserRepository userRepository, ProductRepository productRepository){
-        this.userRepository = userRepository;
-        this.productRepository = productRepository;
-    }
 
     public List<ProductResponseDto> recommendProduct(UserPrincipal userPrincipal){
         User user = userRepository.findById(userPrincipal.getId())
@@ -99,8 +96,7 @@ public class RecommendService {
             for(int i = 0; i < interestList.size(); i++){
                 if (i == 0){
                     jpql.append(" AND p.category = ").append(interestList.get(i).getCategory().getCategoryId());
-                }
-                else{
+                } else{
                     jpql.append(" OR p.category = ").append(interestList.get(i).getCategory().getCategoryId());
                 }
             }

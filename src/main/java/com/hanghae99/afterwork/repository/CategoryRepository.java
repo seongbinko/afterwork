@@ -1,6 +1,6 @@
 package com.hanghae99.afterwork.repository;
 
-import com.hanghae99.afterwork.model.Category;
+import com.hanghae99.afterwork.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 

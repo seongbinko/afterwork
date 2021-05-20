@@ -1,4 +1,4 @@
-package com.hanghae99.afterwork.model;
+package com.hanghae99.afterwork.entity;
 
 import lombok.*;
 

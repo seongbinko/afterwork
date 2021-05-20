@@ -3,7 +3,7 @@ package com.hanghae99.afterwork.controller;
 import com.hanghae99.afterwork.dto.CollectRequestDto;
 import com.hanghae99.afterwork.dto.CollectResponseDto;
 import com.hanghae99.afterwork.dto.ProductResponseDto;
-import com.hanghae99.afterwork.model.Collect;
+import com.hanghae99.afterwork.entity.Collect;
 import com.hanghae99.afterwork.security.CurrentUser;
 import com.hanghae99.afterwork.security.UserPrincipal;
 import com.hanghae99.afterwork.service.CollectService;
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 public class CollectController {
 
     private final CollectRequestDtoValidator collectRequestDtoValidator;
