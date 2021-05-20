@@ -1,4 +1,4 @@
-package com.hanghae99.afterwork.model;
+package com.hanghae99.afterwork.entity;
 
 import lombok.*;
 
@@ -6,8 +6,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "feedbacks")
-@Getter @Setter
-@AllArgsConstructor @Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Feedback extends BaseTimeEntity{
 

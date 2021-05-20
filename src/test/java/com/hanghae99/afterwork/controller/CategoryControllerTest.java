@@ -1,7 +1,7 @@
 package com.hanghae99.afterwork.controller;
 
-import com.hanghae99.afterwork.model.Category;
-import com.hanghae99.afterwork.model.Product;
+import com.hanghae99.afterwork.entity.Category;
+import com.hanghae99.afterwork.entity.Product;
 import com.hanghae99.afterwork.repository.CategoryRepository;
 import com.hanghae99.afterwork.repository.ProductRepository;
 import com.hanghae99.afterwork.service.CategoryService;
@@ -19,11 +19,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -85,7 +85,7 @@ class CategoryControllerTest {
         String strSort = "price";
         String strDirection = "asc";
         String strFilter = "total";
-        String strSitename = "전체";
+        String strSitename = "탈잉,마이비스킷,클래스101,하비인더박스,아이디어스,하비풀,모카클래스";
 
         List<Category> categoryList = categoryRepository.findAll();
 

@@ -3,7 +3,7 @@ package com.hanghae99.afterwork.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanghae99.afterwork.dto.FeedbackRequestDto;
-import com.hanghae99.afterwork.model.Feedback;
+import com.hanghae99.afterwork.entity.Feedback;
 import com.hanghae99.afterwork.repository.FeedbackRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

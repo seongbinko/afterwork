@@ -1,7 +1,7 @@
 package com.hanghae99.afterwork.controller;
 
-import com.hanghae99.afterwork.model.Category;
-import com.hanghae99.afterwork.model.Product;
+import com.hanghae99.afterwork.entity.Category;
+import com.hanghae99.afterwork.entity.Product;
 import com.hanghae99.afterwork.repository.CategoryRepository;
 import com.hanghae99.afterwork.repository.ProductRepository;
 import com.hanghae99.afterwork.service.CategoryService;
@@ -69,7 +69,7 @@ class SearchControllerTest {
         String strSort = "price";
         String strDirection = "asc";
         String strFilter = "total";
-        String strSitename = "전체";
+        String strSitename = "탈잉,마이비스킷,클래스101,하비인더박스,아이디어스,하비풀,모카클래스";
         boolean isOnline;
         boolean isOffline;
 
