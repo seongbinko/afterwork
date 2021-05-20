@@ -3,8 +3,8 @@ package com.hanghae99.afterwork.service;
 import com.hanghae99.afterwork.dto.CategoryResponseDto;
 import com.hanghae99.afterwork.dto.ProductByCategoryRequestDto;
 import com.hanghae99.afterwork.dto.ProductResponseDto;
-import com.hanghae99.afterwork.model.Category;
-import com.hanghae99.afterwork.model.Product;
+import com.hanghae99.afterwork.entity.Category;
+import com.hanghae99.afterwork.entity.Product;
 import com.hanghae99.afterwork.repository.CategoryRepository;
 import com.hanghae99.afterwork.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,15 +12,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;

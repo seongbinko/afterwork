@@ -1,19 +1,19 @@
 package com.hanghae99.afterwork.service;
 
 import com.hanghae99.afterwork.dto.*;
+import com.hanghae99.afterwork.entity.*;
 import com.hanghae99.afterwork.exception.ResourceNotFoundException;
-import com.hanghae99.afterwork.model.*;
 import com.hanghae99.afterwork.repository.*;
 import com.hanghae99.afterwork.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Transactional
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;

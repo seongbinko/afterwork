@@ -1,12 +1,11 @@
 package com.hanghae99.afterwork.service;
 
 import com.hanghae99.afterwork.dto.FeedbackRequestDto;
-import com.hanghae99.afterwork.model.Feedback;
+import com.hanghae99.afterwork.entity.Feedback;
 import com.hanghae99.afterwork.repository.FeedbackRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

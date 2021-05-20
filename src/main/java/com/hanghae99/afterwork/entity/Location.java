@@ -1,26 +1,26 @@
-package com.hanghae99.afterwork.model;
+package com.hanghae99.afterwork.entity;
 
 import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "interests")
-@Getter @Setter
+@Table(name = "locations")
+@Getter
+@Setter
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Interest extends BaseTimeEntity{
+public class Location extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long interestId;
+    private Long locationId;
+
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
 }
