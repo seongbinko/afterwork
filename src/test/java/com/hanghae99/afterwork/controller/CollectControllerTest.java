@@ -87,6 +87,61 @@ class CollectControllerTest {
         categoryRepository.deleteAll();
         userRepository.deleteAll();
     }
+    @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("찜 상품 초과 등록시 예외 처리 - 정상")
+    @Test
+    void m_5() throws Exception{
+
+        int intSize = 60;
+        int collectedSize = 51;
+
+        Optional<User> user = userRepository.findById(userId);
+        if(!user.isPresent()) {
+            throw new ResourceNotFoundException("User", "id", userId);
+        }
+
+        Category category = categoryRepository.findByName(arr[0]).orElse(null);
+
+        for (int i = 0; i < intSize; i++) {
+            Product product = Product.builder()
+                    .title("title" + i)
+                    .isOnline(true)
+                    .popularity(1000)
+                    .price(50000)
+                    .priceInfo("50,000")
+                    .siteName("Test")
+                    .siteUrl(null)
+                    .status("Y")
+                    .category(category)
+                    .build();
+            productRepository.save(product);
+        }
+
+        CollectRequestDto collectRequestDto = new CollectRequestDto();
+        List<Product> productList = productRepository.findAll();
+
+        for(int i = 0; i < collectedSize; i++){
+            collectRequestDto.setProductId(productList.get(i).getProductId());
+            ObjectMapper objectMapper = new ObjectMapper();
+            String collectInfo = objectMapper.writeValueAsString(collectRequestDto);
+
+            if(i < 50){
+                mockMvc.perform(post("/api/collects")
+                        .content(collectInfo)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(authenticated());
+            }else{
+                mockMvc.perform(post("/api/collects")
+                        .content(collectInfo)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isBadRequest())
+                        .andExpect(authenticated());
+            }
+        }
+    }
 
     @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("찜 상품 등록 - 정상")
