@@ -69,7 +69,7 @@ class SearchControllerTest {
         String strSort = "price";
         String strDirection = "asc";
         String strFilter = "total";
-        String strSitename = "전체";
+        String strSitename = "탈잉,마이비스킷,클래스101,하비인더박스,아이디어스,하비풀,모카클래스";
         boolean isOnline;
         boolean isOffline;
 
