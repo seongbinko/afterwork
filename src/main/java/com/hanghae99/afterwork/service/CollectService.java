@@ -35,8 +35,10 @@ public class CollectService {
         if(collectRepository.existsByUserAndProduct(user, product)){
             throw new BadRequestException("이미 등록 하신 상품 입니다");
         }
-        List<Collect> collects = collectRepository.findAllByUser(user);
-        if(collects.size() == 50){
+
+        int collectsCnt = collectRepository.countAllByUser(user);
+
+        if(collectsCnt == 50){
             throw new BadRequestException("상품을 50개 이상 찜 하실 수 없습니다");
         }
 

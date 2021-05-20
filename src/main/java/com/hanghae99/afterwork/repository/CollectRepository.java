@@ -22,4 +22,6 @@ public interface CollectRepository extends JpaRepository<Collect, Long> {
     boolean existsByUserAndProduct(User user, Product product);
 
     Collect findByProductAndUser(Product product, User user);
+
+    Integer countAllByUser(User user);
 }
