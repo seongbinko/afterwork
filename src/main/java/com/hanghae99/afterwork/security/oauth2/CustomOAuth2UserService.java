@@ -1,8 +1,8 @@
 package com.hanghae99.afterwork.security.oauth2;
 
+import com.hanghae99.afterwork.entity.AuthProvider;
+import com.hanghae99.afterwork.entity.User;
 import com.hanghae99.afterwork.exception.OAuth2AuthenticationProcessingException;
-import com.hanghae99.afterwork.model.AuthProvider;
-import com.hanghae99.afterwork.model.User;
 import com.hanghae99.afterwork.repository.UserRepository;
 import com.hanghae99.afterwork.security.UserPrincipal;
 import com.hanghae99.afterwork.security.oauth2.user.OAuth2UserInfo;

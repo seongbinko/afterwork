@@ -1,7 +1,7 @@
 package com.hanghae99.afterwork.repository;
 
-import com.hanghae99.afterwork.model.Category;
-import com.hanghae99.afterwork.model.Product;
+import com.hanghae99.afterwork.entity.Category;
+import com.hanghae99.afterwork.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

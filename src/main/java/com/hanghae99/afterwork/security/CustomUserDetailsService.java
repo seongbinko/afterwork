@@ -1,7 +1,7 @@
 package com.hanghae99.afterwork.security;
 
+import com.hanghae99.afterwork.entity.User;
 import com.hanghae99.afterwork.exception.ResourceNotFoundException;
-import com.hanghae99.afterwork.model.User;
 import com.hanghae99.afterwork.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

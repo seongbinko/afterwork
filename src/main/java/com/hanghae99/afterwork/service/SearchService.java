@@ -2,22 +2,20 @@ package com.hanghae99.afterwork.service;
 
 import com.hanghae99.afterwork.dto.ProductByKeywordRequestDto;
 import com.hanghae99.afterwork.dto.ProductResponseDto;
-import com.hanghae99.afterwork.model.Product;
+import com.hanghae99.afterwork.entity.Product;
 import com.hanghae99.afterwork.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import java.util.Locale;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class SearchService {
 
     private final ProductRepository productRepository;

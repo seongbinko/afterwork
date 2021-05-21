@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanghae99.afterwork.dto.CollectRequestDto;
 import com.hanghae99.afterwork.dto.ProductResponseDto;
+import com.hanghae99.afterwork.entity.*;
 import com.hanghae99.afterwork.exception.ResourceNotFoundException;
-import com.hanghae99.afterwork.model.*;
 import com.hanghae99.afterwork.repository.CategoryRepository;
 import com.hanghae99.afterwork.repository.CollectRepository;
 import com.hanghae99.afterwork.repository.ProductRepository;
@@ -78,30 +78,9 @@ class CollectControllerTest {
                     .build());
         }
         categoryRepository.saveAll(list);
-    }
-
-    @AfterEach
-    void tearDown() {
-        collectRepository.deleteAll();
-        productRepository.deleteAll();
-        categoryRepository.deleteAll();
-        userRepository.deleteAll();
-    }
-
-    @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-    @DisplayName("찜 상품 등록 - 정상")
-    @Test
-    void m_1() throws Exception{
-        int intSize = 4;
-
-        Optional<User> user = userRepository.findById(userId);
-        if(!user.isPresent()) {
-            throw new ResourceNotFoundException("User", "id", userId);
-        }
-        User user1 = userRepository.findByUserId(userId);
 
         Category category = categoryRepository.findByName(arr[0]).orElse(null);
-
+        int intSize = 60;
         for (int i = 0; i < intSize; i++) {
             Product product = Product.builder()
                     .title("title" + i)
@@ -116,6 +95,22 @@ class CollectControllerTest {
                     .build();
             productRepository.save(product);
         }
+    }
+
+    @AfterEach
+    void tearDown() {
+        collectRepository.deleteAll();
+        productRepository.deleteAll();
+        categoryRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
+    @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("찜 상품 등록 - 정상")
+    @Test
+    void collectPost() throws Exception{
+
+        User user1 = userRepository.findByUserId(userId);
 
         CollectRequestDto collectRequestDto = new CollectRequestDto();
         List<Product> productList = productRepository.findAll();
@@ -138,33 +133,11 @@ class CollectControllerTest {
     }
 
     @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-    @DisplayName("찜 상품 전체 조회 - 정상")
+    @DisplayName("찜 상품 - 전체 조회")
     @Test
-    void m_2() throws Exception {
-        int intSize = 4;
+    void collectGetAll() throws Exception {
 
-        Optional<User> user = userRepository.findById(userId);
-        if(!user.isPresent()) {
-            throw new ResourceNotFoundException("User", "id", userId);
-        }
         User user1 = userRepository.findByUserId(userId);
-
-        Category category = categoryRepository.findByName(arr[0]).orElse(null);
-
-        for (int i = 0; i < intSize; i++) {
-            Product product = Product.builder()
-                    .title("title" + i)
-                    .isOnline(true)
-                    .popularity(1000)
-                    .price(50000)
-                    .priceInfo("50,000")
-                    .siteName("Test")
-                    .siteUrl(null)
-                    .status("Y")
-                    .category(category)
-                    .build();
-            productRepository.save(product);
-        }
 
         List<Product> productList = productRepository.findAll();
         int collectSize = 3;
@@ -198,33 +171,11 @@ class CollectControllerTest {
     }
 
     @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-    @DisplayName("찜 상품 개별 삭제 - 정상")
+    @DisplayName("찜 상품 - 개별 삭제")
     @Test
-    void m_3() throws Exception {
-        int intSize = 4;
+    void collectIndividualDelete() throws Exception {
 
-        Optional<User> user = userRepository.findById(userId);
-        if(!user.isPresent()) {
-            throw new ResourceNotFoundException("User", "id", userId);
-        }
         User user1 = userRepository.findByUserId(userId);
-
-        Category category = categoryRepository.findByName(arr[0]).orElse(null);
-
-        for (int i = 0; i < intSize; i++) {
-            Product product = Product.builder()
-                    .title("title" + i)
-                    .isOnline(true)
-                    .popularity(1000)
-                    .price(50000)
-                    .priceInfo("50,000")
-                    .siteName("Test")
-                    .siteUrl(null)
-                    .status("Y")
-                    .category(category)
-                    .build();
-            productRepository.save(product);
-        }
 
         List<Product> productList = productRepository.findAll();
         int collectSize = 3;
@@ -239,7 +190,7 @@ class CollectControllerTest {
 
         List<Collect> foundList = collectRepository.findAllByUser(user1);
 
-       mockMvc.perform(delete("/api/collects/{collectId}", foundList.get(0).getCollectId()))
+        mockMvc.perform(delete("/api/collects/{collectId}", foundList.get(0).getCollectId()))
                 .andExpect(status().isOk())
                 .andExpect(authenticated())
                 .andReturn();
@@ -249,33 +200,11 @@ class CollectControllerTest {
     }
 
     @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-    @DisplayName("찜 상품 전체 삭제 - 정상")
+    @DisplayName("찜 상품 - 전체 삭제")
     @Test
-    void m_4() throws Exception {
-        int intSize = 4;
+    void collectDeleteAll() throws Exception {
 
-        Optional<User> user = userRepository.findById(userId);
-        if(!user.isPresent()) {
-            throw new ResourceNotFoundException("User", "id", userId);
-        }
         User user1 = userRepository.findByUserId(userId);
-
-        Category category = categoryRepository.findByName(arr[0]).orElse(null);
-
-        for (int i = 0; i < intSize; i++) {
-            Product product = Product.builder()
-                    .title("title" + i)
-                    .isOnline(true)
-                    .popularity(1000)
-                    .price(50000)
-                    .priceInfo("50,000")
-                    .siteName("Test")
-                    .siteUrl(null)
-                    .status("Y")
-                    .category(category)
-                    .build();
-            productRepository.save(product);
-        }
 
         Long productId = 1L;
         for(int i = 0; i < 3; i++){
@@ -296,4 +225,35 @@ class CollectControllerTest {
         assertEquals(0, found.size());
     }
 
+    @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("찜 상품 - 초과 시")
+    @Test
+    void collectExceed() throws Exception{
+
+
+        User user = userRepository.findByUserId(userId);
+
+        CollectRequestDto collectRequestDto = new CollectRequestDto();
+        List<Product> productList = productRepository.findAll();
+
+        int collectedSize = 50;
+        for(int i = 0; i < collectedSize; i++){
+            Collect collect = Collect.builder()
+                    .product(productList.get(i))
+                    .user(user)
+                    .build();
+            collectRepository.save(collect);
+        }
+
+        collectRequestDto.setProductId(productList.get(50).getProductId());
+        ObjectMapper objectMapper = new ObjectMapper();
+        String collectInfo = objectMapper.writeValueAsString(collectRequestDto);
+
+        mockMvc.perform(post("/api/collects")
+            .content(collectInfo)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(authenticated());
+        }
 }
