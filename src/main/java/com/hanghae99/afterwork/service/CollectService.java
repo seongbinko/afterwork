@@ -5,6 +5,7 @@ import com.hanghae99.afterwork.dto.ProductResponseDto;
 import com.hanghae99.afterwork.entity.Collect;
 import com.hanghae99.afterwork.entity.Product;
 import com.hanghae99.afterwork.entity.User;
+import com.hanghae99.afterwork.exception.BadRequestException;
 import com.hanghae99.afterwork.exception.ResourceNotFoundException;
 import com.hanghae99.afterwork.repository.CollectRepository;
 import com.hanghae99.afterwork.repository.ProductRepository;
@@ -32,8 +33,15 @@ public class CollectService {
         User user = userRepository.findById(userPrincipal.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
         if(collectRepository.existsByUserAndProduct(user, product)){
-            throw new NullPointerException("이미 등록 하신 상품 입니다");
+            throw new BadRequestException("이미 등록 하신 상품 입니다");
         }
+
+        int collectsCnt = collectRepository.countAllByUser(user);
+
+        if(collectsCnt == 50){
+            throw new BadRequestException("상품을 50개 이상 찜 하실 수 없습니다");
+        }
+
         Collect collect = Collect.builder()
                 .product(product)
                 .user(user)
@@ -50,7 +58,7 @@ public class CollectService {
 
     public Collect deleteOneCollect(Long collectId, UserPrincipal userPrincipal){
         Collect collect = collectRepository.findById(collectId).orElseThrow(
-                () -> new NullPointerException("해당 찜 상품이 존재하지 않습니다.")
+                () -> new BadRequestException("해당 찜 상품이 존재하지 않습니다.")
         );
         User user = userRepository.findById(userPrincipal.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
@@ -58,7 +66,7 @@ public class CollectService {
         if (collect.getUser().getUserId().equals(user.getUserId())) {
             collectRepository.deleteByCollectId(collectId);
         } else {
-            throw new NullPointerException("등록 하지 않은 상품 입니다");
+            throw new BadRequestException("등록 하지 않은 상품 입니다");
         }
         return collect;
     }
