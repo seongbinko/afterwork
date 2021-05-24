@@ -70,6 +70,7 @@ class SearchControllerTest {
         String strDirection = "asc";
         String strFilter = "total";
         String strSitename = "탈잉,마이비스킷,클래스101,하비인더박스,아이디어스,하비풀,모카클래스";
+        String strLocation = "전체,전체";
         boolean isOnline;
         boolean isOffline;
 
@@ -110,6 +111,7 @@ class SearchControllerTest {
                 .param("direction",strDirection)
                 .param("filter",strFilter)
                 .param("sitename",strSitename)
+                .param("location",strLocation)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(unauthenticated());
