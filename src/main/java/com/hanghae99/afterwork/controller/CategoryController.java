@@ -25,7 +25,7 @@ public class CategoryController {
     }
 
     @GetMapping("/api/categorys/{id}")
-    public ResponseEntity getProductByCategory(@PathVariable("id") Long categoryId,@Valid @ModelAttribute ProductByCategoryRequestDto productByCategoryRequestDto, Errors errors) {
+    public ResponseEntity getProductByCategory(@PathVariable("id") Long categoryId, @Valid @ModelAttribute ProductByCategoryRequestDto productByCategoryRequestDto, Errors errors) {
 
         if(errors.hasErrors()){
             return ResponseEntity.badRequest().body(errors.getAllErrors());
