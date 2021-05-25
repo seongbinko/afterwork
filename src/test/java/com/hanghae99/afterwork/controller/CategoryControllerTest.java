@@ -124,4 +124,46 @@ class CategoryControllerTest {
                 .andExpect(jsonPath("pageable").exists())
                 .andExpect(jsonPath("numberOfElements").value(strSize));
     }
+
+    @Test
+    @DisplayName("카테고리별 리스트 - 실패")
+    void getProductByCategoryTestFail() throws Exception{
+
+        String strPage = "0";
+        String strSize = "12";
+        String strSort = "price";
+        String strDirection = "asc";
+        String strFilter = "total";
+        String strSitename = "탈잉,마이비스킷,클래스101,하비인더박스,아이디어스,하비풀,모카클래스";
+        String strLocation = "전체,전체";
+
+        List<Category> categoryList = categoryRepository.findAll();
+
+        for (int i = 0; i < 24; i++) {
+            Product product = Product.builder()
+                    .title("title" + i)
+                    .isOnline(true)
+                    .popularity(1000)
+                    .price(50000)
+                    .priceInfo("50,000")
+                    .siteName("탈잉")
+                    .siteUrl(null)
+                    .status("Y")
+                    .category(categoryList.get(categoryList.size() - 1))
+                    .build();
+
+            productRepository.save(product);
+        }
+
+        mockMvc.perform(get("/api/categorys/" + categoryList.get(categoryList.size() - 1).getCategoryId())
+                .param("page",strPage)
+                .param("size",strSize)
+                .param("sort",strSort)
+                .param("direction",strDirection)
+                .param("sitename",strSitename)
+                .param("location",strLocation)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(unauthenticated());
+    }
 }

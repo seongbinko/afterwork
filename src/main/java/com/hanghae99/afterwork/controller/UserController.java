@@ -30,7 +30,7 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity modifyUser(@CurrentUser UserPrincipal userPrincipal, @Valid @RequestBody UserRequestDto userRequestDto, Errors errors){
 
-        if(errors.hasErrors()){
+        if(errors.hasErrors()) {
             return ResponseEntity.badRequest().body(errors.getAllErrors());
         }
 
