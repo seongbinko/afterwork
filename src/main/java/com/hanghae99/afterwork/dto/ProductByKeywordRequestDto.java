@@ -36,4 +36,8 @@ public class ProductByKeywordRequestDto {
     @NotBlank
     @Pattern(regexp = "^[가-힣,0-9]{2,100}$")
     private String sitename;
+
+    @NotBlank
+    @Pattern(regexp = "^[^\\{\\}\\[\\]\\/?.;:|\\)*~`!\\^\\\\\\-_+<>@#$%&'\\(=\"]{0,100}$")
+    private String location;
 }

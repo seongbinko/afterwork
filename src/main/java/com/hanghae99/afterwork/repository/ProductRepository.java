@@ -25,14 +25,19 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "((:isIdus = true) and (p.siteName like '아이디어스')) or" +
             "((:isMybiskit = true) and (p.siteName like '마이비스킷')) or" +
             "((:isMochaClass = true) and (p.siteName like '모카클래스')) or" +
-            "((:isHobbyful = true) and (p.siteName like '하비풀')))" +
+            "((:isHobbyful = true) and (p.siteName like '하비풀'))) and" +
+            "(((:isOnline = true and :isOffline = false) and (p.location is null)) or" +
+            "((:isOnline = false and :isOffline = true) and (:location like '%전체%') and (p.location like '%')) or" +
+            "((:isOnline = false and :isOffline = true) and (:location not like '%전체%') and (p.location like :location)) or" +
+            "((:isOnline = true and :isOffline = true) and (:location like '%전체%') and ((p.location like '%') or (p.location is null))) or" +
+            "((:isOnline = true and :isOffline = true) and (:location not like '%전체%') and ((p.location like :location) or (p.location is null))))" +
             "group by p.title")
     Page<Product> findAllByCategoryAndOnline(@Param("category") Category category, @Param("isOnline") Boolean isOnline,
                                              @Param("isOffline") Boolean isOffline, @Param("isTaling") Boolean isTaling,
                                              @Param("isClass101") Boolean isClass101, @Param("isHobyInTheBox") Boolean isHobyInTheBox,
                                              @Param("isIdus") Boolean isIdus, @Param("isMybiskit") Boolean isMybiskit,
                                              @Param("isMochaClass") Boolean isMochaClass, @Param("isHobbyful") Boolean isHobbyful,
-                                             Pageable pageable);
+                                             @Param("location") String location, Pageable pageable);
 
     @Query(value = "select p from Product p where p.title like :keyword and p.status = 'Y' and " +
             "(((:isOnline = true and :isOffline = false) and (p.isOnline = :isOnline)) or " +
@@ -44,14 +49,19 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "((:isIdus = true) and (p.siteName like '아이디어스')) or" +
             "((:isMybiskit = true) and (p.siteName like '마이비스킷')) or" +
             "((:isMochaClass = true) and (p.siteName like '모카클래스')) or" +
-            "((:isHobbyful = true) and (p.siteName like '하비풀')))" +
+            "((:isHobbyful = true) and (p.siteName like '하비풀'))) and" +
+            "(((:isOnline = true and :isOffline = false) and (p.location is null)) or" +
+            "((:isOnline = false and :isOffline = true) and (:location like '%전체%') and (p.location like '%')) or" +
+            "((:isOnline = false and :isOffline = true) and (:location not like '%전체%') and (p.location like :location)) or" +
+            "((:isOnline = true and :isOffline = true) and (:location like '%전체%') and ((p.location like '%') or (p.location is null))) or" +
+            "((:isOnline = true and :isOffline = true) and (:location not like '%전체%') and ((p.location like :location) or (p.location is null))))" +
             "group by p.title")
     Page<Product> findAllByTitleLikeAndOnline(@Param("keyword")String keyword, @Param("isOnline") Boolean isOnline,
                                               @Param("isOffline") Boolean isOffline, @Param("isTaling") Boolean isTaling,
                                               @Param("isClass101") Boolean isClass101, @Param("isHobyInTheBox") Boolean isHobyInTheBox,
                                               @Param("isIdus") Boolean isIdus, @Param("isMybiskit") Boolean isMybiskit,
                                               @Param("isMochaClass") Boolean isMochaClass, @Param("isHobbyful") Boolean isHobbyful,
-                                              Pageable pageable);
+                                              @Param("location") String location, Pageable pageable);
 
     @Query("select p from Product p where p.isRecommendOnline = true")
     List<Product> findByRecommendOnline();

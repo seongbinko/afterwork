@@ -4,10 +4,10 @@ spring:
   h2:
     console:
       enabled: true
-  jpa:
-    properties:
-      hibernate:
-        show_sql: true
+#  jpa:
+#    properties:
+#      hibernate:
+#        show_sql: true
 #        format_sql: true
 #        use_sql_comments: true
 #logging:
