@@ -32,6 +32,8 @@ public class RecommendService {
     @PersistenceContext
     EntityManager em;
 
+    public static final int RECOMMENDSIZE = 12;
+
     public List<ProductResponseDto> recommendProduct(UserPrincipal userPrincipal){
         User user = userRepository.findById(userPrincipal.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
@@ -100,15 +102,10 @@ public class RecommendService {
                     jpql.append(" OR p.category = ").append(interestList.get(i).getCategory().getCategoryId());
                 }
             }
+            jpql.append(" ORDER BY rand()");
             Query query = em.createQuery(String.valueOf(jpql));
-            List<Product> foundList = query.getResultList();
-            List<Product> productList = new ArrayList<>();
-
-            int[] randomItem = getRandomItem(foundList.size());
-
-            for(int i = 0; i < randomItem.length; i++){
-                productList.add(foundList.get(randomItem[i]));
-            }
+            query.setMaxResults(RECOMMENDSIZE);
+            List<Product> productList = query.getResultList();
 
             return productList.stream().map(
                     product -> new ProductResponseDto(
