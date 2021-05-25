@@ -18,7 +18,7 @@ public class FeedbackController {
     private final FeedbackService feedbackService;
 
     @PostMapping("/api/feedback")
-    public ResponseEntity createFeedback(@Valid @RequestBody FeedbackRequestDto feedbackRequestDto, Errors errors){
+    public ResponseEntity<Object> createFeedback(@Valid @RequestBody FeedbackRequestDto feedbackRequestDto, Errors errors){
 
         if(errors.hasErrors()) {
             return ResponseEntity.badRequest().body(errors.getAllErrors());

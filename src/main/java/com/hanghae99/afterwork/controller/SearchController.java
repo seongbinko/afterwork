@@ -18,7 +18,7 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping("/api/search")
-    public ResponseEntity getProductByKeyword(@Valid @ModelAttribute ProductByKeywordRequestDto productByKeywordRequestDto, Errors errors) {
+    public ResponseEntity<Object> getProductByKeyword(@Valid @ModelAttribute ProductByKeywordRequestDto productByKeywordRequestDto, Errors errors) {
 
         if(errors.hasErrors()){
             return ResponseEntity.badRequest().body(errors.getAllErrors());

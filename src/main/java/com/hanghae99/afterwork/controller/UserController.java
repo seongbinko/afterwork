@@ -21,14 +21,14 @@ public class UserController {
 
     @GetMapping("/api/user/me")
     @PreAuthorize("hasRole('USER')")
-    public UserResponseDto getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+    public ResponseEntity<UserResponseDto> getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
 
-        return userService.getCurrentUser(userPrincipal);
+        return ResponseEntity.ok(userService.getCurrentUser(userPrincipal));
     }
 
     @PostMapping("/api/user")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity modifyUser(@CurrentUser UserPrincipal userPrincipal, @Valid @RequestBody UserRequestDto userRequestDto, Errors errors){
+    public ResponseEntity<Object> modifyUser(@CurrentUser UserPrincipal userPrincipal, @Valid @RequestBody UserRequestDto userRequestDto, Errors errors){
 
         if(errors.hasErrors()) {
             return ResponseEntity.badRequest().body(errors.getAllErrors());
@@ -39,7 +39,7 @@ public class UserController {
 
     @DeleteMapping("/api/user")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity deleteUser(@CurrentUser UserPrincipal userPrincipal)
+    public ResponseEntity<String> deleteUser(@CurrentUser UserPrincipal userPrincipal)
     {
         userService.deleteUser(userPrincipal);
 
