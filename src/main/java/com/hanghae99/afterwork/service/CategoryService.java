@@ -57,6 +57,15 @@ public class CategoryService {
         String strSort = productByCategoryRequestDto.getSort();
         int page = productByCategoryRequestDto.getPage();
         int size = productByCategoryRequestDto.getSize();
+        String strLocation = productByCategoryRequestDto.getLocation();
+
+        if (strLocation.split(",")[1].equals("전체")){
+
+            strLocation = "%" + strLocation.split(",")[0] + "%";
+        }
+        else{
+            strLocation = "%" + strLocation.split(",")[1] + "%";
+        }
 
         //오름차순 내림차순
         if (strDirection.toLowerCase(Locale.ROOT).equals("asc")) {
@@ -98,7 +107,7 @@ public class CategoryService {
 
         Category category = categoryRepository.findById(categoryId).orElse(null);
         Page<Product> productList = productRepository.findAllByCategoryAndOnline(category, isOnline, isOffline, isTaling,
-                isClass101, isHobyInTheBox, isIdus, isMybiskit, isMochaClass, isHobbyful, pageRequest);
+                isClass101, isHobyInTheBox, isIdus, isMybiskit, isMochaClass, isHobbyful, strLocation, pageRequest);
 
         return productList.map(
                 product -> new ProductResponseDto(

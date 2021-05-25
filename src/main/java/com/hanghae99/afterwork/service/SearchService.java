@@ -40,6 +40,15 @@ public class SearchService {
         String strSort = productByKeywordRequestDto.getSort();
         int page = productByKeywordRequestDto.getPage();
         int size = productByKeywordRequestDto.getSize();
+        String strLocation = productByKeywordRequestDto.getLocation();
+
+        if (strLocation.split(",")[1].equals("전체")){
+
+            strLocation = "%" + strLocation.split(",")[0] + "%";
+        }
+        else{
+            strLocation = "%" + strLocation.split(",")[1] + "%";
+        }
 
         if (keyword == null)
         {
@@ -87,7 +96,7 @@ public class SearchService {
         keyword = "%" + keyword + "%";
 
         Page<Product> productList = productRepository.findAllByTitleLikeAndOnline(keyword, isOnline, isOffline, isTaling,
-                isClass101, isHobyInTheBox, isIdus, isMybiskit, isMochaClass, isHobbyful, pageRequest);
+                isClass101, isHobyInTheBox, isIdus, isMybiskit, isMochaClass, isHobbyful, strLocation, pageRequest);
 
         return productList.map(
                 product -> new ProductResponseDto(

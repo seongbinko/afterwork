@@ -20,6 +20,8 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -77,7 +79,7 @@ class UserControllerTest {
     @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION) //BeforEach 실행 이후에 실행시킨다
     @DisplayName("프로필 수정하기 - 입력값 정상")
     @Test
-    void modifyUser() throws Exception {
+    void modifyUserSuccess() throws Exception {
         String offTime = "18:00:28";
         UserRequestDto userRequestDto = new UserRequestDto();
         userRequestDto.setOffTime(offTime);
@@ -97,6 +99,36 @@ class UserControllerTest {
             throw new ResourceNotFoundException("User", "id", userId);
         }
         assertEquals(offTime, user.get().getOffTime());
+    }
+
+    @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION) //BeforEach 실행 이후에 실행시킨다
+    @DisplayName("프로필 수정하기 - 입력값 비정상")
+    @Test
+    void modifyUserFail() throws Exception {
+        String offTime = "18:00:28";
+
+        List<Long> longList = new ArrayList<>();
+        longList.add(1L);
+        longList.add(2L);
+        longList.add(3L);
+        longList.add(4L);
+        longList.add(5L);
+        longList.add(6L);
+        longList.add(7L);
+        longList.add(8L);
+
+        UserRequestDto userRequestDto = new UserRequestDto();
+        userRequestDto.setOffTime(offTime);
+        userRequestDto.setCategorys(longList);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userInfo = objectMapper.writeValueAsString(userRequestDto);
+
+        mockMvc.perform(post("/api/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userInfo))
+                .andExpect(status().isBadRequest())
+                .andExpect(authenticated());
     }
 
     @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)

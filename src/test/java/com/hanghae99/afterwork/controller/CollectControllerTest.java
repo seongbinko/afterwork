@@ -106,6 +106,54 @@ class CollectControllerTest {
     }
 
     @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("찜 상품 등록 - 존재 하지 않는 상품 입력시")
+    @Test
+    void collectPostDoesntExist() throws Exception{
+
+        CollectRequestDto collectRequestDto = new CollectRequestDto();
+        List<Product> productList = productRepository.findAll();
+
+        collectRequestDto.setProductId(productList.get(productList.size()-1).getProductId() + 1);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String collectInfo = objectMapper.writeValueAsString(collectRequestDto);
+
+        mockMvc.perform(post("/api/collects")
+                .content(collectInfo)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(authenticated());
+    }
+
+    @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("찜 상품 등록 - 중복 상품 등록 시")
+    @Test
+    void collectPostException() throws Exception{
+        User user = userRepository.findByUserId(userId);
+
+        CollectRequestDto collectRequestDto = new CollectRequestDto();
+        List<Product> productList = productRepository.findAll();
+
+        Collect collect = Collect.builder()
+                .product(productList.get(0))
+                .user(user)
+                .build();
+        collectRepository.save(collect);
+
+        collectRequestDto.setProductId(productList.get(0).getProductId());
+        ObjectMapper objectMapper = new ObjectMapper();
+        String collectInfo = objectMapper.writeValueAsString(collectRequestDto);
+
+        mockMvc.perform(post("/api/collects")
+                .content(collectInfo)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(authenticated());
+    }
+
+
+    @WithUserDetails(value = "wnrhd1082@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("찜 상품 등록 - 정상")
     @Test
     void collectPost() throws Exception{

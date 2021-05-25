@@ -41,7 +41,7 @@
     - 클래스톡, 하비인더박스, 마이비스킷, 클래스101 웹사이트 자동 크롤링 구현
     - 카테고리 별 리스트, 검색, 카테고리별 추천 리스트, 온라인 추천 리스트, 오프라인 추천 리스트 api 구현
     - 카테고리 조회 api 구현
-    - 회원정보 수정 / 탈퇴 api 구현    
+    - 회원정보 수정 / 탈퇴 api 구현
   - 최재성
     - 하비풀, 모카클래스, 탈잉 웹사이트 자동 크롤링 구현
     - 찜 항목 저장, 개별 및 전체 삭제, 조회 api 구현
@@ -50,7 +50,8 @@
 - 배포 환경 : Gradle, Travis CI, AWS S3, AWS CodeDeploy, AWS EC2
 - 웹 서버 : Nginx, Tomcat 9.0
 - 데이터베이스 : MariaDB 10.4 (AWS RDS)
-- 협업툴: Git, Notion, Slack
+- 협업 도구 : Git, Notion, Slack
+- 코드 분석 도구 : SonarLint, JaCoCo
 - 간단 소개 : 퇴근하고 뭐할지 고민하는 사람들을 위한, 모든 플랫폼들의 취미들을 한 곳에서 비교가능한 서비스 <br/> 사용자는 관심 지역, 관심 카테고리에 따라 클래스를 추천받을 수 있다
 - 주요 기능 : 소셜 로그인(Google, Kakao, Naver), 검색기능, 찜 기능, 사용자 관심지역, 카테고리별 추천 기능
 - 특징 : 서비스의 데이터를 정기적으로 최신화 ([Afterwork-Scheduler-Repository](https://github.com/seongbinko/afterwork-scheduler)) <br/>
@@ -109,3 +110,5 @@
 | 2021.05.20 | 검색, 카테고리별 리스트, 회원 정보수정 Valid 추가 - [김남석] <br/> 전반적인 코드 리팩토링 (model -> entity) 잘못된 import 변경 - [고성빈] <br/> 계정당 찜 상품 50개로 제한, 각 api에 맞는 예외 처리로 수정 및 테스트 코드 작성 - [최재성] |
 | 2021.05.20 | cors origin 도메인 제한 - [고성빈] |
 | 2021.05.21 | sql log 제거 - [고성빈] |
+| 2021.05.24 | 코드 분석 도구 SonarLint, JaCoCo 추가 [고성빈] <br/> 검색, category 지역필터 추가 [김남석]|
+| 2021.05.25 | 찜 상품 등록 test code coverage 100%로 수정 - [최재성] <br/> RecommendCategory 코드 리팩토링 [김남석] <br/> Recommend 코드 리팩토링 - [최재성] |

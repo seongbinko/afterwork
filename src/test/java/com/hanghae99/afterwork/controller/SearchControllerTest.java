@@ -70,6 +70,7 @@ class SearchControllerTest {
         String strDirection = "asc";
         String strFilter = "total";
         String strSitename = "탈잉,마이비스킷,클래스101,하비인더박스,아이디어스,하비풀,모카클래스";
+        String strLocation = "전체,전체";
         boolean isOnline;
         boolean isOffline;
 
@@ -110,6 +111,7 @@ class SearchControllerTest {
                 .param("direction",strDirection)
                 .param("filter",strFilter)
                 .param("sitename",strSitename)
+                .param("location",strLocation)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(unauthenticated());
@@ -119,6 +121,62 @@ class SearchControllerTest {
                 .andExpect(jsonPath("content").exists())
                 .andExpect(jsonPath("pageable").exists())
                 .andExpect(jsonPath("numberOfElements").value(strSize));
+    }
+
+    @Test
+    @DisplayName("검색 - 실패")
+    void getProductByCategoryTestFail() throws Exception{
+
+        String strPage = "0";
+        String strSize = "12";
+        String strSort = "price";
+        String strDirection = "asc";
+        String strFilter = "total";
+        String strSitename = "탈잉,마이비스킷,클래스101,하비인더박스,아이디어스,하비풀,모카클래스";
+        String strLocation = "전체,전체";
+        boolean isOnline;
+        boolean isOffline;
+
+        if (strFilter.equals("online")){
+            isOnline = true;
+            isOffline = false;
+        } else if (strFilter.equals("offline")){
+            isOnline = false;
+            isOffline = true;
+        } else{
+            isOnline = true;
+            isOffline = true;
+        }
+
+        List<Category> categoryList = categoryRepository.findAll();
+
+        for (int i = 0; i < 24; i++) {
+            Product product = Product.builder()
+                    .title("title" + i)
+                    .isOnline(isOnline)
+                    .isOffline(isOffline)
+                    .popularity(1000)
+                    .price(50000)
+                    .priceInfo("50,000")
+                    .siteName("탈잉")
+                    .siteUrl(null)
+                    .status("Y")
+                    .category(categoryList.get(categoryList.size() - 1))
+                    .build();
+
+            productRepository.save(product);
+        }
+
+        mockMvc.perform(get("/api/search")
+                .param("page",strPage)
+                .param("size",strSize)
+                .param("sort",strSort)
+                .param("direction",strDirection)
+                .param("sitename",strSitename)
+                .param("location",strLocation)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(unauthenticated());
     }
 
 }
