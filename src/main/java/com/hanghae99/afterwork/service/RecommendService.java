@@ -52,10 +52,6 @@ public class RecommendService {
             query.setMaxResults(RECOMMENDSIZE);
             List<Product> productList = query.getResultList();
 
-            for(int i = 0; i < productList.size(); i++){
-                System.out.println(productList.get(i).getTitle());
-            }
-
             return productList.stream().map(
                     product -> new ProductResponseDto(
                             product.getProductId(),
