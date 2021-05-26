@@ -112,3 +112,4 @@
 | 2021.05.21 | sql log 제거 - [고성빈] |
 | 2021.05.24 | 코드 분석 도구 SonarLint, JaCoCo 추가 [고성빈] <br/> 검색, category 지역필터 추가 [김남석]|
 | 2021.05.25 | 찜 상품 등록 test code coverage 100%로 수정 - [최재성] <br/> RecommendCategory 코드 리팩토링 [김남석] <br/> Recommend 코드 리팩토링 - [최재성] |
+| 2021.05.26 | Controller, Service 코드 리펙토링 - [김남석]|

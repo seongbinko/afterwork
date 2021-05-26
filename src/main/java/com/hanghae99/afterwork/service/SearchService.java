@@ -19,6 +19,7 @@ import java.util.Locale;
 public class SearchService {
 
     private final ProductRepository productRepository;
+    private final ProductService productService;
 
     public Page<ProductResponseDto> getProductByKeyword(ProductByKeywordRequestDto productByKeywordRequestDto){
 
@@ -98,21 +99,6 @@ public class SearchService {
         Page<Product> productList = productRepository.findAllByTitleLikeAndOnline(keyword, isOnline, isOffline, isTaling,
                 isClass101, isHobyInTheBox, isIdus, isMybiskit, isMochaClass, isHobbyful, strLocation, pageRequest);
 
-        return productList.map(
-                product -> new ProductResponseDto(
-                        product.getProductId(),
-                        product.getTitle(),
-                        product.getPrice(),
-                        product.getPriceInfo(),
-                        product.getAuthor(),
-                        product.getImgUrl(),
-                        product.isOnline(),
-                        product.isOffline(),
-                        product.getLocation(),
-                        product.getPopularity(),
-                        product.getStatus(),
-                        product.getSiteName(),
-                        product.getSiteUrl()
-                ));
+        return productService.createProductResponseDtoList(productList);
     }
 }

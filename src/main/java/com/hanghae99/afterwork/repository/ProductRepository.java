@@ -26,11 +26,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "((:isMybiskit = true) and (p.siteName like '마이비스킷')) or" +
             "((:isMochaClass = true) and (p.siteName like '모카클래스')) or" +
             "((:isHobbyful = true) and (p.siteName like '하비풀'))) and" +
-            "(((:isOnline = true and :isOffline = false) and (p.location is null)) or" +
+            "(((:isOnline = true and :isOffline = false) and ((p.location is null) or (p.location like '%온라인%') or (p.location like '%튜터전자책%') or (p.location like '%녹화영상%'))) or" +
             "((:isOnline = false and :isOffline = true) and (:location like '%전체%') and (p.location like '%')) or" +
             "((:isOnline = false and :isOffline = true) and (:location not like '%전체%') and (p.location like :location)) or" +
-            "((:isOnline = true and :isOffline = true) and (:location like '%전체%') and ((p.location like '%') or (p.location is null))) or" +
-            "((:isOnline = true and :isOffline = true) and (:location not like '%전체%') and ((p.location like :location) or (p.location is null))))" +
+            "((:isOnline = true and :isOffline = true) and (:location like '%전체%') and ((p.location like '%') or ((p.location is null) or (p.location like '%온라인%') or (p.location like '%온라인%') or (p.location like '%녹화영상%')))) or" +
+            "((:isOnline = true and :isOffline = true) and (:location not like '%전체%') and ((p.location like :location) or ((p.location is null) or (p.location like '%온라인%') or (p.location like '%온라인%') or (p.location like '%녹화영상%')))))" +
             "group by p.title")
     Page<Product> findAllByCategoryAndOnline(@Param("category") Category category, @Param("isOnline") Boolean isOnline,
                                              @Param("isOffline") Boolean isOffline, @Param("isTaling") Boolean isTaling,
@@ -50,11 +50,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "((:isMybiskit = true) and (p.siteName like '마이비스킷')) or" +
             "((:isMochaClass = true) and (p.siteName like '모카클래스')) or" +
             "((:isHobbyful = true) and (p.siteName like '하비풀'))) and" +
-            "(((:isOnline = true and :isOffline = false) and (p.location is null)) or" +
+            "(((:isOnline = true and :isOffline = false) and ((p.location is null) or (p.location like '%온라인%') or (p.location like '%튜터전자책%') or (p.location like '%녹화영상%'))) or" +
             "((:isOnline = false and :isOffline = true) and (:location like '%전체%') and (p.location like '%')) or" +
             "((:isOnline = false and :isOffline = true) and (:location not like '%전체%') and (p.location like :location)) or" +
-            "((:isOnline = true and :isOffline = true) and (:location like '%전체%') and ((p.location like '%') or (p.location is null))) or" +
-            "((:isOnline = true and :isOffline = true) and (:location not like '%전체%') and ((p.location like :location) or (p.location is null))))" +
+            "((:isOnline = true and :isOffline = true) and (:location like '%전체%') and ((p.location like '%') or ((p.location is null) or (p.location like '%온라인%') or (p.location like '%온라인%') or (p.location like '%녹화영상%')))) or" +
+            "((:isOnline = true and :isOffline = true) and (:location not like '%전체%') and ((p.location like :location) or ((p.location is null) or (p.location like '%온라인%') or (p.location like '%온라인%') or (p.location like '%녹화영상%')))))" +
             "group by p.title")
     Page<Product> findAllByTitleLikeAndOnline(@Param("keyword")String keyword, @Param("isOnline") Boolean isOnline,
                                               @Param("isOffline") Boolean isOffline, @Param("isTaling") Boolean isTaling,
