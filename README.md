@@ -82,6 +82,31 @@
 |회원정보 탈퇴|DELETE|/api/user||
 |로그인 회원정보 조회|GET|/api/user/me| |
 
+## 무중단 배포 전체 구조
+
+<img width="914" alt="스크린샷 2021-05-26 오후 1 29 54" src="https://user-images.githubusercontent.com/60464424/119602623-7c659980-be26-11eb-9ebf-c679d91e135d.png">
+
+## 테스트 코드 개선
+
+- Api 관련 테스트 코드 End to End 방식으로 작성
+
+- 2021.05.24
+  - 테스트 코드 커버리지 90%
+  - <details>
+      <summary>관련 이미지</summary>
+        <div markdown="1">
+          <img width="995" alt="테스트 커버리지 5 24" src="https://user-images.githubusercontent.com/60464424/119602414-111bc780-be26-11eb-81be-8a35ffd0d954.png">
+        </div>
+    </details>
+- 2021.05.26
+  - 테스트 코드 커버리지 100%
+  - <details>
+      <summary>관련 이미지</summary>
+        <div markdown="1">
+          <img width="982" alt="스크린샷 2021-05-26 오후 1 20 49" src="https://user-images.githubusercontent.com/60464424/119602498-3a3c5800-be26-11eb-9e07-f61b3dd2e183.png">
+        </div>
+    </details>
+
 ## 타임라인
 
 | 일자       | 진행 목록                                                    |
@@ -112,3 +137,4 @@
 | 2021.05.21 | sql log 제거 - [고성빈] |
 | 2021.05.24 | 코드 분석 도구 SonarLint, JaCoCo 추가 [고성빈] <br/> 검색, category 지역필터 추가 [김남석]|
 | 2021.05.25 | 찜 상품 등록 test code coverage 100%로 수정 - [최재성] <br/> RecommendCategory 코드 리팩토링 [김남석] <br/> Recommend 코드 리팩토링 - [최재성] |
+| 2021.05.26 | Controller, Service 코드 리펙토링 - [김남석] <br/> ProfileController 제거 readme 추가, Api 관련 테스트 코드 커버리지 100% 달성 [고성빈] |
