@@ -5,10 +5,10 @@
 ## [AFTER WORK](https://afterwork.co.kr/) 서비스 소개
 
 - 넘쳐나는 취미 플랫폼 클래스들을 한 번에 모아볼 수 있는 사이트
-
 - 유명 플랫폼 7개사 클래스 인기, 가격 한 번에 비교
 - 구글/네이버/카톡 아이디로 간편하게 소셜 로그인
 - 사용자별 관심 지역, 분야 설정을 통한 맞춤 추천
+- [AFTER WORK | 퇴근하고 뭐하지? 시연 영상 [최종]](https://www.youtube.com/watch?v=pW9s6w0tXzg)
 
 ## 🎯 Target
 
@@ -138,3 +138,4 @@
 | 2021.05.24 | 코드 분석 도구 SonarLint, JaCoCo 추가 [고성빈] <br/> 검색, category 지역필터 추가 [김남석]|
 | 2021.05.25 | 찜 상품 등록 test code coverage 100%로 수정 - [최재성] <br/> RecommendCategory 코드 리팩토링 [김남석] <br/> Recommend 코드 리팩토링 - [최재성] |
 | 2021.05.26 | Controller, Service 코드 리펙토링 - [김남석] <br/> ProfileController 제거 readme 추가, Api 관련 테스트 코드 커버리지 100% 달성 [고성빈] |
+| 2021.05.27 | Readme.md AFTER WORK 퇴근하고 뭐하지? 시연 영상 [최종] url 추가 |
